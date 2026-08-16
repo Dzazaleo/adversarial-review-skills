@@ -28,9 +28,9 @@ a rival AI. The brief tells that reviewer, in plain terms:
 
 - Everything here was written, reviewed and tested by *one* model. Agreement is a failed result.
 - Every confident comment in this code is a **claim by the party under review**, not evidence.
-  Go check whether the test it cites would actually fail if the claim were false.
+Go check whether the test it cites would actually fail if the claim were false.
 - Here are 15–25 specific things this work is betting on. Come back with CONFIRMED, REFUTED,
-  or COULD NOT DETERMINE on each one.
+or COULD NOT DETERMINE on each one.
 - Here is what you may read, run, and write — exactly, including "nothing else."
 - Write your report **to a file as you go**, not in the chat window.
 
@@ -50,9 +50,9 @@ This skill rules on **every single one**, and writes those rulings into a perman
 *ledger*. Each finding gets two separate answers:
 
 - **Verdict — is it true?** `CONFIRMED` · `REFUTED` · `COULD NOT DETERMINE` · `SETTLED ALREADY`
-  · `OWNER RULING REQUIRED`
+· `OWNER RULING REQUIRED`
 - **Disposition — what happens now?** `FIX NOW` · `FIX LATER` · `ACCEPTED AS-IS` · `NO ACTION`
-  · `VERIFY` · `PENDING OWNER`
+· `VERIFY` · `PENDING OWNER`
 
 Two questions, because they are genuinely different. "This bug is real and we are shipping
 anyway" is a legitimate position; "this bug is not real" is a different one; and a single word
@@ -61,16 +61,16 @@ like "accepted" hides which of the two you meant.
 The rules that make it work are mostly rules against the *easy* answer:
 
 - **Dismissal has to cost something.** "We'll do it later" requires an actual backlog file, on
-  disk, before the ledger is written — with the finding's location, mechanism and consequence
-  copied into it. A bare promise is a drop wearing a deferral label.
+disk, before the ledger is written — with the finding's location, mechanism and consequence
+copied into it. A bare promise is a drop wearing a deferral label.
 - **Disproving a finding is as hard as making one.** If the reviewer produced evidence and you
-  want to say it's wrong, you produce evidence too. Reading the code and feeling reassured is
-  not evidence — especially when the reassuring comment was written by the thing under review.
+want to say it's wrong, you produce evidence too. Reading the code and feeling reassured is
+not evidence — especially when the reassuring comment was written by the thing under review.
 - **It never decides whether to ship.** Questions that turn on what you want, what risk you'll
-  take, or what the product should do get handed back to you as a decision, with options and
-  costs.
+take, or what the product should do get handed back to you as a decision, with options and
+costs.
 - **It never fixes anything on its own.** The output is the ledger. Fixing is a separate,
-  deliberate act afterwards.
+deliberate act afterwards.
 
 And the two skills close a loop: the ledger from one round becomes the "ground already walked"
 section of the next brief, so the next reviewer doesn't waste its run re-finding what you
@@ -80,10 +80,11 @@ already ruled on.
 
 ## Install
 
-Copy the two skill folders into your Claude Code skills directory:
+The repo lives at **[https://github.com/Dzazaleo/adversarial-review-skills](https://github.com/Dzazaleo/adversarial-review-skills)**. Clone it and copy
+the two skill folders into your Claude Code skills directory:
 
 ```bash
-git clone <this-repo> adversarial-review-skills
+git clone https://github.com/Dzazaleo/adversarial-review-skills.git
 cp -r adversarial-review-skills/skills/adversarial-review-prompt  ~/.claude/skills/
 cp -r adversarial-review-skills/skills/review-adjudication        ~/.claude/skills/
 ```
@@ -101,53 +102,53 @@ Or invoke them by name: `/adversarial-review-prompt`, `/review-adjudication`.
 
 ## A typical run
 
-Each step says which session to run it in. Only one of them is strict, but that one carries the
-whole method.
+Say Claude has just written you a plan, and you would rather not discover it was wrong after the
+thing is built.
 
-1. **You:** "I want an outside review of `src/importer/` before I ship it."
-2. Claude reads the code, writes `NN-EXTERNAL-REVIEW-PROMPT.md` and a cover note, and lists its
-   own private suspicions for you to hold onto.
-   > **Where:** the same session that built the thing is fine, and it is the normal case — it
-   > knows which parts are shaky. Everything it writes is self-contained, so nothing later
-   > depends on this session staying open. The one thing to watch is that this session's own
-   > suspicions can end up written into the brief without it noticing, which is why it searches
-   > the saved file afterwards and tells you which suspicions really were kept out.
+Each step says which session to run it in. Two of them have to be fresh, and those two are what
+make the whole exercise worth anything.
+
+1. **You:** "Before we build any of this, I want an outside review of the plan you just wrote."
+  Or run `/adversarial-review-prompt` directly.
+2. Claude reads its own plan, writes `NN-EXTERNAL-REVIEW-PROMPT.md` and a cover note, and lists
+  its own private suspicions for you to hold onto.
+  > **Where:** the same session that wrote the plan, and that is the point — it knows which
+  > parts it was least sure of. Everything it writes is self-contained, so nothing later
+  > depends on this session staying open. The one thing to watch is that this session's own
+  > suspicions can end up written into the brief without it noticing, which is why it searches
+  > the saved file afterwards and tells you which of them really were kept out.
 3. **You** paste the cover note into Codex / Gemini / Cursor / another Claude session.
-   > **Where: a fresh session, and ideally a different model.** This is the strict one. Another
-   > Claude session counts only if it has not seen this work. If you hand the review back to
-   > the session that wrote the code, you get agreement instead of a review, and the run is
-   > worth nothing.
+  > **Where: a fresh session, and ideally a different model.** Another Claude session counts
+  > only if it has not seen the plan. Show the plan to the session that wrote it and you get
+  > agreement instead of a review, and the run is worth nothing.
 4. That model reads the brief, does the audit, and writes `NN-EXTERNAL-REVIEW.md` to disk.
-5. **You:** "The review's in — adjudicate it."
-6. Claude re-verifies each finding by actually running things, and writes
+5. **You, in another fresh session:** "The review's in — adjudicate it." Or run
+  `/review-adjudication` directly and point it at the report.
+6. Claude checks every finding for itself — running commands where a finding is about code,
+  going back to the source where it is about the plan — and writes
    `NN-REVIEW-ADJUDICATION.md`: every finding ruled, a fix queue, and the questions that are
    yours to answer.
-   > **Where:** any session — it works from the report and the code on disk, not from a
-   > conversation, so you can pick this up days later. A fresh one is the safer choice: judging
-   > findings about code you yourself wrote is self-review coming back in through the side
-   > door. The skill pushes back on that by refusing to let you dismiss a finding on confident
-   > reading alone — you disprove it by running something — but a session that has no stake in
-   > the code does not need pushing.
+  > **Where: a fresh context session as well.** Starting clean costs you nothing here, because the skill works from the report and the files on disk rather than from a conversation — you can pick it up days later on a different machine. And it buys a lot. The session that wrote the plan has a stake in the findings being wrong, so ruling on them is self-review coming back in through the side door, and "we already thought about that" is the cheapest sentence in the language. A session with no stake in the plan has to go and look.
 7. **You** answer those questions and say go. Fixing happens then, against the ledger.
-   > **Where:** the session that wrote the ledger can do the fixing, as long as you have
-   > actually said go. It writes your go-ahead into the ledger first, then updates each row as
-   > the fix lands, so the file never claims something is still queued after it shipped.
+  > **Where:** the session that wrote the ledger can do the fixing, as long as you have
+  > actually said go. It writes your go-ahead into the ledger first, then updates each row as
+  > the fix lands, so the file never claims something is still queued after it shipped.
 
 ## See it actually working
 
-The [`examples/`](examples/) folder holds real output — the skills pointed at *themselves*.
+The `[examples/](examples/)` folder holds real output — the skills pointed at *themselves*.
 Two different models (OpenAI's Codex and Claude Fable 5) were sent to audit the skills, found
 real defects in them, and those defects were adjudicated and fixed using the very skill under
 review. Nothing there is illustrative or made up; it is the raw artifacts, with local file
 paths and one private project name rewritten.
 
-Start with [`examples/audit-of-review-adjudication/REVIEW-ADJUDICATION.md`](examples/audit-of-review-adjudication/REVIEW-ADJUDICATION.md)
+Start with `[examples/audit-of-review-adjudication/REVIEW-ADJUDICATION.md](examples/audit-of-review-adjudication/REVIEW-ADJUDICATION.md)`
 — 14 findings in, 14 rows out, including two findings that fired against the ledger *while it
 was being written*.
 
 ## For the technically curious
 
-[`HOW-IT-WORKS.md`](HOW-IT-WORKS.md) explains the design: why each rule is there, which failure
+`[HOW-IT-WORKS.md](HOW-IT-WORKS.md)` explains the design: why each rule is there, which failure
 it was written against, and which of them were added only after a review caught them missing.
 
 ## Requirements
