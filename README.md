@@ -15,14 +15,6 @@ it convincing, the same way you find your own reasoning convincing. It carries t
 misreadings into the review that it had while writing. It never tests the thing it never
 thought of.
 
-The obvious fix is to ask a *different* model. But that alone doesn't work either. Hand a
-second model your code and say "please review this," and you usually get a polite summary that
-agrees with everything, plus a few notes about variable naming. That output is worse than
-nothing, because it *looks* like an independent check. You now believe the code is verified
-when nobody actually verified it.
-
-These two skills exist to make the second opinion real.
-
 ---
 
 ## What each one does
