@@ -167,12 +167,13 @@ the reviewer, whichever way it comes out:
 - **Discount non-independent agreement.** Where a brief claim was the author's own suspicion — a
   residual doubt leaked into the brief — the reviewer agreeing with it is an echo, not
   confirmation. Verify those findings from primary sources as if the reviewer had said nothing.
-  **Do not take the hand-off's word that a doubt was held back.** Grep the brief yourself for
-  each doubt's mechanism before scoring reviewer agreement as corroboration: on 2026-08-15 a
-  hand-off stated four doubts were "deliberately excluded from the brief" and the brief's §6
-  asked all four near-verbatim (B3, C1, C6, C4) — the author was remembering their intent, not
-  the file. Record the result per doubt (held back / prompted by claim ‹id›), and treat a
-  hand-off that says "held back" without a grep result as unverified.
+  **Do not take the hand-off's word for it that a doubt was kept out of the brief.** Before you
+  count the reviewer agreeing as corroboration, open the brief and search it yourself for the
+  words naming that doubt's mechanism. On 2026-08-15 a hand-off said four doubts had been
+  "deliberately excluded from the brief" while the brief asked all four almost word for word
+  (B3, C1, C6, C4) — the author was going by what they meant to leave out, not by what the file
+  said. Write down what you found for each doubt (held back / prompted by claim ‹id›), and treat
+  any "held back" that arrives without that check as unverified.
 - **Confirm the gate would actually fail.** When a finding is about a test or gate proving nothing,
   the check is not "does the suite pass" but "would it fail if the thing were wrong." Break it
   deliberately, in a throwaway copy, and see. A gate that passes before its implementation exists

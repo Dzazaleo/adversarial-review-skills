@@ -193,20 +193,20 @@ Non-negotiables while writing:
   can produce. Collect 3–5, each a question with a mechanism, and put them in the hand-off
   summary (§9) for the user to compare against the returned review. They stay out of the
   cover note too (§8) — it is read first, so anchoring there is worse, not better.
-- **"Held back" is a property of the saved brief, not of your intent — verify it by grep.**
-  §3's load-bearing claims carry a sub-question pointing at the seam, and the residual doubts
-  are usually ABOUT those same claims, because both come from the same reading. So the
-  sub-question tends to BECOME the doubt ("is 'by construction' true, or only under the current
-  call ordering?" is not a neutral pointer; it is the doubt, verbatim). This has happened twice
-  on record (2026-08-10, all five doubts leaked; 2026-08-15, four of four, in a session that had
-  cited the first occurrence). The check that catches it is mechanical: after saving, for EACH
-  residual doubt, grep the brief for two or three key terms of its MECHANISM. A hit inside a §6
-  sub-question means the doubt is prompted, not held back — either strip that sub-question back
-  to a neutral pointer ("adjudicate whether the claim is structural") or keep the sharp
-  sub-question and MOVE the doubt out of the held-back list, labelling it in §9 as *"prompted by
-  claim Bn — agreement is an echo"*. Never write "held back" from memory of what you meant to
-  hold back; the reader will score reviewer agreement as independent corroboration on the
-  strength of that word.
+- **A doubt counts as held back only if it is absent from the saved file — check the file, not
+  your memory.** Your doubts and §3's claims come out of the same reading, so a doubt slides
+  into the brief easily: you write a sub-question pointing at the same seam the doubt is about,
+  and now you have asked it. ("Is 'by construction' true, or only under the current call
+  ordering?" is not a neutral pointer — it is the doubt, word for word.) This has happened twice
+  on record: on 2026-08-10 all five doubts leaked, and on 2026-08-15 four of four leaked in a
+  session that had already read about the first case. Memory will not catch it; a search will.
+  After saving, take each doubt and search the brief for two or three words naming its
+  mechanism. If it turns up in a §6 sub-question, you prompted the reviewer with it. Either cut
+  that sub-question back to a neutral pointer ("adjudicate whether the claim is structural"), or
+  keep the sharp version and move the doubt off the held-back list, marking it in §9 as
+  *"prompted by claim Bn — agreement is an echo"*. Never call a doubt held back because you
+  meant to hold it back: on the strength of that one phrase, the person reading your hand-off
+  will count the reviewer agreeing as proof arrived at independently.
 
 Before saving, verify the prompt against reality: open every `file:line` you cited and
 confirm the quoted text is still on that line, and re-run the exact commands the prompt
@@ -319,9 +319,10 @@ Report to the user, briefly:
 - Your 3–5 residual doubts, held out of both the prompt and the cover note by design — list
   them here, and tell the user to compare them against the returned review: a doubt the
   reviewer rediscovered blind is corroborated, a doubt it refuted is settled, and a doubt it
-  never touched is still open. Mark each one either **held back (grep-clean against the saved
-  brief)** or **prompted by claim ‹id›** — the grep from §6 above, stated as its result, so the
-  adjudicator can tell corroboration from echo without re-reading the brief
+  never touched is still open. Mark each one either **held back (searched the saved brief, not
+  there)** or **prompted by claim ‹id›** — that is the §6 search above, written down as its
+  result, so whoever adjudicates can tell real corroboration from an echo without having to
+  re-read the brief themselves
 - One line, only if they use a terminal: the brief can also be piped —
   `codex exec "$(cat path/to/PROMPT.md)"` (bash/zsh) or
   `codex exec (Get-Content path/to/PROMPT.md -Raw)` (PowerShell). The cover note is the
