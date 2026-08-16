@@ -101,16 +101,37 @@ Or invoke them by name: `/adversarial-review-prompt`, `/review-adjudication`.
 
 ## A typical run
 
+Each step says which session to run it in. Only one of them is strict, but that one carries the
+whole method.
+
 1. **You:** "I want an outside review of `src/importer/` before I ship it."
 2. Claude reads the code, writes `NN-EXTERNAL-REVIEW-PROMPT.md` and a cover note, and lists its
    own private suspicions for you to hold onto.
+   > **Where:** the same session that built the thing is fine, and it is the normal case — it
+   > knows which parts are shaky. Everything it writes is self-contained, so nothing later
+   > depends on this session staying open. The one thing to watch is that this session's own
+   > suspicions can end up written into the brief without it noticing, which is why it searches
+   > the saved file afterwards and tells you which suspicions really were kept out.
 3. **You** paste the cover note into Codex / Gemini / Cursor / another Claude session.
+   > **Where: a fresh session, and ideally a different model.** This is the strict one. Another
+   > Claude session counts only if it has not seen this work. If you hand the review back to
+   > the session that wrote the code, you get agreement instead of a review, and the run is
+   > worth nothing.
 4. That model reads the brief, does the audit, and writes `NN-EXTERNAL-REVIEW.md` to disk.
 5. **You:** "The review's in — adjudicate it."
 6. Claude re-verifies each finding by actually running things, and writes
    `NN-REVIEW-ADJUDICATION.md`: every finding ruled, a fix queue, and the questions that are
    yours to answer.
+   > **Where:** any session — it works from the report and the code on disk, not from a
+   > conversation, so you can pick this up days later. A fresh one is the safer choice: judging
+   > findings about code you yourself wrote is self-review coming back in through the side
+   > door. The skill pushes back on that by refusing to let you dismiss a finding on confident
+   > reading alone — you disprove it by running something — but a session that has no stake in
+   > the code does not need pushing.
 7. **You** answer those questions and say go. Fixing happens then, against the ledger.
+   > **Where:** the session that wrote the ledger can do the fixing, as long as you have
+   > actually said go. It writes your go-ahead into the ledger first, then updates each row as
+   > the fix lands, so the file never claims something is still queued after it shipped.
 
 ## See it actually working
 
