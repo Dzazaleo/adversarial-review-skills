@@ -134,13 +134,24 @@ The reason is asymmetric value. A suspicion you plant is echoed back at you; a s
 reviewer reaches blind is independent corroboration, the strongest evidence the exercise can
 produce. Demotion disclaimers ("I suspect X but don't let that bias you") do not survive contact.
 
-When the review returns you compare: doubts it rediscovered are confirmed, doubts it refuted are
-settled, doubts it never touched are still open — and those are the seed of the next brief.
+What the author may *not* do is certify that a doubt stayed out. Doubts and load-bearing claims
+come from one reading of one body of work, so a doubt is usually about a claim you just wrote and
+the sub-question pointing at that seam is the doubt. The claim stays sharp — that sharpness is the
+brief's main value — and the overlap gets declared instead. The hand-off carries, per doubt, the
+brief items a doubt-derived search lands on, plus the raw search output; where nothing turns up
+the words are "no line found — unverified", never "held back".
 
-This has a counterpart on the other side. When a doubt *does* leak into a brief, the adjudicator
-is required to discount the reviewer's agreement with it as an echo and re-verify from primary
-sources. That rule exists because it happened: four of fourteen findings in the self-audit were
-seeded that way, and all four had to be re-established on primary evidence alone.
+That split exists because the softer version failed three times running, the third time after a
+mandatory search had been added *and performed*: the author picks the queries, and picks them from
+the half of the doubt the brief does not contain. Across all three occurrences every wrong label
+was a claim of absence, and not one claim of presence was ever wrong. Absence in a document you
+wrote is not a judgement you are positioned to make.
+
+So the ruling lives on the other side. The adjudicator searches the brief itself, records what it
+found per doubt, and only then may a rediscovered doubt count as corroboration — and where a doubt
+did leak, the reviewer's agreement is discounted as an echo and re-verified from primary sources.
+That rule exists because it happened: four of fourteen findings in the self-audit were seeded that
+way, and all four had to be re-established on primary evidence alone.
 
 ---
 
@@ -474,6 +485,6 @@ do-not-relitigate block, locked decision IDs, and prior ledgers; and the backlog
 requirement in `FIX LATER`, which assumes your project has somewhere durable to put one.
 
 The parts to keep, because they're where the value is: the reviewer never issues a verdict;
-residual doubts never enter the brief; the report is a file written as you go; refutation carries
-the same burden as accusation; enumerate before judging; and every finding leaves with both a
-verdict and a disposition.
+residual doubts never enter the brief, and the author never certifies that they didn't; the report
+is a file written as you go; refutation carries the same burden as accusation; enumerate before
+judging; and every finding leaves with both a verdict and a disposition.

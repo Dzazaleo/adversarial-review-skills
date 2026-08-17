@@ -35,7 +35,7 @@ Everything in this skill exists to defeat that. Three levers do most of the work
    with a different architecture notices different things; and that agreement is therefore a
    failed outcome. Never imply you know what was missed. Where you genuinely do suspect
    something, that is a *known* unknown — it is held out of the prompt entirely and handed
-   to the user for post-review comparison (§9), never written into the prompt.
+   to the user for post-review comparison (§10), never written into the prompt.
 2. **Demote the author's assertions to claims.** Every confident comment, test name, and
    "verified/measured/guaranteed" note is a testable assertion by the party under review,
    never evidence. This single reframing produces more findings than any checklist.
@@ -58,7 +58,7 @@ Resolve from `$ARGUMENTS` (ask only if genuinely ambiguous):
   commands, what it can access), never the adversarial framing.
 - **Artifact kind** — code, or a plan/design. For a plan there is nothing to execute, so the
   evidence standard shifts from CONFIRMED-by-execution to "cite the source that contradicts
-  it"; §6 becomes assumptions and one-way doors rather than runtime claims.
+  it"; the brief's §6 becomes assumptions and one-way doors rather than runtime claims.
 - **Write access** — beyond its own report file, which is always authorized (§6), read-only
   unless the user passed `--writes` or asked for mutation testing in words. This decides which
   write boundary the prompt's envelope gets (§7 below); never grant more on your own initiative.
@@ -202,23 +202,14 @@ Non-negotiables while writing:
 - **Author's residual doubts stay out of the prompt entirely.** A reviewer that reads them
   is anchored by them — demotion disclaimers do not survive contact — while a suspicion the
   reviewer reaches blind is independent corroboration, the strongest evidence this exercise
-  can produce. Collect 3–5, each a question with a mechanism, and put them in the hand-off
-  summary (§9) for the user to compare against the returned review. They stay out of the
-  cover note too (§8) — it is read first, so anchoring there is worse, not better.
-- **A doubt counts as held back only if it is absent from the saved file — check the file, not
-  your memory.** Your doubts and §3's claims come out of the same reading, so a doubt slides
-  into the brief easily: you write a sub-question pointing at the same seam the doubt is about,
-  and now you have asked it. ("Is 'by construction' true, or only under the current call
-  ordering?" is not a neutral pointer — it is the doubt, word for word.) This has happened twice
-  on record: on 2026-08-10 all five doubts leaked, and on 2026-08-15 four of four leaked in a
-  session that had already read about the first case. Memory will not catch it; a search will.
-  After saving, take each doubt and search the brief for two or three words naming its
-  mechanism. If it turns up in a §6 sub-question, you prompted the reviewer with it. Either cut
-  that sub-question back to a neutral pointer ("adjudicate whether the claim is structural"), or
-  keep the sharp version and move the doubt off the held-back list, marking it in §9 as
-  *"prompted by claim Bn — agreement is an echo"*. Never call a doubt held back because you
-  meant to hold it back: on the strength of that one phrase, the person reading your hand-off
-  will count the reviewer agreeing as proof arrived at independently.
+  can produce. Collect 3–5, each a question with a mechanism and the `file:line` it is about,
+  and put them in the hand-off summary (§10) for the user to compare against the returned
+  review. They stay out of the cover note too (§8) — it is read first, so anchoring there is
+  worse, not better.
+- **Where a load-bearing claim's sub-question is one of your own doubts, keep it sharp and
+  declare it.** Doubts and claims come out of the same reading, so the overlap is the normal
+  case, not a slip. Do not blunt a claim to protect a doubt: that spends the brief's main value
+  to buy a corroboration credit which is not yours to grant in the first place (§9).
 
 Before saving, verify the prompt against reality: open every `file:line` you cited and
 confirm the quoted text is still on that line, and re-run the exact commands the prompt
@@ -303,7 +294,7 @@ Four decisions before you write it:
    The authorization paragraph is load-bearing, not courtesy: a brief that opens with *attack
    this, find what is wrong, prove it* and no provenance reads like a request to break into
    someone else's system, and an unsure reviewer spends its output on hedges.
-4. **What stays out.** The residual doubts (§9), because the cover note is read first and
+4. **What stays out.** The residual doubts (§10), because the cover note is read first and
    anchors hardest. The adversarial framing, because the brief carries it in full and a
    compressed restatement here both dilutes it and risks contradicting it.
 
@@ -318,7 +309,49 @@ Save it as `<phase-dir>/NN-EXTERNAL-REVIEW-COVER-NOTE.md`, and grep it for `«` 
 with the brief. Then reproduce it **verbatim in the hand-off message**, inside a single fenced
 block, so the user can copy it in one gesture.
 
-## 9. Hand off
+## 9. Cross-check the doubts against the saved brief — and do not rule on the result yourself
+
+Because doubts and claims come from one reading of one body of work, a doubt is normally *about*
+a claim you just wrote, and the sub-question pointing at that seam is the doubt. The damage is not
+in the brief — it is in the hand-off, where the doubt gets reported as held back, the reviewer
+raises it because the brief asked, and the agreement is then banked as independent corroboration.
+This has now happened three times: 2026-08-10 (five doubts of five were in the brief), 2026-08-15
+(four of four, reported as "deliberately excluded"), 2026-08-17 (two of three) — the last of these
+*after* a search of the saved brief was made mandatory, and duly performed. It failed because the
+author chose the queries: for a doubt whose own text quoted `unitScale && (rotation === 0 ||
+isoBone)`, the recorded search was `packed`/`original`/`whitespace`/`strip`, none of which the
+brief contained, while `isoBone` sat in claim 7. The one collision the search did surface was then
+ruled "generic" by hand.
+
+So take this literally: **you cannot certify absence in a document you wrote.** Over those three
+runs, every wrong label was a claim of absence, and not one claim of presence — "prompted by claim
+N" — was wrong. Presence is provable by pointing at a line. Absence is a claim about all six
+hundred of them, made by the person who wrote them. Point, and let the adjudicator rule.
+
+Run the search with no discretion in it. The queries come **from the doubt's own text** — every
+`file:line` it cites, every backticked identifier, every SHOUTED term — never from your sense of
+what the doubt is really about. One per line in a scratch file, then:
+
+```bash
+while IFS= read -r q; do printf '\n--- %s\n' "$q"
+  grep -nF -- "$q" path/to/NN-EXTERNAL-REVIEW-PROMPT.md path/to/NN-EXTERNAL-REVIEW-COVER-NOTE.md \
+    || echo '  no line'
+done < queries.txt
+```
+
+A line citation often sits inside a range on the brief's side — the doubt says `:154`, the claim
+cites `:129-155` — so when a citation query misses, run the bare path as well and read what cites
+it. Then name, per doubt, the brief items the hits land in — "claim 7 at `:301`", "one-way door 1
+at `:173`" — from anywhere in the brief, not only the claims list: on 2026-08-17 half the leak was
+in the one-way doors, which the then-current rule did not cover. Where the queries turn up
+nothing, the words are **"no line found — unverified"**. Never "held back", "withheld", or
+"excluded from the brief": they assert what you are not in a position to know, they are the
+signature of all three failures, and the adjudicator greps the hand-off for them.
+
+Keep the doubts and the queries in the session scratchpad, never beside the brief — there they are
+one `ls` away from the reviewer.
+
+## 10. Hand off
 
 Report to the user, briefly:
 - The two file paths: the brief, and the cover note
@@ -328,13 +361,14 @@ Report to the user, briefly:
 - The capability line from §7 — every path the reviewer may write, the report file included
 - Where the report will land, and that they should check that file exists when the run ends
   rather than trusting the chat reply: the chat reply is a summary by design now
-- Your 3–5 residual doubts, held out of both the prompt and the cover note by design — list
-  them here, and tell the user to compare them against the returned review: a doubt the
-  reviewer rediscovered blind is corroborated, a doubt it refuted is settled, and a doubt it
-  never touched is still open. Mark each one either **held back (searched the saved brief, not
-  there)** or **prompted by claim ‹id›** — that is the §6 search above, written down as its
-  result, so whoever adjudicates can tell real corroboration from an echo without having to
-  re-read the brief themselves
+- Your 3–5 residual doubts, kept out of both the prompt and the cover note by design. For each
+  one: the doubt, and what §9's search landed on — the brief items by id and line ("claim 7 at
+  `:301`") or **"no line found — unverified"** — with the search output itself in one fenced
+  block, so the labels can be checked instead of believed. Say plainly that none of it is a
+  ruling: a doubt becomes independent corroboration only once an adjudicator has searched the
+  brief and said so (`review-adjudication` does exactly that). Until then, a doubt the reviewer
+  raised is a lead rather than a confirmation, a doubt it refuted is settled either way, and a
+  doubt it never touched is still open
 - One line, only if they use a terminal: the brief can also be piped —
   `codex exec "$(cat path/to/PROMPT.md)"` (bash/zsh) or
   `codex exec (Get-Content path/to/PROMPT.md -Raw)` (PowerShell). The cover note is the
