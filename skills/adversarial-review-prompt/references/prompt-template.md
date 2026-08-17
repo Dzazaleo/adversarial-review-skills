@@ -77,7 +77,11 @@ standard", "this obviously scales", cited versions and benchmarks. Same treatmen
 ## 3. Environment and how to run things
 
 A small table (repo root, OS and its relevant semantics, runtime, install command) plus the
-exact commands. Then every trap:
+exact commands. The audit range goes here as **immutable commit IDs** («`abc1234^..def5678`,
+observed `N files, +A/−B` from `git diff --stat` run at authoring time — never "N commits ahead
+of `main`" or `main..HEAD`, which can be empty by the time the reviewer runs it; list any
+documentation-only commits above the range separately so `HEAD` being ahead reads as
+expected, not as a discrepancy»). Then every trap:
 
 - Gitignored or machine-local datasets, with absolute paths «redact machine-identifying
   components — usernames, home directories — unless the reviewer genuinely needs them; this

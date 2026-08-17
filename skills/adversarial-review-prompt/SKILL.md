@@ -76,6 +76,18 @@ commands to state facts, not guesses:
   files, OS-specific semantics (Windows symlink/junction/permission behavior is a recurring
   source of real defects)
 - Current git state, so you can tell the reviewer what "clean" looks like
+- **The audit range, pinned to immutable commit IDs — never to a branch relation.** State the
+  work under review as explicit commits (`abc1234^..def5678`, or a list) with the file count
+  and `+N/−M` from `git diff --stat` over that exact range, and run that command while
+  authoring the brief so the numbers are observed, not remembered. Never write "N commits
+  ahead of `main`" or "`git diff main..HEAD` is the work" — `main` and the branch converge and
+  re-diverge as work lands (a local fast-forward is one command), and on 2026-08-16 a brief
+  said "2 commits ahead of `main`" three minutes *after* `main` had been fast-forwarded onto
+  the branch, so the prescribed range was empty at authoring time; the reviewer had to
+  reconstruct the scope itself and correctly ranked the empty range as a process finding.
+  Where documentation-only commits sit on top of the code under review (the brief itself is
+  usually one), name them separately so the reviewer knows `HEAD` will be ahead of the pinned
+  range and that this is expected.
 
 A prompt containing a wrong path, a stale line number, or a test command that fails burns
 the reviewer's first ten minutes and its trust in the rest of the document.
