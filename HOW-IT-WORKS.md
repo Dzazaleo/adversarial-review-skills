@@ -458,18 +458,19 @@ Four rules here came from reading [VibeCodyH/code-review-cadre](https://github.c
 answer keys mined from fix commits — but whose rubric had measured failures this pair was not
 guarding against:
 
-- **A reviewer that finds a defect and argues it is fine is worse than one that missed it.** Cadre
-  grades that as DEFER and disqualifies on it. Here it means a claim may not be upheld on a comment
-  or a test name, in the brief, and the upheld-claims list is sampled rather than transcribed, in
-  the ledger.
-- **A report that is not a review must not be adjudicated as a clean one.** Cadre measured three
-  artifacts scoring as complete reviewers while being a summary, a clarification request, and a
-  parroted diff. Adjudication now classifies before it enumerates.
-- **A reviewer that stopped early has approved nothing.** Directly relevant because the file-as-you-go
-  rule *produces* partial reports on purpose; nothing downstream was reading them as partial.
-- **Agreement between reviewers who can read each other is not agreement.** Cadre enforces this
-  structurally, by refusing an output directory inside the reviewed tree. This pair puts everything
-  in one directory, so it is recorded and discounted instead.
+- **Spotting a defect and then arguing it away does more damage than never spotting it.** Cadre
+  scores that outcome in its own right and disqualifies a reviewer for it. Here it became two
+  rules: the brief forbids signing off a claim on the authority of a nearby comment, and the
+  ledger spot-checks the upheld-claims list rather than copying it over.
+- **A report that is not a review must not be adjudicated as a clean one.** Cadre has stored
+  artifacts that were counted as finished reviews while being nothing of the kind, with every file
+  they never mentioned read as approved. Adjudication now classifies before it enumerates.
+- **A reviewer that stopped early has approved nothing.** Directly relevant because the
+  file-as-you-go rule *produces* partial reports on purpose; nothing downstream was reading them
+  as partial.
+- **Agreement between reviewers who can read each other is not agreement.** Cadre prevents it
+  structurally, by keeping one reviewer's output out of any tree the next one can reach. This pair
+  puts everything in one directory deliberately, so it is recorded and discounted instead.
 
 Also taken, smaller: the settled-ground check breaks toward *not settled*, findings true of the
 whole repo are separated from findings about the work, reviewer lineage is named at hand-off, and a

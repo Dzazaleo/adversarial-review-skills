@@ -128,9 +128,9 @@ sub-question pointing at the seam.
 > **Confirming a claim takes what refuting one takes.** A comment, a test name, or a docstring is
 > the code asserting itself — it is what the claim rests on, never what settles it. Quote one and
 > you have located the claim, not checked it; that is a could-not-determine. And if you reach a
-> real defect and conclude it was intended, report it and say why you think so. Do not close it on
-> the strength of the code's own words: an argued dismissal with a citation costs more than a miss,
-> because the next reader inherits both.
+> real defect and conclude the author meant it, report it and say why you think so. Do not close it
+> on the work's own say-so. Dismissing a real bug and writing down a reason costs more than never
+> spotting it: the next reader inherits the bug and the argument together.
 
 15–25 items. Suggested groups: rule/arithmetic correctness · published contracts (one-way
 doors) · robustness and process behavior · supply chain and hygiene.
@@ -250,8 +250,8 @@ conservatively — by not writing the file, which is the one output that matters
   of judgement being asked for. Order them.
 - Hedged findings that commit to nothing. If unsure, say "could not determine" and say what
   would settle it.
-- A defect you found and then talked yourself out of on the strength of the code's own comment,
-  or a test that asserts the behavior as correct. Report it with your reasoning for thinking it
+- A defect you found and then talked yourself out of, on the authority of a nearby comment or of
+  a test written around the behavior as it stands. Report it, with your reasoning for thinking it
   deliberate. Silence here is the most expensive output in this list.
 - Praise. One short paragraph at most, and only for things you actually verified.
 
@@ -320,7 +320,7 @@ what it costs; the ordering is your judgement.
 
 ## Claims examined and upheld
 Short list, one line each, naming what upheld it — what you ran, or the primary source outside the
-work. A claim upheld only by quoting the code's own comment or a test name belongs in "could not
+work. A claim you only backed with a nearby comment or a matching test name belongs in "could not
 verify" instead. Coverage evidence, no elaboration.
 
 ## Could not verify

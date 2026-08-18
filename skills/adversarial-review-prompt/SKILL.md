@@ -58,9 +58,9 @@ Resolve from `$ARGUMENTS` (ask only if genuinely ambiguous):
   commands, what it can access), never the adversarial framing. Name its **model family**, and
   say at hand-off when that family is the one that wrote the work. The whole return on this
   exercise is the architecture difference (lever 1) — a same-family reviewer buys much less of
-  it, and several review products are front-ends over the same two or three underlying families,
-  so the product name does not tell you. Whether to proceed anyway is the user's call; leaving
-  the lineage unnamed is not.
+  it, and a great many review tools are thin layers over a small pool of base models, so the
+  product's name tells you nothing about whose eyes you are actually getting. Whether to proceed
+  anyway is the user's call; leaving the lineage unnamed is not.
 - **Artifact kind** — code, or a plan/design. For a plan there is nothing to execute, so the
   evidence standard shifts from CONFIRMED-by-execution to "cite the source that contradicts
   it"; the brief's §6 becomes assumptions and one-way doors rather than runtime claims.
@@ -181,12 +181,11 @@ Non-negotiables while writing:
   is the party under review talking (lever 2) — it is what the claim rests on, never what
   confirms it. Say plainly that confirming a claim takes what refuting one takes, execution or a
   primary source outside the work, and that COULD NOT DETERMINE is the honest alternative. The
-  shape to name as unacceptable is the reviewer that reaches a defect and then argues it is
-  intentional by citing the code's own comment or a test asserting the behavior as correct:
-  measured in the code review cadre harness, that is worse than missing the defect outright,
-  because it hands the next reader a citation for leaving a real bug alone. If it got that far it
-  reports the finding and says why it thinks the behavior is deliberate — a finding with a note,
-  never a dismissal.
+  shape to name as unacceptable is the reviewer that gets as far as a defect and then decides the
+  work meant it, on the authority of a nearby comment or of a test written around the behavior as
+  it stands. Rank that below missing the defect outright: it leaves the next reader both the bug
+  and a written case for keeping it. If the reviewer got that far it reports the finding and says
+  why it thinks the behavior is deliberate — a finding with a note, never a dismissal.
 - **Specify the deliverable shape** — a coverage line, findings in a strict ranked order,
   claims examined and upheld (one line each, naming what upheld it), could-not-verify (an
   unstated gap reads as a pass), and any mutation results.
