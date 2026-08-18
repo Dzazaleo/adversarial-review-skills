@@ -451,6 +451,30 @@ and one private project name. The round-2 ledger is worth reading in full: it co
 count-convention deviation, an owner-supplied independence discount applied to four of its own
 rows, and two owner questions that the adjudicator explicitly refused to answer itself.
 
+### Borrowed from code review cadre
+
+Four rules here came from reading [VibeCodyH/code-review-cadre](https://github.com/VibeCodyH/code-review-cadre)
+(MIT), which asks a different question — *which set of reviewers should I seat*, graded against
+answer keys mined from fix commits — but whose rubric had measured failures this pair was not
+guarding against:
+
+- **A reviewer that finds a defect and argues it is fine is worse than one that missed it.** Cadre
+  grades that as DEFER and disqualifies on it. Here it means a claim may not be upheld on a comment
+  or a test name, in the brief, and the upheld-claims list is sampled rather than transcribed, in
+  the ledger.
+- **A report that is not a review must not be adjudicated as a clean one.** Cadre measured three
+  artifacts scoring as complete reviewers while being a summary, a clarification request, and a
+  parroted diff. Adjudication now classifies before it enumerates.
+- **A reviewer that stopped early has approved nothing.** Directly relevant because the file-as-you-go
+  rule *produces* partial reports on purpose; nothing downstream was reading them as partial.
+- **Agreement between reviewers who can read each other is not agreement.** Cadre enforces this
+  structurally, by refusing an output directory inside the reviewed tree. This pair puts everything
+  in one directory, so it is recorded and discounted instead.
+
+Also taken, smaller: the settled-ground check breaks toward *not settled*, findings true of the
+whole repo are separated from findings about the work, reviewer lineage is named at hand-off, and a
+public target's own issue tracker is treated as a leak of its answers.
+
 ---
 
 ## 11. Known limits

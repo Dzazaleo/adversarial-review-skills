@@ -23,6 +23,12 @@ findings go instead>`»
 or say what it wrote beyond its report»)
 **Brief:** `«NN-EXTERNAL-REVIEW-PROMPT.md»`
 **Adjudicated:** «date», by «this planning/execution session»
+**Report state:** «complete / partial — no coverage line, stops at «where» / inconclusive — not a
+review, «what it actually is»»
+**Reviewer isolation:** «which earlier artifacts this reviewer could read — the prior report, this
+ledger, another reviewer's findings — and where. Same directory means yes. "First reviewer, nothing
+to see" where that is the case»
+**Upheld claims:** «S» sampled of «T» listed · «K» re-opened as `U-N`
 **Findings in: «N» · Rows out: «N» · +«K» process, +«M» CNV, +«D» prior-review disagreements
 ruled** «numbered counts must match; if merged, say which IDs; state each auxiliary count even
 when it is zero»
@@ -30,6 +36,10 @@ when it is zero»
 
 The envelope line matters. The brief's permissions are an instruction, not a sandbox — if the
 reviewer wrote outside its report file, that is worth knowing before its findings are weighed.
+
+The two lines above it matter for the opposite reason — they say how much the report is entitled to
+settle. A partial report has not upheld the claims it never reached, and a reviewer that could read
+the previous one is not a second opinion on anything they agree about.
 
 ## 1. Situation in one paragraph
 
@@ -142,10 +152,18 @@ Backfill each row as the work lands — with its commit where the target is vers
 a dated change note naming the files touched where it is not. A ledger whose Disposition column
 still says "queued" three phases later is telling you something true.
 
-## 7. Claims examined and upheld
+## 7. Claims examined and upheld — and the ones re-opened
 
 The reviewer's coverage list, and anything it checked and found sound. One line each, no
-elaboration. This is what stops the next brief re-targeting ground already walked.
+elaboration. This is what stops the next brief re-targeting ground already walked — which is exactly
+why it is sampled rather than transcribed. Say how many you sampled and how you chose them.
+
+Then the re-openings, as `U-N` entries with a verdict and a disposition like any other. A claim
+upheld by quoting a comment, a test name, or a docstring was not checked — it is upheld in the
+report and open here. So is any claim the reviewer reached and then argued was intentional on the
+strength of the work's own words.
+
+Where the report is partial, the claims it never reached are listed in §8, never here.
 
 ## 8. What this review could not settle, and why that is acceptable
 

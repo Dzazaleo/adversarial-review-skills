@@ -55,7 +55,12 @@ Resolve from `$ARGUMENTS` (ask only if genuinely ambiguous):
 - **Target** — a phase, directory, file set, PR, diff range, or a plan/design doc. Get an
   exact file list with line counts; a reviewer needs to know the size of the job.
 - **Reviewer** — which model/CLI receives this. Adjust only the mechanics (how it runs
-  commands, what it can access), never the adversarial framing.
+  commands, what it can access), never the adversarial framing. Name its **model family**, and
+  say at hand-off when that family is the one that wrote the work. The whole return on this
+  exercise is the architecture difference (lever 1) — a same-family reviewer buys much less of
+  it, and several review products are front-ends over the same two or three underlying families,
+  so the product name does not tell you. Whether to proceed anyway is the user's call; leaving
+  the lineage unnamed is not.
 - **Artifact kind** — code, or a plan/design. For a plan there is nothing to execute, so the
   evidence standard shifts from CONFIRMED-by-execution to "cite the source that contradicts
   it"; the brief's §6 becomes assumptions and one-way doors rather than runtime claims.
@@ -172,8 +177,18 @@ Non-negotiables while writing:
   opinions, "consider adding X" with no defect behind it, restating a comment as
   verification, proposing out-of-scope features, severity inflation, hedged findings that
   commit to nothing, praise beyond one paragraph.
+- **Forbid upholding a claim on the author's own word.** A comment, a test name, or a docstring
+  is the party under review talking (lever 2) — it is what the claim rests on, never what
+  confirms it. Say plainly that confirming a claim takes what refuting one takes, execution or a
+  primary source outside the work, and that COULD NOT DETERMINE is the honest alternative. The
+  shape to name as unacceptable is the reviewer that reaches a defect and then argues it is
+  intentional by citing the code's own comment or a test asserting the behavior as correct:
+  measured in the code review cadre harness, that is worse than missing the defect outright,
+  because it hands the next reader a citation for leaving a real bug alone. If it got that far it
+  reports the finding and says why it thinks the behavior is deliberate — a finding with a note,
+  never a dismissal.
 - **Specify the deliverable shape** — a coverage line, findings in a strict ranked order,
-  claims examined and upheld (one line each, as coverage evidence), could-not-verify (an
+  claims examined and upheld (one line each, naming what upheld it), could-not-verify (an
   unstated gap reads as a pass), and any mutation results.
 - **Name the report's destination inside the prompt, and make the reviewer write it.** The
   report is a file the *reviewer* creates — `<phase-dir>/NN-EXTERNAL-REVIEW.md`, beside the
@@ -236,7 +251,7 @@ not intend. Cover all six axes, even when the answer is "no":
 | **Writing** | Its own report file, always — that is the deliverable (§6). Everything else read-only by default; if further writes are authorized, exactly which paths, and the restore obligation |
 | **Executing** | Which commands it may run — the test/typecheck/build commands, ad-hoc scripts, a REPL. Name the ones that are slow or destructive |
 | **Network + installs** | Almost always **no**: no `npm install` of new packages, no fetching. If the project forbids network at runtime, that prohibition is itself a claim to audit — say which |
-| **Its own tools** | Whether it may use web search, MCP servers, or subagents. Web search is usually worth allowing for CVEs and upstream library behavior; say if a finding sourced that way must cite the URL |
+| **Its own tools** | Whether it may use web search, MCP servers, or subagents. Web search is usually worth allowing for CVEs and upstream library behavior; say if a finding sourced that way must cite the URL. Where the target is public, its issue tracker and PR prose can state a defect outright — a finding lifted from there is a lookup, not a discovery, so require the URL and say it will be weighed as one |
 | **Effort budget** | Roughly how much time or how many findings you expect, and that depth beats breadth — one CONFIRMED finding is worth several THEORETICAL ones (credibility, never rank: impact alone decides rank) |
 
 **Default to read-only-plus-the-report.** Say so in the prompt as one sentence, not two
@@ -358,6 +373,7 @@ Report to the user, briefly:
 - The cover note itself, verbatim in one fenced block, ready to paste
 - Which directory the reviewer's session must be rooted at for the path in it to resolve
 - The brief's scope and the number of load-bearing claims the reviewer must adjudicate
+- The reviewer's model family, and plainly whether it is the same family that wrote the work
 - The capability line from §7 — every path the reviewer may write, the report file included
 - Where the report will land, and that they should check that file exists when the run ends
   rather than trusting the chat reply: the chat reply is a summary by design now
