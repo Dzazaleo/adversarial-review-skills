@@ -768,3 +768,51 @@ F8, F15) were a rule and its description drifting apart; the round then did it o
 any further instance survives is a question for the next reviewer, and it is claim 19 in the
 round-2 brief.
 
+### S-1 — Scoping note: the cadre-derived rules have never been externally reviewed
+
+Not a finding and not deferred work. A gap in what two rounds of review were *asked* to look at,
+recorded here because the next brief's scope section is written from this file.
+
+**What entered, and when.** Two commits below the round-1 audit base imported material from
+[VibeCodyH/code-review-cadre](https://github.com/VibeCodyH/code-review-cadre) and then rewrote it:
+
+- `50da1fe` "Adopt four rules from code review cadre" — all five skill files, +139/−15
+- `1100680` "Rewrite the cadre-derived passages in our own words" — +46/−44
+
+**Why both rounds missed it.** Both commits are ancestors of `b993d5e`, the base the round-1 brief
+pinned against, so relative to that audit range they were unchanged text. The round-1 brief's §4
+put "the unchanged parts of the two skills" out of scope for findings, and round 2's range
+(`8c1d737..9d892d0`) sits above them too. Neither reviewer declined to look; neither was asked.
+
+**Where the four rules live now**, verified 2026-08-21 — the wording is the repository's own, so a
+search for cadre's vocabulary will not find them:
+
+| Cadre idea | Current home |
+|---|---|
+| Spotting a defect then arguing it away | `adversarial-review-prompt/SKILL.md:195` (no sign-off on a nearby comment) **and** `review-adjudication/SKILL.md:477` (upheld list sampled, not transcribed) |
+| A non-review must not be adjudicated as clean | `review-adjudication/SKILL.md:121` |
+| A reviewer that stopped early approved nothing | `review-adjudication/SKILL.md:128` |
+| Agreement between reviewers that could read each other | `references/ledger-template.md:28-30`, rationale at `:44-48` |
+
+**One correction to the record.** An earlier reading of `50da1fe`'s commit subject treated `DEFER`
+as a rule that had been adopted and then lost, since the word appears in no skill file today. That
+was wrong, and wrong by the shortcut this repository exists to prevent: a rule was inferred from a
+commit subject without opening the diff. `DEFER` only ever appeared in one line of `HOW-IT-WORKS.md`
+describing what *cadre* calls that failure mode, and `1100680` rewrote the sentence. Nothing was
+lost. The commit subject was naming borrowed ideas in the source's vocabulary, not listing
+additions.
+
+Note also that the ledger header's **Reviewer isolation** line is cadre-derived, and the
+**Reviewer calibration** line that the work under review added sits directly beneath it and takes
+the same shape — a fact about what the report's *silence* may close, not about what its findings are
+worth (`ledger-template.md:44-48`). The new mechanism was modelled on an unaudited one.
+
+**What a future brief should do.** Scope `50da1fe..1100680` explicitly, or name those four passages
+as in-scope by `file:line`. The question worth putting is not whether the ideas are good — cadre
+measured them — but whether the rewrite that made them the repository's own preserved what made
+them work, and whether four rules from a tool answering a *different* question (which reviewers to
+seat, graded against keys mined from fix commits) transfer to this one intact.
+
+**Verdict: N/A — scoping note, not a finding.** **Disposition: carried into the next brief's scope
+section.** No action in this round.
+
