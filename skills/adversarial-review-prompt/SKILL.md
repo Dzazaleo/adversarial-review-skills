@@ -62,8 +62,10 @@ Resolve from `$ARGUMENTS` (ask only if genuinely ambiguous):
   product's name tells you nothing about whose eyes you are actually getting. Whether to proceed
   anyway is the user's call; leaving the lineage unnamed is not.
 - **Calibration** — whether this reviewer has ever been shown to find anything. Look for
-  `.adversarial-review/calibration/<reviewer-id>.md` under the project root, keyed on the model's
-  own identity rather than the product's name, and read its result and expiry. Missing, expired,
+  `.adversarial-review/calibration/<reviewer-id>.md` under the project root — keyed on what the
+  reviewer actually is (family, product and version, reasoning effort, and its own self-report
+  where it gave one), so the filename is a model slug or, failing that, built from the rest —
+  and read its result and expiry. Missing, expired,
   or `FAIL` is a normal state and never a reason to refuse: run the review anyway. It changes one
   thing, and you say it at hand-off (§10) — **an untested reviewer's findings still count, and
   its silence does not.** A clean report from it is inconclusive rather than an all-clear, its

@@ -8,7 +8,7 @@ Each trap holds a planted defect that decides the case — one, except `trap-unf
 which holds two and is scored on either — plus secondary signals that are recorded but do not gate
 the pass. The clean cases hold no planted defect.
 
-## Traps — the reviewer must report the primary defect
+## Traps — the reviewer must report a primary defect
 
 **Score the assertion, not the vocabulary.** Every identifier below already appears in the case
 itself, so a reviewer that merely re-narrates the work will contain all the right words while

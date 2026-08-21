@@ -76,7 +76,10 @@ From `$ARGUMENTS`, resolve:
   evidence standard is this skill's own, in both directions: Location · Mechanism · Trigger ·
   Consequence · Status.
 - **The reviewer's calibration record** — `.adversarial-review/calibration/<reviewer-id>.md` under
-  the project root, keyed on the model's own identity rather than the product's name. Read its
+  the project root. The record is keyed on what the reviewer actually is — model family, product
+  *and version*, reasoning effort, and its own self-report where it gave one — so a filename may
+  be a model slug (`gpt-5.6-codex.md`) or, where the model could not name its own version, built
+  from the rest (`openai-codex-cli-0.9.2-high.md`). Read its
   result, its expiry, **and the size of work it was earned on**; a record past its expiry date, or
   filed against a different identity — different family, product version, or reasoning effort — is
   stale and counts as missing. Record what you found in the ledger header beside the

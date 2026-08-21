@@ -727,3 +727,44 @@ are additionally carried as CNV-1 to CNV-3.
 
 Nothing in this ledger states whether this work is complete, correct, or ready to publish. That is
 the owner's call and it is deliberately not made here.
+
+---
+
+# Round 1 — correction, appended 2026-08-21
+
+The round above is closed and is left exactly as written. This block records a defect **introduced
+by one of its own fixes**, found before the fixes were handed to the next reviewer.
+
+### C-1 — The F14 fix left both consumers describing the key it replaced
+
+**Found by:** authoring the round-2 patch-verification brief, while writing the claim that the
+`FIX LATER`/lookup path still resolves. Not found by review.
+
+**What was wrong.** Q3 (§5) replaced the record's single self-reported key with four fields —
+family, product *and version*, reasoning effort, self-report — and added a filename fallback built
+from the product and version (`openai-codex-cli-0.9.2-high.md`). Both skills that *read* the record
+still said it is "keyed on the model's own identity **rather than the product's name**"
+(`review-adjudication/SKILL.md:79`, `adversarial-review-prompt/SKILL.md:65-66`). After the fix those
+sentences instructed the opposite of what the record and the protocol now say, and would have told
+an adjudicator that the very filename the protocol prescribes is the wrong kind of name.
+
+**Why it matters beyond the typo.** This is exactly the defect class the round-1 brief named as
+most likely — an amendment contradicting a rule elsewhere in the same document — reproduced while
+fixing a finding about a contradiction. Two rows in §3 (F5, F8) were dispositioned on the reasoning
+that the consuming skills must be kept in step with the record; that reasoning was applied to the
+size caveat and the severity note and not to the key itself.
+
+**Fixed 2026-08-21**, in the same act: both bullets now describe the four-field key and the
+filename fallback. `calibration/ANSWER-KEY.md:11` was corrected in the same sweep — its heading
+still read "the reviewer must report **the** primary defect" after Q1 made one trap hold two.
+
+**Verdict: CONFIRMED** · **Disposition: FIX NOW — ✔ executed 2026-08-21.** Supersedes nothing; it
+records a gap in the execution of F14 and Q1 rather than a wrong ruling. The rows for F14 and F3
+stand as written.
+
+**Standing note for round 2.** A fix sweep that updates a rule must sweep every consumer that
+*describes* that rule, not only those that act on it. Three of this round's fifteen findings (F5,
+F8, F15) were a rule and its description drifting apart; the round then did it once more. Whether
+any further instance survives is a question for the next reviewer, and it is claim 19 in the
+round-2 brief.
+
