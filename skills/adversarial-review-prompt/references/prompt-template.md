@@ -77,7 +77,11 @@ standard", "this obviously scales", cited versions and benchmarks. Same treatmen
 ## 3. Environment and how to run things
 
 A small table (repo root, OS and its relevant semantics, runtime, install command) plus the
-exact commands. The audit range goes here as **immutable commit IDs** («`abc1234^..def5678`,
+exact commands. «Every count in that table — how many files of what kind, how many lines — is
+**enumerated** with a command at authoring time, never described from recall. You have just read
+this work and you will remember its shape wrongly: the count you carry is of the files you thought
+about, and the tree holds the ones you did not. A reviewer that trusts an undercount audits half of
+what you meant to hand it and reports the coverage as complete.» The audit range goes here as **immutable commit IDs** («`abc1234^..def5678`,
 observed `N files, +A/−B` from `git diff --stat` run at authoring time — never "N commits ahead
 of `main`" or `main..HEAD`, which can be empty by the time the reviewer runs it; list any
 documentation-only commits above the range separately so `HEAD` being ahead reads as
@@ -237,6 +241,14 @@ conservatively — by not writing the file, which is the one output that matters
   prove nothing. You may write throwaway probes. Put them somewhere
   obviously temporary, commit nothing, leave «paths» as you found them, and report the tree
   clean when you finish."
+
+«If you tell the reviewer what the closing `git status` should look like, **produce that listing by
+running the command as you write this brief** — never from memory of what you changed. The tree
+almost always holds things you did not think of, this brief and its cover note among them once you
+save them, and a reviewer told "any other line is a finding against you" against a list you
+reconstructed will find your own untracked files sitting in it. Either paste the real current
+output and name which lines the reviewer is expected to add, or ask only that the tree be reported
+and judge it yourself.»
 
 ## 9. Anti-patterns — output that will be discarded
 

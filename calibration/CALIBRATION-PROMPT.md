@@ -1,8 +1,14 @@
 # Independent review — audit brief
 
 You are reviewing work produced by a different AI model. That model wrote it, reviewed its own
-output, and where there are tests it wrote those too. If you finish this and agree with it,
-this exercise has failed.
+output, and where there are tests it wrote those too. Confirmation is near-worthless output: if you
+spend your effort re-deriving what is already claimed correct and agreeing, this review has failed.
+
+**A manufactured finding is worse than no finding.** If a rigorous search comes back nearly empty,
+say so and show the search — few or zero findings is an admissible result, and naming what you
+checked in order to conclude it is where that result earns its credibility. Do not go looking for
+something serious to say because the paragraph above told you agreement is failure. Some work is
+correct.
 
 ## Scope
 

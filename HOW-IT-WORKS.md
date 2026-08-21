@@ -194,11 +194,11 @@ propagates.
 
 So the reviewer gets audited the same way everything else does: it is handed work with defects
 already planted in it, and you see whether it comes back with them. `calibration/` holds six small
-cases — four with one planted defect each, two clean. The traps are picked to be different from
+cases — four with a planted defect, two clean. The traps are picked to be different from
 each other rather than four flavours of the same thing: one plan built on a file that does not
-exist, one plan whose second stated goal no step delivers, one function whose test suite would
-stay green if the function returned `True` unconditionally, one service-role key inlined into a
-browser bundle. The two clean cases run the other way — they catch a reviewer that rates correct
+exist, one plan whose second stated goal no step delivers, one function whose comparison is
+truncated *and* whose test suite would stay green if the function returned `True` unconditionally,
+one service-role key inlined into a browser bundle. The two clean cases run the other way — they catch a reviewer that rates correct
 forty-line code as critical, because a reviewer where everything is critical has told you nothing
 either.
 
@@ -208,10 +208,13 @@ rather than once per review.
 Two things make it work at all, and both are borrowed from failures already recorded here. The
 cases are copied one at a time into an empty scratch directory, because a reviewer that can `ls`
 its way to the answer key is being told rather than measured — the same contamination the
-adjudicator already watches for between two reviewers, one level up. And the record is filed under
-the model's own identity, never the product's name, for the reason the brief already gives: a
-great many review tools are thin layers over a small pool of base models, and the label on the box
-does not tell you whose eyes you are getting.
+adjudicator already watches for between two reviewers, one level up. And the record is keyed on
+what the model actually is rather than the label on the box — family, product *and version*, and
+the reasoning effort the run used, with whatever the model says about itself recorded verbatim
+beside them. A great many review tools are thin layers over a small pool of base models, so the
+product name alone tells you nothing; and plenty of models cannot name their own served version at
+all, so keying on that string alone would fail closed on capable reviewers. Effort is in the key
+because the same model at high and low effort is not the same reviewer.
 
 What a pass buys is deliberately narrow, and both skills state it in the same words: **calibration
 governs the reviewer's silence, never its speech.** A finding is a claim with evidence attached and
@@ -728,15 +731,24 @@ those repositories.
 - **Calibration proves the reviewer is awake, not that it is good.** Six cases cannot show that a
   model will find *your* defect, and a clean review from a calibrated reviewer still is not
   evidence that your work is clean. All a pass establishes is that this reviewer can find a planted
-  defect of four distinct kinds and does not rate correct code as critical — which is the minimum
-  for its silence to carry any information at all, and no more than that.
+  defect of four distinct kinds and spared at least one of two correct artifacts — which is the
+  minimum for its silence to carry any information at all, and no more than that. Note the second
+  half is weaker than it sounds: the pass rule tolerates a serious false positive on one of the two
+  clean cases, so a pass is not evidence that the reviewer never cries wolf.
 - **The calibration corpus is public, which is a real weakness.** These cases sit in a public
   repository under a permissive licence, so a model trained after they were published may recognise
   them rather than find them, and the measurement quietly stops being evidence about unseen work.
-  There is no clean fix. The mitigation is that the cases are deliberately tiny and easy to
-  replace — swap in four traps drawn from defects your own project actually shipped, keep the
-  scoring rule, and the corpus becomes both private and better targeted. Treat `calibration/cases/`
-  as a worked example of the shape, not as a fixed benchmark.
+  There is no clean fix, and there is not really a mitigation either — only a direction, which is
+  worth stating honestly rather than dressing up. The direction is to swap in four traps drawn from
+  defects your own project actually shipped and keep the scoring rule, so the corpus becomes both
+  private and better targeted. What that asks of you is the whole original problem again: four
+  planted defects that are findable but not obvious, across four capabilities that do not collapse
+  into each other, two cases that are genuinely clean, and an answer key that is right. **Nothing in
+  this repository helps you do any of it** — there is no construction checklist, no way to check a
+  replacement is findable before you trust it, and no baseline to tell a bent ruler from a bad
+  reviewer. A malformed private corpus fails good reviewers indefinitely and looks exactly like a
+  working one. Treat `calibration/cases/` as a worked example of the shape, take the direction if
+  you have the appetite for it, and know that the default corpus decays as it is read.
 - **Nothing here is scored.** There is no eval suite, so a change to the brief or to the ledger
   rules cannot be shown to have made either better — only argued for. The projects listed in
   section 10 that hold themselves to recall and precision thresholds against planted-defect

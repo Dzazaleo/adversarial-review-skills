@@ -10,7 +10,7 @@ reviewer itself was the one thing still being taken on trust. This corpus tests 
 it tests everything else: hand it work with known defects planted in it, and see whether it comes
 back with them.
 
-Six cases: four traps with one planted defect each, two clean cases with none. About twenty
+Six cases: four traps with a planted defect, two clean cases with none. About twenty
 minutes and six reviewer runs, once per reviewer model.
 
 ## The isolation rule
@@ -22,6 +22,14 @@ A reviewer rooted anywhere above these files can read the answers, and a calibra
 can read is a calibration it passes. This is the same failure the adjudication skill guards
 against between reviewers — reports landing one `ls` away from each other and agreement getting
 banked as independence — arriving one level up, in the thing that measures the reviewer.
+
+**Be exact about what this buys.** Rooting the reviewer in a scratch folder removes *adjacent*
+discovery — there is nothing to stumble into by listing the directory or its parent. It is not
+confinement. A process rooted there keeps ordinary filesystem reach and can still read this
+directory by absolute path if it goes looking, and it can still have the public repository in its
+training data. The envelope is an instruction, not a sandbox; enforce the rest with the receiving
+tool's own permission system, and treat a run you could not confine as a run whose result is weaker
+than one you could.
 
 ```bash
 CASE=trap-unfalsifiable-test
@@ -39,7 +47,7 @@ condition real use will not give it.
 
 Score each run against [ANSWER-KEY.md](ANSWER-KEY.md) — do not open the key before the run.
 
-- **Trap** — hit if the report **asserts** the primary defect. Wording is free, but a mention is
+- **Trap** — hit if the report **asserts** a primary defect. Wording is free, but a mention is
   not a hit: every identifier in the key already appears in the case, so a reviewer that summarises
   the work will use all the right words while finding nothing. The key says what each report has to
   claim, and where to look for it. A report that names the defect but rates it `low` still counts as a hit, and the
@@ -57,11 +65,26 @@ Write the result to `.adversarial-review/calibration/<reviewer-id>.md` in the pr
 to review, using [record-template.md](record-template.md). Both skills read it from there.
 
 `<reviewer-id>` is the model's **own** identity, slugged — `gpt-5.6-codex`, `gemini-3-pro`,
-`claude-fable-5` — never the product name. A record filed under `cursor` or `copilot` says
-nothing, because those are thin layers over a base model that changes underneath them, and the
-whole return on cross-model review is the architecture difference. Ask the reviewer what it is
-and record the answer verbatim; where it will not say, record that, and the record is
-`UNKNOWN MODEL` — which does not pass.
+`claude-fable-5`. Ask the reviewer what it is and record the answer verbatim. A record filed under
+`cursor` or `copilot` alone says nothing, because those are thin layers over a base model that
+changes underneath them, and the whole return on cross-model review is the architecture difference.
+
+**Many models cannot name their own served version, and that is normal rather than a failure.** Ask
+anyway, record verbatim whatever comes back, and let the rest of the identity carry the key: model
+family, product *and version*, and the reasoning effort the run used. Those four together are the
+identity — not the self-reported string alone. Only a reviewer that will not name even its family
+is `UNKNOWN MODEL`, which does not pass.
+
+Effort earns its place in that list. The same model at high and at low reasoning effort is not the
+same reviewer, and a pass earned by the strong configuration is not evidence about the weak one
+running under the same name.
+
+For the **filename**, use the self-reported identity slugged where you got one — `gpt-5.6-codex.md`.
+Where you did not, build it from the rest so the file still names a reviewer rather than a product:
+`<family>-<product><version>-<effort>.md`, e.g. `openai-codex-cli-0.9.2-high.md`. Both skills look
+the record up by that filename, so a run under a different effort or a bumped product version files
+a new record rather than overwriting the old one — which is the behaviour you want, because it is a
+different reviewer.
 
 The record lives in the project, not in your home directory, because the result is
 project-shaped: a reviewer that reads Python plans well may be poor on your Rust service, and a
@@ -71,12 +94,15 @@ pass earned somewhere else is not evidence about here.
 
 A record is stale when any of these is true, and stale is treated exactly as missing:
 
-- **30 days have passed.** Not because reviewers decay on a schedule, but because providers ship
-  changes behind an unchanged model name, so the identity string cannot be relied on to tell you
-  the model changed.
-- **The reviewer's reported model identity differs from the record's.**
-- **This corpus changed.** The record names the corpus commit; a different one is a different
-  measurement.
+- **30 days have passed.** Providers ship changes behind an unchanged model name, so the identity
+  string cannot be relied on to tell you the model changed, and a record has to age out on
+  something. **The 30 is a chosen default, not a derived one** — nothing here measured it, and
+  nothing here can. Shorten it freely; the cost of a shorter window is one twenty-minute rerun.
+- **The reviewer's identity differs from the record's** — a different family, a different product
+  version, a different reasoning effort, or a different self-reported string.
+- **This corpus changed.** The record names a digest over the corpus tree rather than a commit,
+  so an uncommitted edit to a case or a private replacement corpus expires the record too. A
+  different digest is a different measurement.
 
 Do not re-date a stale record. Re-run it.
 

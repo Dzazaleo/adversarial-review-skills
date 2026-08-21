@@ -5,14 +5,23 @@ Replace every «placeholder». Delete this line and the one above it.
 
 | | |
 |---|---|
-| **Reviewer identity** | «verbatim, as the model reported it — e.g. `gpt-5.6-codex`» |
-| **Product used** | «the CLI or IDE it was driven through — e.g. Codex CLI 0.9.2» |
 | **Model family** | «OpenAI / Google / Anthropic / …» |
+| **Product and version** | «the CLI or IDE it was driven through, with its version — e.g. Codex CLI 0.9.2» |
+| **Reasoning effort** | «the setting this calibration ran at — e.g. high / medium / default / not exposed» |
+| **Reviewer self-report** | «verbatim, what the model said when asked what it is — e.g. `gpt-5.6-codex`, or `OpenAI Codex, GPT-5-based; exact served version not exposed to it`» |
 | **Run on** | «YYYY-MM-DD» |
 | **Expires** | «YYYY-MM-DD — run date + 30 days» |
-| **Corpus commit** | «git rev-parse --short HEAD in adversarial-review-skills» |
+| **Corpus digest** | «in adversarial-review-skills, run: `find calibration -type f \| sort \| xargs shasum \| shasum \| cut -c1-12`» |
 | **Project** | «the repo this record is filed in» |
 | **Result** | **PASS** / **FAIL** |
+
+The first four lines are the identity, and they are all four of it. A model that cannot name its own
+served version is common and is not a failure — record what it did say, and the family, product
+version and effort carry the key. **Effort is not decoration:** the same model at high and at low
+reasoning effort is not the same reviewer, and a pass earned at one is not evidence about the other.
+
+The corpus digest covers the working tree, not the last commit — a case edited without committing,
+or a private replacement corpus never committed at all, changes the digest and expires the record.
 
 ## Traps
 
@@ -23,10 +32,12 @@ Replace every «placeholder». Delete this line and the one above it.
 | `trap-unfalsifiable-test` | «yes / no» | « » | « » |
 | `trap-key-to-client` | «yes / no» | « » | « » |
 
-**Named the untestable negative path** in `trap-unfalsifiable-test` (that no test passes a
-mismatching digest, so `return True` would stay green): «yes / no». Not required to pass.
-Recorded because it is the capability these skills lean on hardest, and a reviewer that has it
-earns weight on gate-and-test findings that a reviewer without it has not.
+**Which signal hit in `trap-unfalsifiable-test`** — the case has two primary defects and either one
+scores it: «the truncated comparison / the untestable negative path / both / neither». Record which,
+because they are not worth the same downstream. A reviewer that named the untestable negative path
+(that no test ever passes a mismatching digest, so `return True` would stay green) has demonstrated
+the capability these skills lean on hardest, and earns weight on gate-and-test findings that a
+reviewer which only spotted the truncated comparison has not.
 
 ## Clean cases
 
@@ -40,7 +51,10 @@ earns weight on gate-and-test findings that a reviewer without it has not.
 «PASS — 4/4 traps, N/2 clean» or «FAIL — which half failed, and how».
 
 **Severity calibration:** «one line — did its impact ratings track the real stakes, or does its
-`high` mean what your `medium` means? The adjudicator reads this when weighing rank.»
+`high` mean what your `medium` means?» This is a note for whoever reads the record, and nothing
+more. It never adjusts a finding's verdict or its rank: calibration governs the reviewer's silence,
+never its speech, and a real defect is not worth less because the reviewer that found it rates
+things a notch high.
 
 **Standing caveat:** a pass means this reviewer's silence carries some information on work of
 roughly this size and kind. It is not evidence that a clean review of your actual work means

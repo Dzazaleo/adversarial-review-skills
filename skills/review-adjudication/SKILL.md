@@ -9,7 +9,7 @@ allowed-tools:
   - Grep
   - Glob
   - Bash
-  - Task
+  - Agent
 ---
 
 <objective>
@@ -77,9 +77,17 @@ From `$ARGUMENTS`, resolve:
   Consequence · Status.
 - **The reviewer's calibration record** — `.adversarial-review/calibration/<reviewer-id>.md` under
   the project root, keyed on the model's own identity rather than the product's name. Read its
-  result and its expiry; a record past its expiry date, or filed against a different model
-  identity, is stale and counts as missing. Record what you found in the ledger header beside the
+  result, its expiry, **and the size of work it was earned on**; a record past its expiry date, or
+  filed against a different identity — different family, product version, or reasoning effort — is
+  stale and counts as missing. Record what you found in the ledger header beside the
   isolation line — it is the same kind of fact, and it is read for the same purpose.
+
+  The record's own caveat is part of what you read, not boilerplate under it: a pass is evidence
+  about work of roughly the corpus's size and kind — six cases of one to three small files. Where
+  the review you are adjudicating covered something far larger, that gap is stated in the header
+  and again at hand-off. It does not make the record worthless and it is not a reason to discount
+  a single finding; it bounds what the reviewer's *silence* is entitled to close, which is the only
+  thing calibration was ever buying.
 - **The round.** If a ledger already exists at the target path, check whether its last round is
   *closed*. Closed is defined over obligations, not cell presence: every numbered row AND every
   auxiliary entry (process, CNV, prior-review disagreement, re-opened upheld claim) carries both a
@@ -130,8 +138,9 @@ Four checks before it earns a ledger:
   allowed to close — every load-bearing claim on its upheld list is a CNV entry rather than
   coverage, and a report with no findings at all is inconclusive, ruled the same as a report that
   turned out not to be a review. Say it in the header and in the hand-off, and point once at
-  `calibration/README.md` in the skills repo: 20 minutes, six cases, and the next review's silence
-  starts meaning something. Do not raise it twice.
+  the calibration corpus — https://github.com/Dzazaleo/adversarial-review-skills/tree/main/calibration
+  — 20 minutes, six cases, and the next review's silence starts meaning something. It is not
+  installed alongside the skill, so give the URL rather than a bare path. Do not raise it twice.
 
 ## 2. Enumerate first, judge nothing yet
 
@@ -175,6 +184,16 @@ argument for its severity, its suggested fix, and every phrase carrying confiden
 claim rather than grading the argument. Where a field is genuinely absent from the report, the
 card says `not stated` — and that absence is itself worth seeing early, because a finding with no
 stated trigger is one nobody can reproduce yet.
+
+**Most reports will not hand you a clean separation, so have a rule ready for the mixed field.**
+Nothing obliges a reviewer to keep its argument out of Mechanism, and in practice a good one does
+not: the evidence that convinced it, a citation, or the case for severity arrives *inside* the very
+field you are told to copy verbatim. Both instructions cannot be obeyed on that field. When it
+happens — and expect it on the highest-impact findings, where the reviewer had the most to argue —
+**copy the claim clause verbatim, and replace the argument with a pointer to the report line it
+came from** (`— argument at :131`). Never paraphrase it: a paraphrase silently edits what you are
+about to verify, which is worse than either instruction taken alone. The pointer keeps the argument
+findable for step 5's re-read while keeping it off the card you check against.
 
 The cards are what step 5 works from. Cut them here, while you are still transcribing and before
 any ruling exists, because a card cut later is a card cut by someone who has already decided.
@@ -234,10 +253,19 @@ record, on its own line, whether it changes the ruling and which way.
 
 You have already read that argument once, in step 1. The point of the card is not that you are
 blind to it — you are not — but that the check is aimed at the claim instead of at the case made
-for it, and that your expected result is on paper before the evidence arrives. The pre-registration
-is what carries the weight here. It is the same rule the ledger template already applies to every
-re-verification, for the same reason: an expectation recorded before the run surfaces a surprise
-mechanically, whereas an expectation recalled afterwards reshapes itself to fit whatever came back.
+for it, and that your expected result is on paper before the evidence arrives. It is the same rule
+the ledger template already applies to every re-verification, for the same reason: an expectation
+recorded before the run surfaces a surprise mechanically, whereas an expectation recalled
+afterwards reshapes itself to fit whatever came back.
+
+Be exact about what pre-registration is worth, because it is easy to claim more. It works on *you*,
+in the moment, and only if you actually write the expectation first: the surprise has to land
+somewhere it cannot be quietly re-remembered. What it is not is proof to a later reader. The
+finished ledger records an expectation and an output but nothing that establishes their order — no
+timestamp, no append-only event, and the current round is deliberately editable so it can be
+backfilled. A reader six months from now cannot distinguish a pre-registration from a well-written
+reconstruction, and should not be told otherwise. Write it first because it changes what you
+notice, not because the document will vouch for you.
 
 What that guards against is real and runs in two directions. A well-argued false finding earns a
 `CONFIRMED` it did not deserve; a finding stated flatly, in poor English, or by a reviewer whose
@@ -289,6 +317,20 @@ the reviewer, whichever way it comes out:
   or no line found — with the query beside it, and score only a doubt *you* ruled absent as
   independent corroboration. A hand-off that says "held back", "withheld" or "excluded from the
   brief" is asserting what its author was not positioned to know: unverified until you check.
+
+  **The residual doubts are the small channel. The brief's load-bearing claims list is the large
+  one, and it is the one that will actually be carrying the author's suspicions.** Every claim
+  there with a pointed sub-question — "is 30 derived from anything, or chosen because it sounds
+  like a period?", "does the loud error crowd out the quiet gap?" — states the suspected defect
+  outright and directs the reviewer at it. A reviewer that comes back agreeing has not
+  independently found anything; it has answered a question, which is what it was asked to do and
+  is not its failure. So run the same probe over **every finding**, not just the doubts: query the
+  brief and cover note with that finding's own identifiers, and record for each whether the brief
+  had already said it. Then rule the echoes from primary sources, scoring the reviewer's agreement
+  as nothing. Put the tally in the ledger — how many findings were echoes, how many partial, how
+  many were free to surprise. That last number is what the report's evidentiary weight actually
+  rests on, and a report whose independent findings are all confirmed has earned more than its
+  count of findings suggests.
 - **The same discount applies between reviewers.** Two reports agreeing is corroboration only if
   the second could not read the first. Ours all land in one directory, so by default it could: the
   brief, the earlier report and this ledger sit one `ls` away from a reviewer rooted there. For a
@@ -333,6 +375,14 @@ Then three escalation rules:
   code, the reviewer called it serious, and you are about to write down that it was wrong. Where
   no subagent is available, the fallback is the one already above — `COULD NOT DETERMINE`, with
   the check named.
+
+  **Carry the write boundary into the delegation, because nothing else will.** A spawned subagent
+  does not inherit this skill — it never sees the rule at §7 that keeps this workflow read-only,
+  and a general-purpose agent left unrestricted holds every tool its parent session has. So spawn
+  it read-only where the tool grants let you, and say the boundary in the delegation message
+  itself: it is inspecting the code to establish whether a mechanism holds, and it edits nothing,
+  runs nothing that writes, and reports back in prose. A second opinion that modifies the target
+  while forming itself has destroyed the thing both of you were reading.
 - Where your refutation rests on a hypothesis you formed before reading the evidence, get an
   independent check that is blind to that hypothesis rather than arguing for it.
 
@@ -418,7 +468,8 @@ Report to the user, briefly:
   means much — in both cases say what the next run should cover.
 - Whether this reviewer had a passing calibration record, and if not, exactly what that cost:
   which claims are CNV entries rather than coverage, and that nothing it cleared is carrying
-  forward into the next brief. One sentence, and one pointer to `calibration/README.md`. This is
+  forward into the next brief. One sentence, and one pointer — the URL above, not a bare
+  `calibration/README.md`, which resolves to nothing from an installed skill. This is
   reported, never argued — the user chose the reviewer they had.
 - How many upheld claims you sampled and how many you re-opened.
 - Where a reviewer's figures failed to reproduce, or two reviewers disagreed — that bears on how

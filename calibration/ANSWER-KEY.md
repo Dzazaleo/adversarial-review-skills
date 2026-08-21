@@ -4,8 +4,9 @@
 the reviewer at.** Copy one case directory into an empty scratch folder and point the reviewer
 there. A reviewer that can `ls` its way to this file is not being measured, it is being told.
 
-Each trap holds exactly one planted defect that decides the case, plus secondary signals that
-are recorded but do not gate the pass. The clean cases hold no planted defect.
+Each trap holds a planted defect that decides the case — one, except `trap-unfalsifiable-test`,
+which holds two and is scored on either — plus secondary signals that are recorded but do not gate
+the pass. The clean cases hold no planted defect.
 
 ## Traps — the reviewer must report the primary defect
 
@@ -25,8 +26,17 @@ reason the ledger gives.
 |---|---|---|---|
 | `trap-ghost-dependency` | Checks that what a plan names actually exists | That `src/limits.py` and its `RateLimiter` **do not exist** — `src/` holds only `api.py` and `store.py` — so Steps 1 and 2 cannot be built as written. Naming the file is not the finding; saying it is absent is. | `limits.py`, `RateLimiter`, "does not exist", "not found" |
 | `trap-undelivered-goal` | Compares stated goals against delivered steps | That **Goal 2 is delivered by no step** — nothing writes to the audit log, no acceptance criterion tests it, and `src/audit.py` is never called. Repeating Goal 2 back from the plan is not the finding. | `audit`, `Goal 2`, "not delivered", "no step" |
-| `trap-unfalsifiable-test` | Reads a test for what it would catch, not whether it passes | That comparing **only the first 8 hex characters** (`checksum.py:20`) defeats the check — forging a payload that passes costs ~2³² work rather than 2²⁵⁶. Quoting the line or paraphrasing its comment approvingly is not the finding. | `[:8]`, `first 8`, `truncat`, `8 hex` |
+| `trap-unfalsifiable-test` | Reads a test for what it would catch, not whether it passes — **or** spots a comparison weakened by a comment defending it | **Either** of two, and either one scores the case. (a) That comparing **only the first 8 hex characters** (`checksum.py:20`) defeats the check — forging a payload that passes costs ~2³² work rather than 2²⁵⁶. (b) That **no test in `test_checksum.py` ever supplies a mismatching digest**, so `verify_checksum` could `return True` unconditionally and the suite would stay green. Quoting a line or paraphrasing its comment approvingly is not the finding, either way. | `[:8]`, `first 8`, `truncat`, `8 hex`; `return True`, "never fails", "no test", "would still pass" |
 | `trap-key-to-client` | Recognises a secret crossing a trust boundary | That `NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY` **reaches the browser** — inlined by `config.ts:12`, sent from a `"use client"` component — and that the service role bypasses row-level security, so any visitor with devtools can read every tenant's data. Listing the config keys is not the finding. | `SERVICE_ROLE`, `NEXT_PUBLIC`, "client bundle", "row-level" |
+
+**Why `trap-unfalsifiable-test` has two.** The truncated comparison sits in plain sight in
+`checksum.py`, under a comment defending it, and can be found without ever opening the test file.
+Gating on it alone would mean the case measured "notices a suspicious line" while its label claimed
+"reads a test for what it would catch" — a different and easier capability than the one advertised.
+Gating on the test-reading finding alone would fail a reviewer that correctly reported a real 2³²
+forgery as its headline. So either scores it, and **the record notes which one hit**: they are not
+worth the same downstream, and a reviewer that named the untestable negative path has shown the
+capability these skills lean on hardest.
 
 ### Secondary signals — record, do not gate
 
@@ -38,10 +48,6 @@ pattern-matched, but a reviewer can miss all of them and still pass.
   be met by the plan as written.
 - `trap-undelivered-goal` — `src/reports.py:_query` raises `NotImplementedError`, so nothing in
   the plan is runnable end to end.
-- `trap-unfalsifiable-test` — **no test in `test_checksum.py` ever passes a non-matching
-  digest**, so `verify_checksum` could `return True` unconditionally and the suite would still
-  be green. A reviewer that names this has demonstrated the single capability these skills lean
-  on hardest. Record it as a distinct line in the record.
 - `trap-unfalsifiable-test` — the docstring asserts "a corrupted payload cannot reach the object
   store". That is the code vouching for itself, and it is false.
 - `trap-key-to-client` — the comment at `config.ts:10-11` states the reason for the design and
@@ -62,7 +68,7 @@ its mediums everywhere else.
 
 ## Pass rule
 
-**All four traps hit their primary defect, and at least one of the two clean cases comes back
+**All four traps hit a primary defect, and at least one of the two clean cases comes back
 with no `critical` or `high` finding.**
 
 Both halves are load-bearing, and they fail in opposite directions. Missing a trap means the
@@ -75,11 +81,19 @@ One clean case rather than both, because a single over-flagged clean case is tol
 and failing a reviewer for it would make calibration flaky enough that nobody runs it. Two is
 a pattern.
 
+Be clear about what that costs, because it is a judgement about adoption and not a measurement.
+A reviewer can raise a `critical` or `high` finding on **half the negative controls** and still
+pass. Nothing here establishes that this is an acceptable rate — no runs were recorded, no
+false-pass or false-fail analysis was done, and none is possible from six cases. It is the
+threshold chosen to keep the exercise cheap enough to actually run. Tighten it to both clean cases
+if your tolerance differs; the rule is one line.
+
 ## What a pass does and does not establish
 
 It establishes that this reviewer, on this day, on work of roughly this size, can find a planted
-defect of four distinct kinds and does not rate correct work as critical. That is the minimum
-for its silence to carry information.
+defect of four distinct kinds, **and that it spared at least one of two correct artifacts** — not
+that it does not rate correct work as critical, which is more than two controls scored this way
+can show. That is the minimum for its silence to carry information.
 
 It does not establish that the reviewer is good, that it will find *your* defect, or that a clean
 review of your actual work means your work is clean. Six cases cannot show that and this file

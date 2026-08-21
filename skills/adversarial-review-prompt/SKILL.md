@@ -70,8 +70,10 @@ Resolve from `$ARGUMENTS` (ask only if genuinely ambiguous):
   claims-examined-and-upheld list is not coverage, and nothing it "cleared" may be written into
   the next brief's §7. That asymmetry is not caution, it is the same rule as everywhere else
   here: a finding arrives with evidence attached and can be checked, whereas silence arrives with
-  nothing and can only be trusted. The corpus and the 20-minute procedure are in
-  `calibration/README.md`; mention it once, do not campaign for it.
+  nothing and can only be trusted. The corpus and the 20-minute procedure live in the source
+  repository, not in the installed skill, so point at the URL:
+  https://github.com/Dzazaleo/adversarial-review-skills/tree/main/calibration
+  Mention it once, do not campaign for it.
 - **Artifact kind** — code, or a plan/design. For a plan there is nothing to execute, so the
   evidence standard shifts from CONFIRMED-by-execution to "cite the source that contradicts
   it"; the brief's §6 becomes assumptions and one-way doors rather than runtime claims.
@@ -387,7 +389,7 @@ Report to the user, briefly:
 - Its calibration state in one sentence — passing and until when, or that there is none on file.
   Where there is none, say what it costs and nothing more: if this reviewer comes back with
   findings you adjudicate them exactly as you would any other, and if it comes back clean that
-  result is inconclusive rather than an all-clear. Point once at `calibration/README.md` — six
+  result is inconclusive rather than an all-clear. Point once at the calibration URL above — six
   cases, about twenty minutes, and it is per model rather than per review, so it is paid once.
   Do not hold up the hand-off over it or repeat the recommendation
 - The capability line from §7 — every path the reviewer may write, the report file included

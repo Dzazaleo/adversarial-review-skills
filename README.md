@@ -123,6 +123,11 @@ cp -r adversarial-review-skills/skills/review-adjudication        ~/.claude/skil
 
 For one project instead of everywhere, use `.claude/skills/` inside that project.
 
+**Keep the clone.** Those two commands install the skills and nothing else — the calibration corpus
+below is a sibling directory, not part of either skill, so it does not come with them. The skills
+know this and point at the corpus by URL rather than by a path that would not resolve, but the
+twenty-minute procedure needs the actual case files, and the clone is where they are.
+
 Restart Claude Code. You don't need to remember a command — just say what you want:
 
 > "Get an independent review of the payment module from Codex."
