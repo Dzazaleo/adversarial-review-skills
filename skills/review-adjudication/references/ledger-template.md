@@ -28,6 +28,10 @@ review, «what it actually is»»
 **Reviewer isolation:** «which earlier artifacts this reviewer could read — the prior report, this
 ledger, another reviewer's findings — and where. Same directory means yes. "First reviewer, nothing
 to see" where that is the case»
+**Reviewer calibration:** «PASS, run «date», expires «date», corpus «commit» — from
+`.adversarial-review/calibration/«reviewer-id».md`» / «none on file» / «stale — run «date», expired
+«date»» / «FAIL». «Where it is anything but PASS, add: findings adjudicated normally; upheld claims
+recorded as CNV, not coverage»
 **Upheld claims:** «S» sampled of «T» listed · «K» re-opened as `U-N`
 **Findings in: «N» · Rows out: «N» · +«K» process, +«M» CNV, +«D» prior-review disagreements
 ruled** «numbered counts must match; if merged, say which IDs; state each auxiliary count even
@@ -37,9 +41,11 @@ when it is zero»
 The envelope line matters. The brief's permissions are an instruction, not a sandbox — if the
 reviewer wrote outside its report file, that is worth knowing before its findings are weighed.
 
-The two lines above it matter for the opposite reason — they say how much the report is entitled to
-settle. A partial report has not upheld the claims it never reached, and a reviewer that could read
-the previous one is not a second opinion on anything they agree about.
+The three lines above it matter for the opposite reason — they say how much the report is entitled
+to settle. A partial report has not upheld the claims it never reached; a reviewer that could read
+the previous one is not a second opinion on anything they agree about; and a reviewer never shown
+to be able to find a planted defect has not cleared anything by staying quiet. None of the three
+touches what its findings are worth — only what its silence is worth.
 
 ## 1. Situation in one paragraph
 
@@ -56,6 +62,10 @@ The section that gives every ruling below its weight. For each thing you checked
 - The command, verbatim, and its real output — not a paraphrase and not a summary
 - Which finding it bears on
 - Whether the reviewer's own figures reproduced, where it gave any, exactly
+- **The ruling you reached checking the claim card**, before re-reading the reviewer's argument for
+  that finding — then, on its own line, whether re-reading it moved the ruling and which way. Most
+  rows read "unchanged", and that is the point: the exceptions are where the report did the
+  persuading rather than the evidence, and they are worth being able to find later
 
 Mark every check whose result contradicted its pre-stated expectation. A re-verification section
 containing only confirmations of what you already believed is self-review with extra steps.

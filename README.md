@@ -90,6 +90,11 @@ you want to say it's wrong, bring evidence back. Reading the code and feeling re
 evidence — least of all when the reassuring comment was written by the thing under review.
 - **Claims the reviewer says it checked get spot-checked.** If it signed one off by quoting a
 comment or a test name, it didn't check it, and that claim goes back on the pile.
+- **It checks the claim, not the case made for it.** Every finding is cut down to what it actually
+asserts — where, what breaks, when, and what it costs — and the check is aimed at that, with the
+expected result written down before anything is run. Only afterwards does it re-read the reviewer's
+argument and record whether that changed anything. Otherwise the ruling is partly a verdict on how
+well the reviewer writes, which is a fact about the reviewer and not about your code.
 - **Two reviewers agreeing only counts if the second couldn't see the first.** Reports land in
 the same folder, so usually it could. The skill records what each reviewer was able to read and
 discounts the overlap.
@@ -165,6 +170,26 @@ are what make the whole exercise worth anything.
   > said go. It writes your go-ahead into the ledger first, then updates each row as the fix
   > lands, so the file never claims something is still queued after it shipped.
 
+## Calibrate the reviewer once
+
+When a review comes back clean, you can't tell whether the work is sound or the reviewer never
+really looked. The two produce the same file — and the empty one is worse than running nothing,
+because it gets recorded as covered and the next brief tells the next reviewer to skip it.
+
+[calibration/](calibration/) fixes that the same way everything else here works: hand the reviewer
+work with defects already planted in it and see whether it comes back with them. Six small cases —
+four traps, two clean — about twenty minutes, once per model rather than once per review. Copy a
+case into an empty folder, point the reviewer at it, score it against the key.
+
+It buys one specific thing, and both skills say so in the same words: **calibration governs the
+reviewer's silence, never its speech.** An untested reviewer's findings are adjudicated exactly
+like anyone else's — a real bug doesn't stop being real because the model that found it was never
+tested. What it can't do is *close* anything: its "I checked these and they're fine" list is
+recorded as unverified rather than as coverage, and a report with no findings counts as
+inconclusive instead of an all-clear.
+
+Neither skill refuses to run without it. They just tell you once what you're missing.
+
 ## See it actually working
 
 The [examples/](examples/) folder holds real output — the skills pointed at *themselves*. Two
@@ -196,6 +221,13 @@ Four of the rules here came from reading
 [code review cadre](https://github.com/VibeCodyH/code-review-cadre), which tackles a different
 problem — picking which reviewers to use — but had already measured failures these skills
 weren't guarding against. Details in [HOW-IT-WORKS.md](HOW-IT-WORKS.md#borrowed-from-code-review-cadre).
+
+The calibration corpus follows [cross-model-review](https://github.com/med95Albert/cross-model-review),
+which makes the case that a reviewer has to be shown trustworthy rather than assumed so, and
+[validity-audit](https://github.com/klmtseng/validity-audit), which puts it as *has the checker
+demonstrated that it can fail when it should?* Ruling on the claim before reading the argument
+comes from [refute](https://github.com/Jmosier69/refute). Details and what was deliberately not
+taken: [HOW-IT-WORKS.md](HOW-IT-WORKS.md#borrowed-from-the-wider-adversarial-review-field).
 
 ## License
 

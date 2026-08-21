@@ -61,6 +61,17 @@ Resolve from `$ARGUMENTS` (ask only if genuinely ambiguous):
   it, and a great many review tools are thin layers over a small pool of base models, so the
   product's name tells you nothing about whose eyes you are actually getting. Whether to proceed
   anyway is the user's call; leaving the lineage unnamed is not.
+- **Calibration** — whether this reviewer has ever been shown to find anything. Look for
+  `.adversarial-review/calibration/<reviewer-id>.md` under the project root, keyed on the model's
+  own identity rather than the product's name, and read its result and expiry. Missing, expired,
+  or `FAIL` is a normal state and never a reason to refuse: run the review anyway. It changes one
+  thing, and you say it at hand-off (§10) — **an untested reviewer's findings still count, and
+  its silence does not.** A clean report from it is inconclusive rather than an all-clear, its
+  claims-examined-and-upheld list is not coverage, and nothing it "cleared" may be written into
+  the next brief's §7. That asymmetry is not caution, it is the same rule as everywhere else
+  here: a finding arrives with evidence attached and can be checked, whereas silence arrives with
+  nothing and can only be trusted. The corpus and the 20-minute procedure are in
+  `calibration/README.md`; mention it once, do not campaign for it.
 - **Artifact kind** — code, or a plan/design. For a plan there is nothing to execute, so the
   evidence standard shifts from CONFIRMED-by-execution to "cite the source that contradicts
   it"; the brief's §6 becomes assumptions and one-way doors rather than runtime claims.
@@ -373,6 +384,12 @@ Report to the user, briefly:
 - Which directory the reviewer's session must be rooted at for the path in it to resolve
 - The brief's scope and the number of load-bearing claims the reviewer must adjudicate
 - The reviewer's model family, and plainly whether it is the same family that wrote the work
+- Its calibration state in one sentence — passing and until when, or that there is none on file.
+  Where there is none, say what it costs and nothing more: if this reviewer comes back with
+  findings you adjudicate them exactly as you would any other, and if it comes back clean that
+  result is inconclusive rather than an all-clear. Point once at `calibration/README.md` — six
+  cases, about twenty minutes, and it is per model rather than per review, so it is paid once.
+  Do not hold up the hand-off over it or repeat the recommendation
 - The capability line from §7 — every path the reviewer may write, the report file included
 - Where the report will land, and that they should check that file exists when the run ends
   rather than trusting the chat reply: the chat reply is a summary by design now

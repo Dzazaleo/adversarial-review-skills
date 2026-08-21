@@ -180,6 +180,55 @@ finding gets re-established from scratch. That rule exists because it happened: 
 fourteen findings in the self-audit were seeded this way, and all four had to be proved again on
 primary evidence alone.
 
+### Knowing whether the reviewer can find anything
+
+Everything above demotes somebody's assertion to a claim and asks for evidence. The reviewer
+itself was the last thing still being taken on trust.
+
+The gap shows up when a review comes back clean. Two very different situations produce that same
+file — the work is sound, or the reviewer never really looked — and from the outside they are
+identical. The second one is worse than having run nothing, because a clean report gets written
+into the ledger as coverage, and the next brief's "ground already walked" section then tells the
+*next* reviewer not to bother with everything the first one supposedly cleared. One lazy run
+propagates.
+
+So the reviewer gets audited the same way everything else does: it is handed work with defects
+already planted in it, and you see whether it comes back with them. `calibration/` holds six small
+cases — four with one planted defect each, two clean. The traps are picked to be different from
+each other rather than four flavours of the same thing: one plan built on a file that does not
+exist, one plan whose second stated goal no step delivers, one function whose test suite would
+stay green if the function returned `True` unconditionally, one service-role key inlined into a
+browser bundle. The two clean cases run the other way — they catch a reviewer that rates correct
+forty-line code as critical, because a reviewer where everything is critical has told you nothing
+either.
+
+Passing means all four traps and at least one clean case. About twenty minutes, once per model
+rather than once per review.
+
+Two things make it work at all, and both are borrowed from failures already recorded here. The
+cases are copied one at a time into an empty scratch directory, because a reviewer that can `ls`
+its way to the answer key is being told rather than measured — the same contamination the
+adjudicator already watches for between two reviewers, one level up. And the record is filed under
+the model's own identity, never the product's name, for the reason the brief already gives: a
+great many review tools are thin layers over a small pool of base models, and the label on the box
+does not tell you whose eyes you are getting.
+
+What a pass buys is deliberately narrow, and both skills state it in the same words: **calibration
+governs the reviewer's silence, never its speech.** A finding is a claim with evidence attached and
+gets checked on that evidence no matter who raised it — an untested reviewer's findings are
+adjudicated exactly like anyone else's, and downgrading a real defect because of missing paperwork
+would just be the dismissal reflex of section 6 in better clothes. What an uncalibrated reviewer
+cannot do is *close* anything: its upheld-claims list is recorded as unverified rather than as
+coverage, and a report with no findings is inconclusive rather than an all-clear.
+
+That is exactly the treatment a truncated report already gets — findings stand, silence covers
+nothing — which is the argument for the rule. A reviewer never shown to be able to find a defect
+is, as far as its quiet is concerned, a reviewer that stopped before it started.
+
+Neither skill refuses to run without a record. Running an uncalibrated reviewer is usually the
+right call, because the alternative is running nothing. Both just say once, plainly, what the
+missing record costs, and then get on with it.
+
 ---
 
 ## 3. What the reviewer is allowed to do
@@ -388,6 +437,58 @@ either; it is reopened, and it goes to you.
   there rather than in the code). *Resolving a machine-checkable finding by reasoning is an unforced
   error. Resolving an owner-judgement finding yourself is taking a call that is not yours.*
 
+### Ruling on the claim, not on the case made for it
+
+Each finding arrives as two things fused together: a claim about the code, and an argument for that
+claim. Only the first is being adjudicated. The second was written by a model specifically asked to
+be hostile, and it is doing a second job besides carrying information — it is trying to convince.
+
+So the two get separated while the adjudicator is still only transcribing. As every finding is
+copied into the ledger skeleton, its *claim card* is cut alongside it — Location, Mechanism,
+Trigger, Consequence, and the impact the reviewer assigned, verbatim, and nothing else. The
+reasoning, the evidence, the suggested fix and every confident phrase stay behind. Re-verification
+then runs against the card: write down what you expect the check to show, run it, record the
+result — and only then re-read what the reviewer argued, noting separately whether that changed the
+ruling and which way.
+
+**This is not blinding, and the skill says so in as many words.** The adjudicator read the whole
+report in step 1, because the checks in the previous section are about the document as a whole and
+cannot be done from an excerpt. Nobody un-reads that. Claiming otherwise would be the same
+overstatement this project keeps catching elsewhere — a technique described by the property it
+would have in the best case rather than the one it actually has.
+
+What the card genuinely does is aim the check at the mechanism instead of at the case for it, and
+what carries the real weight sits beside it: the expected result is written down *before* the
+command runs. That rule was already in the ledger template for every re-verification, and it is the
+mechanical part. An expectation recorded in advance turns a surprise into something you have to
+notice; an expectation recalled afterwards quietly reshapes itself around whatever came back.
+
+The failure being guarded against is real and runs in both directions. A well-written case for a
+finding that is not real buys a `CONFIRMED` it did not earn. A finding stated flatly, or in awkward
+English, or coming from a reviewer whose earlier numbers did not reproduce, buys a `REFUTED` on
+exactly the same non-evidence. Both are rulings on prose.
+
+Re-reading the argument afterwards is required, not optional — it is often where the reproduction
+steps are, and a claim whose trigger the report never stated may only be reproducible from the
+surrounding text. What the ordering decides is only which of the two ends up as the finding of
+record.
+
+Genuine blindness exists in exactly one place, because it is expensive and only one case earns it:
+refuting a high or critical finding about code you wrote yourself.
+
+There, a second opinion is fetched that has never seen the report at all — it gets the claim card
+and the code, and is asked to establish whether the mechanism holds, not to check the ruling, since
+checking a ruling mostly means being handed a conclusion to agree with. If the two disagree, the
+verdict is `COULD NOT DETERMINE` and the disagreement goes in the ledger.
+
+One convention from the refutation pipelines this resembles is deliberately **not** adopted. Those
+tell the refuter to default to *refuted* when uncertain, which is right for them: they are
+filtering findings before any human sees them, and a false positive spends the reader's attention.
+This ledger sits at the opposite end. The finding is already in front of you, the ruling is durable
+and will be read in six months, and `COULD NOT DETERMINE` — with the check that would settle it
+written beside it — is an honest outcome that costs a single line. Dropping a finding for being
+unclear would be the same dismissal reflex the whole section exists to resist.
+
 ### Weighing what the reviewer said
 
 - **When a finding says a test proves nothing, do not check whether the suite passes — check
@@ -571,6 +672,48 @@ as a way for it to leak its own answers.
 The ideas are cadre's; the wording here is ours. Nothing was copied out of that repository — no
 code, and no prose.
 
+### Borrowed from the wider adversarial-review field
+
+A survey of what else exists on GitHub turned up around fifty live projects doing cross-model or
+adversarial review. Almost all of them are review *generators* — they orchestrate getting a second
+model to attack your code — and very few adjudicate what comes back, which is why the second skill
+here has fewer obvious neighbours than the first. Three of them had solved problems these skills
+had not:
+
+- **Calibrating the judge, and failing closed when it is stale.**
+  [med95Albert/cross-model-review](https://github.com/med95Albert/cross-model-review) makes the
+  point that swapping in a different model is not enough — the reviewer itself has to be shown
+  trustworthy rather than assumed so — and pairs a small planted-defect gold set with clean cases
+  for the false-positive direction, expiring the result when the model identity changes or enough
+  time passes that a provider could have changed it underneath the name. That is where
+  `calibration/` comes from, including the six-case shape and the expiry rule.
+  [klmtseng/validity-audit](https://github.com/klmtseng/validity-audit) puts the same idea more
+  sharply — *has the checker demonstrated that it can fail when it should?* — which is the
+  sentence the whole directory is built around.
+- **Giving the verifier the claim and withholding the argument.**
+  [Jmosier69/refute](https://github.com/Jmosier69/refute) hands its refuter the claim only, never
+  the finder's reasoning, on the grounds that an argument you have read is an argument you have
+  been moved by. That became the claim card in step 2 and the ordering rule in step 5. Its default
+  — *refuted when uncertain* — was deliberately not adopted, for a reason given in section 6: that
+  rule belongs to a filter running before a human sees anything, and this ledger is the opposite
+  situation.
+- **Measuring the pipeline instead of describing it.**
+  [prime-radiant-inc/parallel-adversarial-review](https://github.com/prime-radiant-inc/parallel-adversarial-review)
+  scores its reviews against fixtures with planted defects and holds itself to recall and precision
+  thresholds, with recorded responses so the suite is free to re-run. Nothing here does that yet.
+  It is the obvious next thing and it is named in section 11 rather than quietly left out.
+
+Two more were read closely without anything being taken:
+[chaseai-yt/crucible](https://github.com/chaseai-yt/crucible), whose reviewer keeps its session
+across rounds so it attacks its own accepted fixes and whose flagged deadlock is treated as a
+better outcome than a manufactured approval, and
+[addyosmani/adverse](https://github.com/addyosmani/adverse), which runs three deliberately
+orthogonal personas over one model and names the anchoring cost of that honestly instead of
+claiming it is equivalent to two vendors.
+
+As with cadre: the ideas are theirs, the wording is ours, and nothing was copied out of any of
+those repositories.
+
 ---
 
 ## 11. What this does not fix
@@ -582,6 +725,22 @@ code, and no prose.
 - **This reduces self-confirmation; it does not eliminate it.** A second model with similar training
   can still miss what the first one missed. The value comes from the difference between them, so the
   more different the reviewer, the better the return.
+- **Calibration proves the reviewer is awake, not that it is good.** Six cases cannot show that a
+  model will find *your* defect, and a clean review from a calibrated reviewer still is not
+  evidence that your work is clean. All a pass establishes is that this reviewer can find a planted
+  defect of four distinct kinds and does not rate correct code as critical — which is the minimum
+  for its silence to carry any information at all, and no more than that.
+- **The calibration corpus is public, which is a real weakness.** These cases sit in a public
+  repository under a permissive licence, so a model trained after they were published may recognise
+  them rather than find them, and the measurement quietly stops being evidence about unseen work.
+  There is no clean fix. The mitigation is that the cases are deliberately tiny and easy to
+  replace — swap in four traps drawn from defects your own project actually shipped, keep the
+  scoring rule, and the corpus becomes both private and better targeted. Treat `calibration/cases/`
+  as a worked example of the shape, not as a fixed benchmark.
+- **Nothing here is scored.** There is no eval suite, so a change to the brief or to the ledger
+  rules cannot be shown to have made either better — only argued for. The projects listed in
+  section 10 that hold themselves to recall and precision thresholds against planted-defect
+  fixtures are doing something this repository currently does not.
 - **The envelope is an instruction, not a sandbox.** Enforce the boundaries that matter with the
   receiving tool's own permission system.
 - **It costs something.** A serious brief runs 400–600 lines, and reading the work properly enough
