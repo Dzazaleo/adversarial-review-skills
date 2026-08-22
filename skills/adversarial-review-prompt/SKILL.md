@@ -64,8 +64,14 @@ Resolve from `$ARGUMENTS` (ask only if genuinely ambiguous):
 - **Calibration** — whether this reviewer has ever been shown to find anything. Look for
   `.adversarial-review/calibration/<reviewer-id>.md` under the project root — keyed on what the
   reviewer actually is (family, product and version, reasoning effort, and its own self-report
-  where it gave one), so the filename is a model slug or, failing that, built from the rest —
-  and read its result and expiry. Missing, expired,
+  where it gave one). The filename is always `<identity>-<effort>.md`, `<identity>` being the
+  served model alias where the session gave one, else family plus product and version, else the
+  family alone. **List the directory before concluding there is no record** — one product does not
+  always describe itself the same way twice, and a record read as absent is the failure this
+  scheme exists to avoid. Read its result, its expiry, **and its corpus digest**: recompute the
+  digest from the corpus and compare, because that is the only check that notices the instrument
+  changing, and where you do not have the corpus, say staleness was unknowable rather than
+  treating the record as current. Missing, expired,
   or `FAIL` is a normal state and never a reason to refuse: run the review anyway. It changes one
   thing, and you say it at hand-off (§10) — **an untested reviewer's findings still count, and
   its silence does not.** A clean report from it is inconclusive rather than an all-clear, its
@@ -136,6 +142,14 @@ sub-question that points at the seam:
 Group them (rule/arithmetic correctness · published contracts · robustness and process
 behavior · supply chain and hygiene). Aim for 15–25 items. Fewer means you did not read
 enough; many more means you are padding with things that cannot produce a wrong result.
+
+**Then ask for an unseeded pass beside them** — the template's §6b, and it is not optional whenever
+a claims list exists. A list this directed is where the confirmed defects come from, and it is also
+why a reviewer's coverage collapses to the seams you named: measured twice on this repository,
+10 of 15 findings and then 6 of 9 were echoes of the sub-questions, with one finding in nine
+reached unprompted. Requiring a separately-reported pass that sets the list aside is what stops the
+next adjudicator having to discount the whole report's silence to nothing. A considered "nothing"
+from that pass is a result, not a failure.
 
 ## 4. Inventory the ground already walked
 

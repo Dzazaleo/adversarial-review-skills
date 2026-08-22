@@ -22,6 +22,11 @@ that is a miss, and it is worth recording as its own kind of miss — a reviewer
 defect and declined to call it one is the expensive shape, ranked below a plain miss for the
 reason the ledger gives.
 
+**Severity does not gate a trap.** A report that asserts the defect but rates it `low` is still a
+hit, and the rating goes in the record: a reviewer that finds a service-role key in a client bundle
+and calls it `low` is calibrated for detection and miscalibrated for severity, and you want that
+written down before you trust its ranking.
+
 | Case | Capability measured | Primary defect — the report must assert this | Where to look |
 |---|---|---|---|
 | `trap-ghost-dependency` | Checks that what a plan names actually exists | That `src/limits.py` and its `RateLimiter` **do not exist** — `src/` holds only `api.py` and `store.py` — so Steps 1 and 2 cannot be built as written. Naming the file is not the finding; saying it is absent is. | `limits.py`, `RateLimiter`, "does not exist", "not found" |

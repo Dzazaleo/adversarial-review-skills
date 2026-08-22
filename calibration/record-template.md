@@ -10,8 +10,9 @@ Replace every «placeholder». Delete this line and the one above it.
 | **Reasoning effort** | «the setting this calibration ran at — e.g. high / medium / default / not exposed» |
 | **Reviewer self-report** | «verbatim, what the model said when asked what it is — e.g. `gpt-5.6-codex`, or `OpenAI Codex, GPT-5-based; exact served version not exposed to it`» |
 | **Run on** | «YYYY-MM-DD» |
-| **Expires** | «YYYY-MM-DD — run date + 30 days» |
-| **Corpus digest** | «in adversarial-review-skills, run: `find calibration/cases calibration/CALIBRATION-PROMPT.md calibration/ANSWER-KEY.md -type f \| sort \| xargs shasum \| shasum \| cut -c1-12`» |
+| **Expires** | «YYYY-MM-DD — run date + the window you chose. 30 days is the default, not a requirement; say which you used and why if it was not 30» |
+| **Corpus digest** | «in adversarial-review-skills, run: `find calibration/cases calibration/CALIBRATION-PROMPT.md calibration/ANSWER-KEY.md -type f ! -name .DS_Store -print0 \| sort -z \| xargs -0 shasum \| shasum \| cut -c1-12`» |
+| **Workload** | «what the six cases actually were, in numbers — e.g. `6 cases, 14 files, ~400 lines total`. This is the size the pass was earned on, and the consumer states it beside the size of the work it is adjudicating» |
 | **Project** | «the repo this record is filed in» |
 | **Result** | **PASS** / **FAIL** |
 
@@ -61,5 +62,7 @@ never its speech, and a real defect is not worth less because the reviewer that 
 things a notch high.
 
 **Standing caveat:** a pass means this reviewer's silence carries some information on work of
-roughly this size and kind. It is not evidence that a clean review of your actual work means
-your work is clean. See `calibration/ANSWER-KEY.md`.
+roughly this size and kind — the **Workload** row above says what that size actually was, in
+numbers, so a later reader can compare it with the work being adjudicated rather than guess at
+"roughly". It is not evidence that a clean review of your actual work means your work is clean.
+See `calibration/ANSWER-KEY.md`.

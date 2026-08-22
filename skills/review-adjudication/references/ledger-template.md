@@ -28,10 +28,13 @@ review, «what it actually is»»
 **Reviewer isolation:** «which earlier artifacts this reviewer could read — the prior report, this
 ledger, another reviewer's findings — and where. Same directory means yes. "First reviewer, nothing
 to see" where that is the case»
-**Reviewer calibration:** «PASS, run «date», expires «date», corpus «commit» — from
+**Reviewer calibration:** «PASS, run «date», expires «date», corpus digest «12-char» — recomputed
+and «matches» / «differs, so stale» / «not checkable, no corpus here» — from
 `.adversarial-review/calibration/«reviewer-id».md`» / «none on file» / «stale — run «date», expired
 «date»» / «FAIL». «Where it is anything but PASS, add: findings adjudicated normally; upheld claims
 recorded as CNV, not coverage»
+**Workload gap:** «the size the pass was earned on, from the record's Workload row, beside the size
+of the work this review covered — both in numbers. State them; do not characterise the gap»
 **Upheld claims:** «S» sampled of «T» listed · «K» re-opened as `U-N`
 **Findings in: «N» · Rows out: «N» · +«K» process, +«M» CNV, +«D» prior-review disagreements
 ruled** «numbered counts must match; if merged, say which IDs; state each auxiliary count even

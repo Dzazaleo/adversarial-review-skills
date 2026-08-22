@@ -3,9 +3,10 @@
 > ## STALE — superseded by a corpus change on 2026-08-22, hours after it was written
 >
 > This record pins corpus digest `573e270c698b`. The corpus was then repaired using five defects
-> **this run found** (`K-1`–`K-5` in `REVIEW-ADJUDICATION.md`), and the instrument digest is now
-> `da2a8d36e0ba`. Under `calibration/README.md`, a differing digest makes a record stale, and stale
-> is treated exactly as missing. **This reviewer is uncalibrated again until the six cases are
+> **this run found** (`K-1`–`K-5` in `REVIEW-ADJUDICATION.md`), moving the instrument digest to
+> `da2a8d36e0ba`; round 2's `F5` and `F1` then moved it again, to `775e1cc8c43f`. Under
+> `calibration/README.md`, a differing digest makes a record stale, and stale is treated exactly as
+> missing. **This reviewer is uncalibrated again until the six cases are
 > re-run.**
 >
 > The record has not been re-dated and must not be — the protocol says re-run, not re-date. It is

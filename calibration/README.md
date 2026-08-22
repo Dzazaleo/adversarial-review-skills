@@ -47,25 +47,27 @@ condition real use will not give it.
 
 Score each run against [ANSWER-KEY.md](ANSWER-KEY.md) — do not open the key before the run.
 
-- **Trap** — hit if the report **asserts** a primary defect. Wording is free, but a mention is
-  not a hit: every identifier in the key already appears in the case, so a reviewer that summarises
-  the work will use all the right words while finding nothing. The key says what each report has to
-  claim, and where to look for it. A report that names the defect but rates it `low` still counts as a hit, and the
-  rating goes in the record: a reviewer that finds a service-role key in a client bundle and
-  calls it `low` is calibrated for detection and miscalibrated for severity, and you want that
-  written down before you trust its ranking.
-- **Clean** — passes if it raises no `critical` or `high` finding. Count the mediums.
+**Every rule that decides a result lives in the key, and only in the key.** What each trap's report
+must assert, that a mention is not a hit, that severity does not gate a trap, what a clean case may
+raise, and the pass rule itself: read them there and score from there. This file does not restate
+them, deliberately. The key is inside the corpus digest and this file is not, so a rule restated
+here could be edited without expiring a single record — the measurement would change and every
+stored `PASS` would go on looking current. If you want to change how cases are scored, change the
+key.
 
-**Pass:** all four traps hit, and at least one clean case with nothing above `medium`. The
-reasoning behind both halves, and behind "at least one" rather than both, is in the key.
+The procedure, then, is only: run the six cases as above, open
+[ANSWER-KEY.md](ANSWER-KEY.md), score each report against it, and record the result and the counts
+the key asks for in [record-template.md](record-template.md).
 
 ## The record
 
 Write the result to `.adversarial-review/calibration/<reviewer-id>.md` in the project you intend
 to review, using [record-template.md](record-template.md). Both skills read it from there.
 
-`<reviewer-id>` is the model's **own** identity, slugged — `gpt-5.6-codex`, `gemini-3-pro`,
-`claude-fable-5`. Ask the reviewer what it is and record the answer verbatim. A record filed under
+`<reviewer-id>` is the model's **own** identity, slugged, followed by the reasoning effort —
+`gpt-5.6-codex-high`, `gemini-3-pro-high`, `claude-fable-5-default`. The exact rule for building it
+is below, and it is one rule: there is no shorter form. Ask the reviewer what it is and record the
+answer verbatim. A record filed under
 `cursor` or `copilot` alone says nothing, because those are thin layers over a base model that
 changes underneath them, and the whole return on cross-model review is the architecture difference.
 
@@ -87,11 +89,29 @@ same reviewer, and a pass earned by the strong configuration is not evidence abo
 running under the same name.
 
 For the **filename**, always end with the reasoning effort, because a run at a different effort is
-a different reviewer and must file its own record rather than overwrite one:
-`<identity>-<effort>.md`. Use the self-reported identity slugged where you got one —
-`gpt-5.6-codex-high.md`. Where you did not, build the identity from the rest so the file still
-names a reviewer rather than a product — `openai-codex-cli-0.9.2-high.md`. Both skills look the
-record up by that filename.
+a different reviewer and must file its own record rather than overwrite one: `<identity>-<effort>.md`.
+
+`<identity>` is built by taking **the first of these the session actually gave you**, and no other:
+
+1. **The served model alias**, where the reviewer named one — `gpt-5.6-sol`, `gemini-3-pro`. This
+   is the alias itself, not the sentence around it: a reviewer that says "OpenAI Codex, an agent
+   based on GPT-5; the active model alias is `gpt-5.6-sol`" has given you `gpt-5.6-sol`.
+2. **Family plus product and version**, where it named no alias — `openai-codex-cli-0.147.0`.
+3. **Family alone**, where it named only that — `openai-codex`. A reviewer that will not name even
+   its family is `UNKNOWN MODEL`, which does not pass.
+
+The order is fixed so that two people filing the same session reach the same name. What it cannot
+fix is that **the same product does not always say the same thing about itself**: on 2026-08-22 one
+Codex session named the alias `gpt-5.6-sol` and another, hours later, could give only "OpenAI
+Codex, GPT-5-based". Those two sessions produce two filenames for one reviewer, and no naming rule
+closes that.
+
+So the lookup rule has a second half. **Before concluding a record is absent, list the directory.**
+`.adversarial-review/calibration/` holds few enough files to read at a glance; a near-miss on the
+family is a record worth opening and checking the four identity fields against, and treating a
+present record as missing is the exact failure this scheme was built to escape. Both skills look
+the record up by filename, and both are told to look at the directory before saying there is
+nothing there.
 
 The record lives in the project, not in your home directory, because the result is
 project-shaped: a reviewer that reads Python plans well may be poor on your Rust service, and a

@@ -1076,3 +1076,678 @@ small, and CNV-3 cannot be settled without them.
 **A re-run is expected to score better, not merely the same.** The only control this reviewer
 failed was `clean-copy-link`, on the ambiguity `K-1` has now removed.
 
+
+---
+
+# Round 2 — audit of the round-1 fixes, adjudicated 2026-08-22
+
+**Reports found:** the step-1 census globbed the repository root for `*EXTERNAL*` report families
+excluding `*PROMPT*`, `*COVER-NOTE*`, `*ADJUDICATION*` and `*RESPONSE*`. It returned two:
+`EXTERNAL-REVIEW.md` — *adjudicated in round 1 above; not re-adjudicated here* — and
+`EXTERNAL-REVIEW-2.md` — ***adjudicated in this round***. `examples/**` holds four further reports
+(`audit-of-adversarial-review-prompt/EXTERNAL-REVIEW.md`,
+`audit-of-review-adjudication/EXTERNAL-REVIEW.md`, `-2.md`, `-FABLE.md`) — *not adjudicated here:
+they are prior rounds against a different target, already dispositioned in
+`examples/audit-of-review-adjudication/REVIEW-ADJUDICATION.md`, and are read this round only as
+settled ground.*
+
+**Review:** `EXTERNAL-REVIEW-2.md` (OpenAI Codex, GPT-5-based — the reviewer again reported that its
+served model version and Codex product version are not exposed to it; 2026-08-22). **Envelope
+honoured.** Verified: `git status --short` before this ledger was appended showed exactly
+`?? EXTERNAL-REVIEW-2.md` and nothing else; no `__pycache__` or `.pytest_cache` anywhere in the
+tree; all mutation was under `/tmp`.
+
+**Brief:** `EXTERNAL-REVIEW-2-PROMPT.md` (557 lines, 24 load-bearing claims, pinned diff
+`8c1d737..e1fc88b`).
+
+**Reviewer calibration:** **stale, which the protocol treats exactly as missing.**
+`.adversarial-review/calibration/gpt-5.6-sol-high.md` pins corpus digest `573e270c698b`; the
+instrument digest today is `da2a8d36e0ba` (reproduced below, RV-1). Per `calibration/README.md:110`
+this reviewer is uncalibrated. Consequence, applied: its **findings are adjudicated normally and at
+the usual standard**, and its *silence* closes nothing — its fourteen claims-examined-and-upheld
+entries are **not coverage**. Five of the fourteen were sampled independently anyway (§R2.6); the
+other nine are recorded as unverified.
+
+**Lookup note, first-hand:** this session found that record by listing
+`.adversarial-review/calibration/`, **not** by deriving its filename. Had it followed the skill's
+own lookup rule from this reviewer's self-report — "OpenAI Codex, GPT-5-based" — it would have
+looked for `openai-codex-gpt-5-based-<effort>.md` and concluded *no record on file*. That is
+finding `F3`'s consequence, experienced live by the consumer the fix was written for.
+
+**Report completeness:** **complete.** Nine numbered findings, one process finding, a strict ranked
+order (ten positions, no ties), a 24-claim adjudication, an independent re-score table, a
+claims-upheld section, a could-not-verify section, a mutation section, a coverage line and a final
+repository status. No truncation.
+
+**Adjudicated:** 2026-08-22, by a fresh session that did not write the work under review. It is the
+same model *family* that wrote it, so every refutation below carries execution evidence rather than
+prose.
+
+**ID collision notice:** this round's findings are numbered `F1`–`F9` by the reviewer; round 1's were
+`F1`–`F15`. They are different findings. Outside this round, qualify as `R2-F1`. Auxiliary entries
+carry explicit `R2-` IDs.
+
+**Findings in: 9 · Rows out: 9 · +2 process, +3 CNV, +1 prior-review disagreement ruled**
+
+No findings merged. `R2-P1` is reviewer-raised; `R2-P2` is adjudicator-raised — found by running the
+echo audit this skill mandates, and not present in the report.
+
+---
+
+## R2.1 — Situation in one paragraph
+
+Round 1 produced fifteen confirmed findings; fourteen were fixed, one deferred. The corpus was then
+run for the first time, passed, and found six defects in itself, five of which were fixed in the
+same range. The same model wrote the work, the fixes, and the fixes-to-fixes, with nobody looking in
+between. Codex was handed a 557-line brief with 24 load-bearing claims and asked whether the fixes
+close the findings or only read as though they do. It returned nine numbered findings — four rated
+`high`, five `low` — one process finding, three declared gaps, fourteen upheld claims, an
+independent re-score of all six calibration outputs, and six mutation results. Six of its nine
+findings were confirmed here without qualification, two confirmed with a supporting sub-claim
+corrected, one confirmed with its diagnosis corrected. Every executed figure it reported reproduced
+exactly; both of its claims that something was *absent* failed to reproduce. Nothing in this ledger
+says whether the work should ship.
+
+## R2.2 — Re-verification performed before accepting anything
+
+Every command was run read-only against the repository or inside a scratch copy at
+`/private/tmp/claude-501/.../scratchpad/r2/`. Nothing in the repository was written, edited or
+reverted; the only file this session touched is this ledger. Expectations are stated **before** each
+command.
+
+### RV-1 — the instrument digest reproduces
+
+*Expectation: the documented `K-6` command returns `da2a8d36e0ba`, the value the calibration-run
+block above records.*
+
+```bash
+$ cd <scratch>/r2/current
+$ find calibration/cases calibration/CALIBRATION-PROMPT.md calibration/ANSWER-KEY.md -type f \
+    | sort | xargs shasum | shasum | cut -c1-12
+da2a8d36e0ba
+```
+
+Reproduces. The reviewer's figure is exact.
+
+### RV-2 — a scoring-procedure edit leaves the identity unchanged (`F1`, half A)
+
+*Expectation: changing the pass threshold in `calibration/README.md` from one clean case to both
+does not move the digest, because `K-6` excluded that file.*
+
+```bash
+$ sed -i '' 's/and at least one clean case with nothing above `medium`/and BOTH clean cases with nothing above `medium`/' calibration/README.md
+$ grep -n '^\*\*Pass:\*\*' calibration/README.md
+59:**Pass:** all four traps hit, and BOTH clean cases with nothing above `medium`. The
+$ find calibration/cases calibration/CALIBRATION-PROMPT.md calibration/ANSWER-KEY.md -type f \
+    | sort | xargs shasum | shasum | cut -c1-12
+da2a8d36e0ba
+```
+
+Confirmed. **One correction to the reviewer's mechanism:** it calls
+`calibration/README.md` the file that "defines the operative trap/clean scoring procedure". The two
+rules that decide a result — *score the assertion, not the vocabulary* and the pass rule itself —
+are **also** in `calibration/ANSWER-KEY.md:12-22` and `:69-71`, which **is** digested. So the defect
+is not that the scoring rule sits outside the digest; it is that it sits in **two places, one
+digested and one not**, so an operator who edits only the undigested copy produces silent drift
+between the two and expires nothing. That is this project's recurring defect class, arriving inside
+the fix for a different instance of it.
+
+### RV-3 — a whitespace pathname is silently dropped, exit 0 (`F1`, half B)
+
+*Expectation: `xargs` splits the name, `shasum` errors on two nonexistent paths, the pipeline still
+exits 0, and the digest is unchanged — so a new case file is silently omitted from the identity.*
+
+```bash
+$ printf 'a planted case with a space in its name\n' > 'calibration/cases/added case.md'
+$ find calibration/cases calibration/CALIBRATION-PROMPT.md calibration/ANSWER-KEY.md -type f \
+    | sort | xargs shasum | shasum | cut -c1-12
+shasum: calibration/cases/added: No such file or directory
+shasum: case.md: No such file or directory
+da2a8d36e0ba
+$ echo "pipeline exit status: $?"
+pipeline exit status: 0
+```
+
+Confirmed, byte-identical to the reviewer's report.
+
+### RV-4 — the proposed minimal fix costs no record and closes the hole
+
+*Expectation: a `-print0`/`-0` variant returns the **same** `da2a8d36e0ba` on a clean tree — so
+adopting it does not expire any record — and **does** move when the spaced file is present.*
+
+```bash
+$ find calibration/cases calibration/CALIBRATION-PROMPT.md calibration/ANSWER-KEY.md -type f -print0 \
+    | sort -z | xargs -0 shasum | shasum | cut -c1-12
+da2a8d36e0ba
+$ printf 'x\n' > 'calibration/cases/added case.md'
+$ find ... -print0 | sort -z | xargs -0 shasum | shasum | cut -c1-12
+95bee60976d2
+$ rm -f 'calibration/cases/added case.md'
+$ find ... -print0 | sort -z | xargs -0 shasum | shasum | cut -c1-12
+da2a8d36e0ba
+```
+
+Both halves confirmed. The fix is free.
+
+### RV-5 — the digest moves for a file nobody authored (adjudicator-raised, bears on `F1`'s fix)
+
+*Expectation: an incidental `.DS_Store` inside `calibration/cases` changes the identity, which is the
+failure `F1` names in the other direction — expiring records for no reason.*
+
+```bash
+$ printf '\0\0junk' > calibration/cases/.DS_Store
+$ find ... | sort | xargs shasum | shasum | cut -c1-12
+5f2fe1ba364b
+$ rm -f calibration/cases/.DS_Store
+$ find ... | sort | xargs shasum | shasum | cut -c1-12
+da2a8d36e0ba
+```
+
+Confirmed. The brief's claim 1 asked about this and the reviewer did not answer it. It is not filed
+as a separate finding — it is folded into `F1`'s fix, which must be correct in both directions.
+
+### RV-6 — no consumer checks the digest, and the ledger template still says commit (`F2`)
+
+*Expectation: neither skill instructs the consumer to recompute or compare the corpus digest, and
+`ledger-template.md` still asks for `corpus «commit»`.*
+
+```bash
+$ grep -rn 'digest' skills/
+$ grep -n 'corpus\|Corpus' skills/review-adjudication/references/ledger-template.md
+31:**Reviewer calibration:** «PASS, run «date», expires «date», corpus «commit» — from
+```
+
+Confirmed, and **stronger than reported**: the string `digest` does not appear *anywhere* in
+`skills/` — zero hits, not merely no comparison instruction. `review-adjudication/SKILL.md:83-84`
+reads result, expiry, identity and workload size; `adversarial-review-prompt/SKILL.md:68` reads
+result and expiry. The one check capable of noticing an instrument change is never performed by
+either consumer, and the template still names the field the fix replaced.
+
+### RV-7 — three incompatible filename forms (`F3`)
+
+*Expectation: the always-suffixed rule, the unsuffixed skill example, and the real record's name do
+not agree.*
+
+Read side by side:
+
+| Source | Form it gives |
+|---|---|
+| `calibration/README.md:67` | "`<reviewer-id>` is the model's **own** identity, slugged — `gpt-5.6-codex`, `gemini-3-pro`, `claude-fable-5`" — **three examples, no effort suffix**, in the sentence that *defines* the term |
+| `calibration/README.md:89-93` | "always end with the reasoning effort … `<identity>-<effort>.md`" — `gpt-5.6-codex-high.md` |
+| `skills/review-adjudication/SKILL.md:81` | `gpt-5.6-codex.md` — **no effort** |
+| `skills/adversarial-review-prompt/SKILL.md:66-67` | "the filename is a model slug or, failing that, built from the rest" — **effort not mentioned at all** |
+| on disk | `gpt-5.6-sol-high.md` |
+
+Confirmed: `K-5`'s rule contradicts the defining sentence twelve lines above it in its own file, and
+neither consuming skill was updated. Same defect class again.
+
+**One correction to the reviewer's supporting sentence.** `F3` says the record uses "an alias not
+present in that self-report". The record's own verbatim self-report is:
+
+```
+| **Reviewer self-report** | "OpenAI Codex, an agent based on GPT-5. The active model alias is
+  `gpt-5.6-sol`. The exact backend snapshot/build behind that alias is not exposed." |
+```
+
+— `.adversarial-review/calibration/gpt-5.6-sol-high.md:32`. So the primary rule *did* produce
+`gpt-5.6-sol-high.md` from what that session actually said; the scorer did not improvise, which is
+what the brief's claim 4 asked. The real mechanism is **session-to-session variance in the
+self-report of one product** — the calibration session named its alias, this round's session could
+not — and that mechanism is demonstrated live by the two reports side by side. The finding stands;
+one sentence of its support does not.
+
+### RV-8 — the subagent boundary names no mechanism, and one exists (`F4`)
+
+*Expectation: the skill's frontmatter grants write tools, the delegation rule names no restriction
+mechanism, and Claude Code supplies one.*
+
+```bash
+$ sed -n '5,13p' skills/review-adjudication/SKILL.md
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Grep
+  - Glob
+  - Bash
+  - Agent
+$ sed -n '382,385p' skills/review-adjudication/SKILL.md
+  ... So spawn it read-only where the tool grants let you, and say the boundary in the delegation
+  message itself ...
+$ claude --version
+2.1.239 (Claude Code)
+$ head -4 ~/.claude/agents/gsd-plan-checker.md
+name: gsd-plan-checker
+tools: Read, Bash, Glob, Grep, Skill
+```
+
+Confirmed. The rule says "where the tool grants let you" and never says how. The mechanism is
+concrete, current, and present on this machine: a subagent definition declaring a `tools:` allowlist
+without `Write`/`Edit`/`NotebookEdit` (demonstrated by `gsd-plan-checker.md:4`), or a built-in
+read-only agent type — this session's own agent roster lists `Explore` as "All tools except Agent,
+Artifact, ExitPlanMode, Edit, Write, NotebookEdit". An unnamed general-purpose subagent is `Tools:
+*` and inherits everything. The reviewer's `claude --version` figure is exact.
+
+### RV-9 — the envelope permits arbitrary new files (`F5`)
+
+*Expectation: adding a non-cache `EXTRA.md` to a case copy satisfies "change no file that was already
+here" literally — every pre-existing file compares byte-equal.*
+
+```bash
+$ cp -R <repo>/calibration/cases/clean-wordcount <scratch>/envelope/wc1 && cd <scratch>/envelope/wc1
+$ printf 'arbitrary non-cache artifact\n' > EXTRA.md
+$ # cmp every pre-existing file against the repository original
+pre-existing files all byte-identical: yes
+extra artifact present: EXTRA.md
+```
+
+Confirmed. The envelope at `calibration/CALIBRATION-PROMPT.md:45-47` reads "Write `REVIEW.md`, and
+change no file that was already here." — a bound on modification, none on creation.
+
+### RV-10 — the expiry contradiction (`F6`) and the workload rule (`F7`)
+
+*Expectation: the template hard-codes 30 days with no field for a chosen window; and no threshold or
+size field exists anywhere.*
+
+```bash
+$ sed -n '13p' calibration/record-template.md
+| **Expires** | «YYYY-MM-DD — run date + 30 days» |
+$ sed -n '107p' calibration/README.md
+  nothing here can. Shorten it freely; the cost of a shorter window is one twenty-minute rerun.
+$ grep -n 'Expires\|window\|30' calibration/record-template.md
+13:| **Expires** | «YYYY-MM-DD — run date + 30 days» |
+$ grep -rn 'far larger\|size of work\|roughly this size' skills/ calibration/
+skills/review-adjudication/SKILL.md:83, :89-90 ; calibration/ANSWER-KEY.md:93 ; calibration/record-template.md:64
+```
+
+Both confirmed. `F6`: one file says shorten freely, the only file an operator fills says run date +
+30, and there is no field to record what was chosen. `F7`: "far larger" appears once, with no
+threshold; the record carries a prose standing caveat (`record-template.md:63-65`) and **no workload
+field**; the ledger template header (`:20-38`) has **no size-gap field**. Both reproduce exactly.
+
+### RV-11 — the install, and what the URL actually does (`F8`)
+
+*Expectation: the two documented `cp -r` commands install the two skills and no calibration artifact,
+and the hard-coded corpus URL does not resolve.*
+
+```bash
+$ cp -r <repo>/skills/adversarial-review-prompt  <sandbox>/home/.claude/skills/
+$ cp -r <repo>/skills/review-adjudication        <sandbox>/home/.claude/skills/
+$ find home -type f | sort
+home/.claude/skills/adversarial-review-prompt/SKILL.md
+home/.claude/skills/adversarial-review-prompt/references/cover-note-template.md
+home/.claude/skills/adversarial-review-prompt/references/prompt-template.md
+home/.claude/skills/review-adjudication/SKILL.md
+home/.claude/skills/review-adjudication/references/ledger-template.md
+$ find home -name 'ANSWER-KEY.md' -o -name 'CALIBRATION-PROMPT.md' -o -name 'record-template.md' | wc -l
+0
+$ curl -s -o /dev/null -w "%{http_code}\n" -L https://github.com/Dzazaleo/adversarial-review-skills/tree/main/calibration
+404
+```
+
+Five files, zero calibration artifacts, 404 — all three reproduce exactly.
+
+**The reviewer's diagnosis does not.** It wrote: "search does not find the named public repository"
+and "the repository URL itself is unavailable."
+
+```bash
+$ curl -s -o /dev/null -w "repo root: %{http_code}\n" -L https://github.com/Dzazaleo/adversarial-review-skills
+repo root: 200
+$ curl -s -o /dev/null -w "api: %{http_code}\n" https://api.github.com/repos/Dzazaleo/adversarial-review-skills
+api: 200
+$ git remote -v
+origin	https://github.com/Dzazaleo/adversarial-review-skills.git (fetch)
+$ git ls-tree --name-only origin/main
+.gitignore  HOW-IT-WORKS.md  LICENSE  README.md  examples  skills
+$ git rev-list --left-right --count origin/main...HEAD
+0	8
+```
+
+The repository is public and reachable — it is this clone's `origin`. The `/tree/main/calibration`
+path 404s because `calibration/` exists only on the local branch
+`calibration-corpus-and-claim-cards`, which is **8 commits ahead of `origin/main` and unpushed**.
+The consequence the finding names survives intact; its cause and therefore its remedy change
+completely — this is publish ordering, not a broken pointer.
+
+### RV-12 — the inventory count (`F9`) and the range assertion (`R2-P1`)
+
+*Expectation: the brief's stated 416 lines is wrong against the pinned blob, and `e1fc88b` is not
+`HEAD`.*
+
+```bash
+$ git show e1fc88b:skills/adversarial-review-prompt/SKILL.md | wc -l
+418
+$ sed -n '167p' EXTERNAL-REVIEW-2-PROMPT.md
+| `skills/adversarial-review-prompt/SKILL.md` | 416 | ...
+$ git show 3ec5baf:skills/review-adjudication/SKILL.md | wc -l
+485
+$ git show 3ec5baf:EXTERNAL-REVIEW-2-PROMPT.md | sed -n '145p'
+| `skills/review-adjudication/SKILL.md` | 482 | ...
+$ git rev-parse HEAD
+2ddf6d30064bc6e28c46b2833ca9dc23cdef883d
+$ git diff --name-status e1fc88b..HEAD
+M	EXTERNAL-REVIEW-2-PROMPT.md
+$ sed -n '120p' EXTERNAL-REVIEW-2-PROMPT.md
+`e1fc88b` is `HEAD`. There is nothing above the range.
+```
+
+Both confirmed exactly. **One figure the reviewer did not supply, which bounds `F9`:** the other
+eleven counts in that inventory table were checked against their pinned blobs and **all eleven are
+correct** (101, 47, 142, 65, 16, 485, 373, 781, 239, 1078, 59). The rule mostly worked; the single
+wrong entry is the one **carried forward** from the earlier version of the brief while its neighbour
+(482 → 485) was corrected in the same refresh. That is the precise failure mode, and it names the
+fix.
+
+### RV-13 — working state after re-verification
+
+```bash
+$ git status --short
+ M REVIEW-ADJUDICATION.md
+?? EXTERNAL-REVIEW-2.md
+$ find . -name '__pycache__' -o -name '.pytest_cache' -not -path './.git/*'
+(no output)
+```
+
+`REVIEW-ADJUDICATION.md` is this ledger — the only file this session wrote.
+`EXTERNAL-REVIEW-2.md` is the reviewer's report. No other repository file changed; all mutation was
+in the scratch copy.
+
+## R2.3 — Adjudication
+
+Screened first against settled ground (`CLAUDE.md`: none exists; the three owner decisions `Q1`–`Q3`
+locked in §5 above; the `Q4`/`Q5` calibration-run decisions; `BACKLOG.md` §B-1 and §B-2;
+`HOW-IT-WORKS.md:700-704`). **No finding this round relitigates a locked decision.** `F3` and `F6`
+touch the *implementations* of `Q3` and of round-1 `F13`, which the brief expressly puts in scope at
+`:207-209`. No `SETTLED ALREADY` verdict is issued, and none was available.
+
+| ID | Finding *(reviewer impact)* | Verdict | Disposition |
+|---|---|---|---|
+| F1 | The narrowed corpus digest excludes a scoring rule and silently ignores filenames containing spaces *(high)* | **CONFIRMED (partial)** — RV-2, RV-3, RV-5, all executed. *Established:* the whitespace path is silently dropped with exit 0 and an unchanged digest, byte-identical to the report; and a scoring-threshold edit in `calibration/README.md` leaves the identity unchanged. *Corrected:* the two rules that decide a result are **also** in the digested `ANSWER-KEY.md:12-22,69-71`, so the defect is duplication across a digested and an undigested file, not exclusion of the sole authority. *Added by this session (RV-5):* the identity also moves for a `.DS_Store` nobody authored — the same failure in the other direction, which the fix must close too | **FIX NOW** — two edits, both verified free of record cost by RV-4. (a) `calibration/record-template.md:14` and `calibration/README.md:112`: `-type f -print0 \| sort -z \| xargs -0 shasum`, with `.DS_Store` pruned. Returns the same `da2a8d36e0ba` on a clean tree, so no record is expired. (b) `calibration/README.md:46-60`: stop restating the assert-not-mention rule and the pass threshold — point at `ANSWER-KEY.md`, so the operative text lives only in a digested file. Do **not** re-broaden the digest to include `README.md`: that reverts `K-6`, whose reason still holds **✔ executed 2026-08-22** — (a) `record-template.md:14` now runs `-type f ! -name .DS_Store -print0 \| sort -z \| xargs -0 shasum`; (b) the one rule that lived only in the undigested README — severity does not gate a trap — moved into `ANSWER-KEY.md:24-28`, and `calibration/README.md` §Scoring now restates **nothing**, stating instead that every deciding rule lives in the key and only there, with the reason (the key is digested, that file is not) |
+| F2 | Neither consuming skill checks the corpus digest before accepting a record *(high)* | **CONFIRMED** — RV-6, and stronger than reported: `grep -rn 'digest' skills/` returns **zero hits**. `review-adjudication/SKILL.md:83-84` reads result, expiry, identity, workload; `adversarial-review-prompt/SKILL.md:68` reads result and expiry; `ledger-template.md:31` still asks for `corpus «commit»`, the field `F1`/`K-6` replaced. The only check that can notice an instrument change is never performed end to end. **Independent on its core half** (§R2.4) | **FIX NOW** — three sites, all already touched this round. Both consumer bullets gain the digest: recompute it from the corpus and compare with the record's; a differing digest is stale and counts as missing. `ledger-template.md:31` `corpus «commit»` → `corpus digest «12-char»`. **And name the case the fix cannot cover:** an installed skill has no `calibration/` (`F8`), so it cannot recompute — the honest instruction there is to record that staleness was *unknowable*, not to pass the record **✔ executed 2026-08-22** — both consumer bullets now read the corpus digest, recompute it and compare, and say staleness was *unknowable* where the corpus is absent (`review-adjudication/SKILL.md:87-96`, `adversarial-review-prompt/SKILL.md:68-76`); `ledger-template.md:31-32` `corpus «commit»` → `corpus digest «12-char» — recomputed and matches / differs / not checkable` |
+| F3 | The same reviewer still has several valid filenames, so lookup is not reproducible *(high)* | **CONFIRMED (partial)** — RV-7. *Established:* four incompatible forms, including `calibration/README.md:67` giving three unsuffixed examples in the sentence that defines the term, twelve lines above `K-5`'s "always end with the reasoning effort"; and both consuming skills carrying unsuffixed/effortless forms. *Demonstrated live:* this adjudication would have missed the existing record by following the written rule (see header). *Corrected:* the record's own verbatim self-report **does** contain `gpt-5.6-sol` (`gpt-5.6-sol-high.md:32`), so the rule produced that filename from what that session said; the scorer did not improvise. The real mechanism is session-to-session variance in one product's self-report | **FIX NOW** — one rule in one place. Suffix the three examples at `calibration/README.md:67` or make that sentence defer to `:89`; `review-adjudication/SKILL.md:81` `gpt-5.6-codex.md` → `gpt-5.6-codex-high.md`; `adversarial-review-prompt/SKILL.md:66-67` gains the effort. Then the part that actually closes the finding: a **precedence order** over the four recorded fields (self-reported alias where the session exposes one, else family + product + version), and one line telling the consumer to **list the directory before concluding a record is absent** — because no naming rule can make two sessions of one product report themselves identically **✔ executed 2026-08-22** — `calibration/README.md:67` no longer gives unsuffixed examples; `:89-113` carries one rule with a three-step precedence order (served alias → family+product+version → family alone) and the directory-listing rule, and names the 2026-08-22 two-session divergence as the reason no naming rule closes it. Both skills follow |
+| F4 | The read-only subagent boundary remains advisory even though Claude Code supplies an enforceable mechanism *(high)* | **CONFIRMED** — RV-8. The frontmatter grants `Write`, `Edit`, `Bash`, `Agent`; the rule at `:382-385` says "spawn it read-only where the tool grants let you" and never says how; an unnamed general-purpose subagent is `Tools: *`. The mechanism exists, is current on `2.1.239` (the reviewer's version figure is exact) and is present on this machine: a `tools:` allowlist in a subagent definition (`~/.claude/agents/gsd-plan-checker.md:4`), or a built-in read-only agent type. The reviewer marked this `THEORETICAL` because it declined to bill a subagent to demonstrate a documented default — that is honest, and the finding is documentary anyway, so nothing turns on it | **FIX NOW** — one paragraph at `skills/review-adjudication/SKILL.md:382-385`: name the mechanism (spawn with a tool allowlist that excludes `Write`/`Edit`/`NotebookEdit`, or a subagent type already defined that way), and say what to do when you cannot — record in the ledger that the second opinion ran unbounded, rather than leaving the reader to infer a configuration the skill never states **✔ executed 2026-08-22** — `review-adjudication/SKILL.md:396-412`: spawn with a tool allowlist excluding `Write`/`Edit`/`NotebookEdit`, the mechanism named (a subagent definition whose frontmatter declares `tools:`; an unnamed general-purpose subagent inherits everything), pick an agent type already defined read-only rather than the default, and where you cannot restrict tools, record in the ledger that the verifier ran unbounded |
+| F5 | The K-3 envelope now permits arbitrary new files, not only test-runner caches *(low)* | **CONFIRMED** — RV-9, executed. "Write `REVIEW.md`, and change no file that was already here" bounds modification and not creation; an arbitrary `EXTRA.md` satisfies it literally while leaving an unauthorized non-cache artifact. `K-3` named the cache exception but loosened the surrounding rule | **FIX NOW** — `calibration/CALIBRATION-PROMPT.md:45-47`: "Write `REVIEW.md` and no other file, and change no file that was already here. A test runner leaving its own caches behind is expected and is not a violation." **Sequencing, not deferral:** this edits the fixed brief, so it moves the instrument digest. The only record on file is *already* stale and awaiting a re-run, so the cost is zero **if it lands before that re-run** — batch it with `F1`(a) and land both first **✔ executed 2026-08-22, first in the queue** — `calibration/CALIBRATION-PROMPT.md:45-47` now reads "Write `REVIEW.md` and no other file, and change no file that was already here." Instrument digest moved `da2a8d36e0ba` → `775e1cc8c43f`; the only record on file was already stale, so no record was lost |
+| F6 | The advertised shorter expiry conflicts with the only record-filling instruction *(low)* | **CONFIRMED** — RV-10. `calibration/README.md:107` says "Shorten it freely"; `calibration/record-template.md:13`, the only file an operator fills, says "run date + 30 days"; `grep` finds no field anywhere recording a chosen window. Following the template defeats the choice; exercising the choice means disobeying it. Reviewer's `THEORETICAL` status is correct — nothing runtime reads the date | **FIX NOW** — one line. `record-template.md:13` → «YYYY-MM-DD — run date + the window you chose; 30 days is the default», and the row carries the window so a later reader can see which was used **✔ executed 2026-08-22** — `record-template.md:13`: «run date + the window you chose. 30 days is the default, not a requirement; say which you used and why if it was not 30» |
+| F7 | The workload-gap rule supplies neither a threshold nor a place to record the compared workload *(low)* | **CONFIRMED** — RV-10. "Far larger" occurs once (`SKILL.md:90`) with no file, line, token or artifact threshold; the record has a prose standing caveat and no workload field; the ledger-template header has no size-gap field. An adjudicator satisfies the instruction by writing a sentence regardless of the facts, and a private replacement corpus cannot be reconstructed from a 12-character digest | **FIX NOW** — the option consistent with this project's own stance on unmeasured constants (`F13`: name the number honestly rather than invent a better one). Add a **workload field** to `calibration/record-template.md` (what the six cases actually are — file count and rough line count) and a **size line** to the ledger-template header; rewrite `SKILL.md:88-91` from "far larger" to "state both sizes and let the reader judge". No invented threshold. *The alternative — picking a multiple, e.g. 10× — is available and is named in the hand-off; it is not recommended, because nothing here measured it* **✔ executed 2026-08-22** — `record-template.md:15` gains a **Workload** row ("6 cases, 14 files, ~400 lines total"); `ledger-template.md:34-35` gains a **Workload gap** header line taking both numbers; `review-adjudication/SKILL.md:99-105` replaces "far larger" with state-both-sizes-in-numbers and forbids characterising the gap. No threshold invented |
+| F8 | F15's replacement pointer does not currently resolve *(high)* | **CONFIRMED (partial)** — RV-11. *Established, all reproduced exactly:* the documented install yields five files and zero calibration artifacts; `/tree/main/calibration` returns 404; a user on the documented path cannot reach the procedure. *Refuted:* "search does not find the named public repository" and "the repository URL itself is unavailable" — the repo is public (`200` on both the HTML and the API), it is this clone's `origin`, and the 404 is because `calibration/` lives only on the unpushed local branch, **8 commits ahead of `origin/main`**. The consequence stands; the diagnosis does not, and the remedy it implies is the wrong one | **PENDING OWNER — proposed: FIX NOW by publishing.** Pushing `calibration-corpus-and-claim-cards` to `main` makes all four pointers resolve with **no document change at all**. That is a publishing decision, not an adjudicator's. See **Q6**. **Does not block** the rest of the queue. *Not recommended:* copying the corpus into each skill directory — it doubles the corpus, and an answer key adjacent to the skill is the adjacency the protocol exists to prevent |
+| F9 | The inventory-enumeration fix failed on the next brief that used it *(low)* | **CONFIRMED** — RV-12, exact. `418` at the pinned blob against `416` in the brief, at both `3ec5baf` and the refreshed `2ddf6d3`; and `485` against `482` in the earlier version. *Bounding figure the report did not supply:* the other **eleven** inventory counts are all correct. The rule worked; one entry was **carried forward** across a refresh while its neighbour was corrected in the same pass. **Genuinely independent** — the only finding this round the brief did not name (§R2.4) | **FIX NOW** — `skills/adversarial-review-prompt/references/prompt-template.md:79-84`: the inventory is produced by running a count over the scoped paths **at the pinned commit**, and **a refreshed brief re-runs it rather than carrying numbers forward**. That last clause is the actual defect. Lands in the same paragraph as `R2-P1`'s fix. The spent brief itself is history and is not edited **✔ executed 2026-08-22** — `references/prompt-template.md:86-93`: counts are run against the pinned commit (`git show <commit>:<path> \| wc -l`), and **a refreshed brief re-runs the whole table** rather than carrying numbers forward, with this round's 418-as-416 named as the case. `R2-P1`'s clause landed in the same paragraph |
+
+### Process and prompt defects
+
+**R2-P1 — The refreshed brief incorrectly says its pinned endpoint is HEAD.** *Reviewer-raised,
+`low`.* **Verdict: CONFIRMED** (RV-12, exact): `EXTERNAL-REVIEW-2-PROMPT.md:120` asserts "`e1fc88b`
+is `HEAD`. There is nothing above the range", while `git rev-parse HEAD` returns `2ddf6d3` and
+`git diff --name-status e1fc88b..HEAD` returns one line — the brief itself. **Cost to this run:
+none** — the reviewer resolved the range correctly, filed it as a process finding rather than
+silently, and audited the right commits. Note what this is: a *branch relation* re-entering a range
+that commit `c054c1a` deliberately pinned to immutable commit IDs, precisely so a moving `HEAD`
+could never make the range ambiguous. **Disposition: FIX NOW** — same template paragraph as `F9`:
+state the range only by commit ID, and where `HEAD` is mentioned at all, produce it by running
+`git rev-parse HEAD` at authoring time rather than asserting it.
+
+**R2-P2 — The brief's §6 sub-questions did the finding again: about one of nine findings is an
+independent discovery.** *Adjudicator-raised — not in the report; found by running the echo audit
+this skill mandates at `SKILL.md:324-336`, which is itself one of the fixes under review.*
+**Verdict: CONFIRMED** — §R2.4 records the per-finding audit with the query beside each result. Six
+of nine findings are stated in the brief's own §6 sub-questions, two of them nearly verbatim
+(`F6`, `F7`). Exactly one finding — `F9`, rated `low` — was reached without the brief pointing at
+it. Round 1 was 10 of 15; this round is 6 or 7 of 9, so the ratio did not improve, it worsened.
+**What this does and does not mean:** it does not weaken a single confirmed finding — each was
+re-established here from primary evidence. It bounds what the reviewer's **silence** is worth: this
+round supplies almost no evidence about the parts of the range nobody pointed at, and the fourteen
+upheld claims are already discounted to nothing by the stale calibration record. Two rounds now say
+the brief is doing the finding. **Disposition: PENDING OWNER — proposed: FIX NOW → settled as Q7 option A (§R2.10); ✔ executed
+2026-08-22.** `references/prompt-template.md` gains **§6b — The unseeded pass**, required whenever a
+claims list exists: the reviewer sets §6 aside, searches the range on its own reading, and reports
+that pass under its own heading, with a considered "nothing" declared a result rather than a
+failure. `adversarial-review-prompt/SKILL.md:144-151` requires the author to ask for it and carries
+the two measured ratios as the reason. §6 is not weakened — both rounds say the directed questions
+are where the confirmed defects come from. **Did not block.**
+
+### Reviewer's could-not-verify items
+
+**R2-CNV-1 — Digest byte-stability off macOS.** The reviewer did not establish that the command
+returns an identical value under non-macOS `find`/`sort`/`xargs`/`shasum`; it reports that default
+locale and `LC_ALL=C` agree on this host. **Verdict: COULD NOT DETERMINE** — not settled here
+either; this session ran only macOS. It matters more than the reviewer allows: a digest that differs
+by platform makes every record unverifiable by an operator on another OS, which is the same
+end-state as `F2`. **Disposition: VERIFY** — run the documented command (and the `-print0` variant
+from RV-4) on a Linux host under both `LC_ALL=C` and an unset locale, and compare against
+`da2a8d36e0ba`. **Does not block** the queue, but it should be run before anyone treats a digest as
+portable evidence.
+
+**R2-CNV-2 — Whether an unrestricted subagent actually writes.** The reviewer declined to bill a
+Claude subagent to demonstrate a documented default, and marked `F4` `THEORETICAL` rather than
+overstate it. **Verdict: COULD NOT DETERMINE**, and correctly declared. **It is not material to
+`F4`'s disposition:** the finding is documentary — the skill names no restriction mechanism — and
+RV-8 establishes that documentarily, so the fix does not depend on the runtime demonstration.
+**Disposition: VERIFY** — spawn one subagent of each kind and compare their available tool sets, if
+anyone wants the runtime half on record. **Does not block, and is not required for the fix.**
+
+**R2-CNV-3 — One agreeing re-score is not a scorer agreement rate.** The reviewer independently
+re-scored all six archived outputs and agreed with all six recorded calls, then said plainly that
+this is one agreeing score and not an inter-rater estimate. **Verdict: COULD NOT DETERMINE** — the
+rate is still unknown. **The reviewer is right to disclaim it, and it is still the most this project
+has ever had.** This session sampled `clean-copy-link` — the one case whose score is a judgement
+rather than a lookup — read the archived report cold, and independently reached **FAIL (one high)**,
+agreeing with both the record and the reviewer; the report's sole finding is explicitly rated
+`high`, and the rule at `calibration/README.md:59` fails a clean case on any `critical`/`high`.
+**Disposition: VERIFY** — two blinded scorers on the same archive, then repeat after a delay.
+**Does not block.**
+
+**Supersedes round-1 `CNV-3`,** which was ruled `COULD NOT DETERMINE` on the ground that "no raw
+calibration reports, independently scored labels, edge-case examples or inter-rater results exist
+anywhere in the repository; there is nothing to rescore." That ground no longer holds: the archive
+exists, and **three independent scorers now agree** on the sampled case (original scorer, this
+reviewer, this session). The original row stands as written; this entry records what changed.
+
+### Disagreements with a prior internal review
+
+**R2-D-1 — Claim 20: ledger §8's "largest gap" is historical.** The reviewer disputes round-1 §8's
+statement that the largest gap under the round is that the calibration corpus has never been run,
+arguing it is now historical and the larger current gap is operational: records cannot reliably
+expire when the instrument changes (`F1`, `F2`) and cannot reliably be found by the consumers
+(`F3`). **Verdict: CONFIRMED.** §8 was written before the run; the run has happened; the claim is
+factually superseded by events. The replacement gap is supported by three findings confirmed above,
+and by this session's own first-hand lookup failure recorded in the header. **Disposition: FIX NOW —
+✔ executed in this ledger.** The durable act is the record itself: round-1 §8's largest-gap
+statement is superseded as of 2026-08-22, and the current largest gap is that a calibration record
+can be neither reliably expired nor reliably found. Round-1 §8 stands as written; this entry
+supersedes it. No separate code change — `F1`/`F2`/`F3` are the code change.
+
+### Disagreements between reviewers
+
+Not applicable — one reviewer this round.
+
+## R2.4 — Echo audit: what the brief had already named
+
+Required by `skills/review-adjudication/SKILL.md:324-336`. Each finding was probed against the
+**brief and the cover note** using **the finding's own identifiers**, not a paraphrase.
+
+| Finding | Query | Result | Independence |
+|---|---|---|---|
+| F1 | `-print0`, `xargs`, `containing a space`, `excludes \`calibration/README.md\``, `how cases are scored` | brief `:223-224` and `:229-231` — both halves stated, including "what happens with a filename containing a space" and "If an operator changes how cases are scored, should every record survive that?" | **echo — none.** Executed verification of the author's own hypothesis |
+| F2 | `recompute`, `compare the digest`, `consumer.*digest`, `corpus «commit»` | no line found for the consumer-omission half. Brief `:288`, `:383` name `ledger-template.md` as untouched and direct a sweep | **independent on its core half**, directed on the template half |
+| F3 | `same filename`, `two different names`, `lookup misses`, `by filename`, `gpt-5.6-sol` | brief `:256-262` — the mechanism nearly verbatim, including "the lookup misses and the record reads as absent" and "or whether the scorer had to improvise" | **echo — none.** Its one novel sub-claim is the one that failed to reproduce |
+| F4 | `read-only`, `restrict a subagent`, `instruction or a wish` | brief `:267-269` — "is that an instruction or a wish? Does the skill say anywhere how to actually restrict a subagent's tools" | **echo — none.** The brief also pre-authorized the web lookup at `:486` and pre-labelled it "a lookup rather than a discovery" |
+| F5 | `envelope`, `change no file that was already here`, `violate it without noticing` | brief `:411-412` — "Does that resolve the contradiction or relocate it? … say whether a reviewer could now violate it without noticing" | **partial** — the question is the author's, the new-file route is the reviewer's |
+| F6 | `Shorten it freely`, `run date + 30`, `shorter window` | brief `:313-316` — "still computes `Expires` as run date + 30 days with no way to record that a shorter window was chosen" | **echo — none.** Stated verbatim |
+| F7 | `far larger`, `threshold at which this fires`, `measured how` | brief `:337-340` — "'Far larger' than what, measured how? … Is there any threshold at which this fires, or has an unfalsifiable instruction been added" | **echo — none.** Stated verbatim |
+| F8 | `resolve for the skill`, `Reproduce the install`, `left to find it`, `404` | brief `:274-277` directs the install reproduction and asks whether the URL resolves; **no line found** for the 404 itself | **partial** — the observation is the reviewer's, and its diagnosis is wrong |
+| F9 | `inventory`, `enumerated`, `416`, `418`, `line count` | brief `:63`, `:167` **contain the stale number itself**; nothing anywhere says it is wrong | **independent — the only one this round** |
+| R2-P1 | `is \`HEAD\``, `nothing above the range`, `completely clean` | brief `:120` makes the false assertion; `:491-497` invites the reviewer to run the check and report a difference | **invited** — the brief asked for exactly this check |
+
+**Score: 1 of 9 fully independent, 2 partial, 6 echoes.** Every confirmed finding stays confirmed —
+each was re-established here from primary sources, which is what the rule requires. What is
+discounted is the reviewer's coverage: outside the seams the brief named, this round establishes
+almost nothing. Ruled as `R2-P2`.
+
+## R2.5 — Reviewer's figures: what reproduced
+
+Nine of nine executed figures reproduced **exactly**: the digest `da2a8d36e0ba`; the whitespace
+mutation's two error lines, exit 0 and unchanged digest; `418` vs the brief's `416`; `485` vs the
+earlier brief's `482`; `claude --version` `2.1.239`; the install's five files and zero calibration
+artifacts; `/tree/main/calibration` 404; `git rev-parse HEAD` and the one-file diff above the range;
+the envelope's literal satisfaction by an added `EXTRA.md`. The independent re-score of
+`clean-copy-link` was sampled and agreed.
+
+**Two claims failed to reproduce, and both are claims of *absence*:**
+
+1. "search does not find the named public repository" — false. Public, `200` on HTML and API, and
+   this clone's `origin` (RV-11). This is the reviewer's **top-ranked** finding, and it is the
+   claim that determines what the remedy is.
+2. `F3`'s "an alias not present in that self-report" — the record's verbatim self-report contains
+   `gpt-5.6-sol` (RV-7). Strictly read against *this session's* self-report the sentence is true,
+   but the record was open in front of the reviewer for claim 24 and the omission supports the
+   inference the brief explicitly asked about ("or whether the scorer had to improvise").
+
+**What that pattern is worth.** Everything this reviewer *executed* held up under repetition,
+without exception — the executed half of this report earns real weight. Both failures are the same
+shape: an absence asserted without running the check that would have settled it. That is the same
+asymmetry this skill already records about authors certifying absence in their own briefs, now
+observed in a reviewer. Weight its positive executed claims highly; verify every claim that
+something does not exist.
+
+## R2.6 — Claims examined and upheld — what was sampled
+
+The reviewer adjudicated all 24 load-bearing claims: 10 refuted (each mapped to a finding above, or
+to `R2-D-1`), 14 upheld. **Its calibration record is stale, so those fourteen are not coverage.**
+Five were sampled independently here; the other nine stand **unverified**.
+
+**Sampled: 5 of 14 · re-opened: 0.**
+
+- **Claim 2** *(the counterweight to "agreement means failure")* — read `CALIBRATION-PROMPT.md:1-12`
+  in order. The counterweight sits immediately after and names the pressure outright: "Do not go
+  looking for something serious to say because the paragraph above told you agreement is failure."
+  **Upheld.**
+- **Claim 9** *(the pass-rule overclaim, corrected consistently)* — read both homes.
+  `ANSWER-KEY.md:93-96` and `HOW-IT-WORKS.md:733-737` both now say "spared at least one of two
+  correct artifacts", and both carry the tolerated-false-positive cost. No drift between them.
+  **Upheld.**
+- **Claim 18** *(disclosure complete)* — `git diff --name-status 8c1d737..e1fc88b` returns 24 paths;
+  every one is accounted for by a ledger row, a disclosed consistency edit, the run archive, or the
+  brief and cover note themselves. **No unaccounted path found.** **Upheld.**
+- **Claim 21** *(`K-1` did not break the negative control)* — read `clean-copy-link` cold.
+  `viewer.html` is 16 lines: no script, no external resource, no form, no input. Nothing a competent
+  reviewer rates `high` or `critical`. The plan's "next to the page title" now resolves — the page
+  supplies `<h1 id="page-title">` — and "no new files" describes the implementation, which the
+  pre-existing `viewer.html` does not contradict. **Upheld.**
+- **Claim 24 / CNV-3** *(the recorded scoring)* — sampled `clean-copy-link`, the one case whose score
+  is a judgement rather than a lookup. Read the archived report cold: its sole finding is explicitly
+  under `## High impact`, so the case is **FAIL** under `calibration/README.md:59`. Agrees with the
+  record and with the reviewer. **Upheld.**
+
+Unverified, recorded as such rather than as coverage: claims 3, 7, 8, 10, 12, 13, 15, 17, 23.
+
+## R2.7 — Owner decisions required
+
+### Q6 — How should the calibration corpus be made reachable from a normal install?
+
+**What turns on it:** `F8`. A user following `README.md:118-122` today installs five files, none of
+them calibration, and the URL the skills hand them returns 404 — because `calibration/` exists only
+on an unpushed local branch that is 8 commits ahead of `origin/main`. The repository itself is
+public and fine.
+
+| Option | What it costs |
+|---|---|
+| **A — Push the branch to `main`** *(recommended)* | All four pointers resolve immediately, **with no document change at all**. Cost: it publishes the work, which the cover note says has not happened yet, and publishing the answer key is the recall exposure round-1 `F10` describes and `BACKLOG.md` §B-2 keeps open. That exposure is already accepted for the corpus; this adds the six archived model reports to it |
+| **B — Ship the corpus inside each skill directory** | The install carries the procedure. Cost: the corpus is duplicated in two places and drifts; and an answer key sitting adjacent to the installed skill is exactly the adjacency `ANSWER-KEY.md:3-5` exists to prevent |
+| **C — Leave it, and say so** | Zero work. Cost: the fix stays broken at its highest-frequency boundary until publication, and `F8` would need `ACCEPTED AS-IS` with your words on record |
+
+**Recommendation: A.** It is the only option where the fix as written becomes true rather than
+being rewritten, and the exposure it adds is an increment on one already taken.
+
+**Blocks:** nothing. `F8` stays `PENDING OWNER` until answered; the other eight fixes are
+independent of it.
+
+### Q7 — Should the next brief keep naming the seams?
+
+**What turns on it:** `R2-P2`, and what these reviews are actually buying. Two rounds now: round 1,
+10 of 15 findings were echoes of the brief's sub-questions; round 2, 6 of 9, with exactly **one**
+independent discovery — `F9`, rated `low`. Every finding is real and worth fixing. But a reviewer
+that only ever confirms where it was pointed tells you nothing about anywhere else, and the parts of
+this range nobody pointed at have now been through two audits without evidence either way.
+
+| Option | What it costs |
+|---|---|
+| **A — Split the brief: a directed half and a blind half** *(recommended)* | Keep §6 as it is, and add an explicit unseeded pass — "here is the range, here are no questions" — scored separately. Cost: reviewer effort is finite, so the directed half gets less; and the blind half may return nothing, which is itself the datum currently missing |
+| **B — Keep naming the seams** | Highest confirmed-defect yield per run, which two rounds have demonstrated. Cost: independent coverage stays near zero, and every future ledger must keep discounting the reviewer's silence to nothing — which makes calibration, whose only purpose is to price that silence, buy nothing |
+| **C — Stop naming them** | Maximum independence. Cost: round 1 and round 2 both suggest the yield collapses; the author's suspicions are load-bearing and would go unchecked |
+
+**Recommendation: A.** The echo rule already discounts directed agreement to zero independent
+discovery; A is the cheapest way to stop that discount from applying to the *whole* report.
+
+**Blocks:** nothing. This changes the next brief, not this queue.
+
+## R2.8 — Amendments queued
+
+The `FIX NOW` queue — **eight rows plus `R2-P1`, plus row 10 from Q7. All executed 2026-08-22**, on
+the owner's authorisation recorded verbatim in §R2.10 and only after it was recorded. The
+adjudication above was written before any fix was applied; this section is the backfill. Two of them are cheap doc edits in
+sites this round already touched, and none is deferred: no `FIX LATER` row exists this round, so no
+new backlog artifact was created. `BACKLOG.md` §B-1 and §B-2 are unchanged.
+
+**Sequence matters for exactly two of them.** `F1`(a) and `F5` touch files inside the instrument
+digest, so they move it. The only record on file is already stale and awaiting a re-run, so landing
+them **before** that re-run costs nothing and landing them after costs the whole re-run. Everything
+else — `F1`(b), `F2`, `F3`, `F4`, `F6`, `F7`, `F9`, `R2-P1` — touches operator documentation or the
+skills, which `K-6` deliberately excluded from the digest, and expires nothing.
+
+| # | Row | Site | Effect on the instrument digest |
+|---|---|---|---|
+| 1 | F5 | `calibration/CALIBRATION-PROMPT.md:45-47` | **moves it** — land before the re-run |
+| 2 | F1(a) | `calibration/record-template.md:14`, `calibration/README.md:112` | none (`-print0` returns the same value, RV-4) |
+| 3 | F1(b) | `calibration/README.md:46-60` | none |
+| 4 | F3 | `calibration/README.md:67`, both `SKILL.md` | none |
+| 5 | F6 | `calibration/record-template.md:13` | none |
+| 6 | F7 | `record-template.md`, `ledger-template.md`, `review-adjudication/SKILL.md:88-91` | none |
+| 7 | F2 | both `SKILL.md`, `ledger-template.md:31` | none |
+| 8 | F4 | `review-adjudication/SKILL.md:382-385` | none |
+| 9 | F9 + R2-P1 | `references/prompt-template.md:79-84` | none |
+| 10 | R2-P2 *(Q7→A)* | `references/prompt-template.md` §6b, `adversarial-review-prompt/SKILL.md:144-151` | none |
+
+**Instrument digest after the queue: `da2a8d36e0ba` → `775e1cc8c43f`.** Two instrument files moved —
+`CALIBRATION-PROMPT.md` (`F5`) and `ANSWER-KEY.md` (`F1`(b)'s rule move). The only record on file was
+already stale and awaiting a re-run, so nothing was lost; the record's banner was updated to name the
+new value rather than continue asserting the old one. Both fixture suites re-run green in a scratch
+copy afterwards: `5 passed in 0.01s` and `3 passed in 0.01s`.
+
+`F8` is executed separately — it is a publish, not an edit; see §R2.11.
+
+## R2.9 — What this round did not settle
+
+- **Whether the corpus measures anything outside the seams a brief names.** `R2-P2`. Two rounds, one
+  independent discovery between them at `low` impact. This is now the largest open question about
+  the method, and it is larger than any single row above.
+- **Whether the digest is portable.** `R2-CNV-1`. Unrun off macOS; a platform-dependent value would
+  reproduce `F2`'s end-state by a different route.
+- **The scorer agreement rate.** `R2-CNV-3`. Three independent scorers now agree on the sampled
+  case, which is three more than existed a day ago and still not a rate.
+- **Nine of the reviewer's fourteen upheld claims.** Unverified, and not coverage, because the
+  reviewer's calibration record is stale.
+- **`BACKLOG.md` §B-1 and §B-2** remain open and untouched: no corpus-drift gate exists, and no
+  construction procedure for a private replacement corpus exists. `F1` and `F2` would both be
+  cheaper to keep correct if §B-1 existed.
+
+Nothing in this round establishes that the work is complete, correct, or ready to publish. That is
+the owner's call, and it is not made here.
+
+## R2.10 — Locked owner decisions from this round
+
+**2026-08-22 — owner, verbatim:**
+
+> "ok proceed with recommended options"
+
+Following a hand-off that named both questions with their options, their costs and a stated
+recommendation for each. Taken as **Q6 → option A**, **Q7 → option A**, and as the explicit
+authorisation for the `FIX NOW` queue in §R2.8 to be executed. Recorded **before any fix was
+applied.**
+
+- **Q6 (F8) — settled: option A.** The branch is published to `main`, which makes all four in-skill
+  calibration pointers resolve with no document change. The recall exposure this adds — the six
+  archived model reports joining an already-public answer key — is accepted, and remains tracked at
+  `BACKLOG.md` §B-2. **Sequenced last**, after the queue lands, so what is published is the repaired
+  state rather than the state carrying nine confirmed findings.
+- **Q7 (R2-P2) — settled: option A.** The brief template gains an unseeded pass alongside its
+  directed §6, scored separately, so that a future round's independent coverage is not structurally
+  zero. This becomes queue row 10.

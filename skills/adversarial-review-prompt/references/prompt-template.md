@@ -81,11 +81,22 @@ exact commands. «Every count in that table — how many files of what kind, how
 **enumerated** with a command at authoring time, never described from recall. You have just read
 this work and you will remember its shape wrongly: the count you carry is of the files you thought
 about, and the tree holds the ones you did not. A reviewer that trusts an undercount audits half of
-what you meant to hand it and reports the coverage as complete.» The audit range goes here as **immutable commit IDs** («`abc1234^..def5678`,
+what you meant to hand it and reports the coverage as complete.
+
+**Enumerate against the pinned commit, and re-enumerate on every refresh.** Run the count over the
+scoped paths at the commit the range pins (`git show <commit>:<path> | wc -l`), not against the
+working tree and not against your last draft. **A brief that is refreshed re-runs the whole table**
+— the recurring failure is not an author who never counted, it is an author who counted once,
+corrected one number on the second pass and carried the rest forward. That is exactly how a pinned
+418-line file was handed over as 416 lines in two successive versions of the same brief while its
+neighbour was corrected in the same edit.» The audit range goes here as **immutable commit IDs** («`abc1234^..def5678`,
 observed `N files, +A/−B` from `git diff --stat` run at authoring time — never "N commits ahead
 of `main`" or `main..HEAD`, which can be empty by the time the reviewer runs it; list any
 documentation-only commits above the range separately so `HEAD` being ahead reads as
-expected, not as a discrepancy»). Then every trap:
+expected, not as a discrepancy. **Do not assert that an endpoint "is `HEAD`"** — that is a branch
+relation smuggled back into a pinned range, and it is false the moment one more commit lands, which
+on a live branch is usually before the reviewer opens the file. If you mention `HEAD` at all,
+produce it by running `git rev-parse HEAD` as you write, and name what sits above the range»). Then every trap:
 
 - Gitignored or machine-local datasets, with absolute paths «redact machine-identifying
   components — usernames, home directories — unless the reviewer genuinely needs them; this
@@ -142,6 +153,30 @@ doors) · robustness and process behavior · supply chain and hygiene.
 «Where a sub-question here is one of your own residual doubts — the normal case, since both come
 out of the same reading — keep it sharp and declare the overlap at hand-off (§11 below). Never
 blunt a claim to protect a doubt.»
+
+### 6b. The unseeded pass — required whenever §6 exists
+
+«A brief this directed buys confirmed defects and almost no independent coverage. Two measured
+rounds on this repository: 10 of 15 findings were echoes of §6's own sub-questions, then 6 of 9,
+with exactly one finding reached without the brief pointing at it. Every one of those findings was
+real. What was worth nothing was the reviewer's **silence** — outside the seams named here, the
+review established nothing either way, which is the one thing a calibrated reviewer's silence was
+supposed to buy.
+
+So ask for both, and keep them separate:»
+
+> **An unseeded pass, reported separately.** Set this brief's claim list aside and search the range
+> on your own reading of it. Report what that pass found under its own heading, including "nothing"
+> — a considered nothing from an unseeded pass is a result this brief cannot get any other way, and
+> it is not a failure to produce one. Findings that are also in the claim list belong under the
+> claim they answer, not here; this heading is only for what you reached without being pointed at
+> it.
+
+«Score the two passes separately when the report comes back. The adjudicator's echo audit will do
+this anyway — it probes every finding against this brief using the finding's own identifiers — but
+a reviewer that was asked for an unseeded pass produces the evidence directly instead of leaving it
+to be reconstructed. Do not drop §6 in favour of this: both rounds above suggest the directed
+questions are where the confirmed defects come from.»
 
 ## 7. Ground already walked — do not re-report, do challenge
 
