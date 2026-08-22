@@ -1,6 +1,6 @@
 # Adversarial audit — the ten fixes applied from external review 3
 
-*(A different model is auditing the same range in parallel from its own copy of this brief. See "What you must not read" in §8 — it is the one instruction here that protects the value of your report.)*
+*(Second-reviewer edition. A different model is auditing the same range in parallel from its own copy of this brief. See "What you must not read" in §8 — it is the one instruction here that protects the value of your report.)*
 
 You are auditing a small repository of two Claude Code "skills" — structured markdown instruction
 files that a coding agent loads and follows — plus a calibration corpus and the accumulated
@@ -17,8 +17,8 @@ source of the defects you are looking for.
 > That is exactly the problem. A model validating its own work carries the same blind spots into
 > the review that it had while writing — the same misreadings, the same unexamined assumptions, the
 > same things it never thought to check because it never thought of them at all. This work was
-> written by Anthropic's Claude. You are OpenAI's GPT-5.6 (Sol). You have a different architecture
-> and different training. **You will notice different things, and those things are the entire value
+> written by Anthropic's Claude. You are xAI's Grok. You have a different architecture and
+> different training. **You will notice different things, and those things are the entire value
 > of this exercise.**
 >
 > - **Confirmation is near-worthless output.** If you spend your effort re-deriving what the ledger
@@ -60,6 +60,15 @@ cannot tell the difference because the ledger is written by the same author as t
 
 **Do not uphold any claim on the strength of the ledger's description of it.** Open the file, read
 the actual text at the actual line, and decide for yourself.
+
+**One more source of confident error, specific to you.** Several claims below turn on what
+**Claude Code specifically** does — whether `allowed-tools` grants or restricts, whether
+`disallowed-tools` exists, how much of a skill survives auto-compaction. Agentic coding tools
+have converged on similar-looking skill formats, and yours may implement something that looks
+like the thing described here. **That is not evidence.** Answer those claims from Anthropic's
+published documentation with the URL cited, or return `COULD NOT DETERMINE`. A confident answer
+derived from how your own harness behaves is the single most expensive wrong finding this brief
+can produce, because it will read as authoritative and I am poorly placed to catch it.
 
 ## 2. Environment and how to run things
 
@@ -125,7 +134,7 @@ The ten changes were made to close eleven findings from an unscoped audit. The c
 
 ## 5. Load-bearing claims — attack these
 
-Return **CONFIRMED**, **REFUTED**, or **COULD NOT DETERMINE** for each of the 23 below, one line
+Return **CONFIRMED**, **REFUTED**, or **COULD NOT DETERMINE** for each of the 24 below, one line
 each, in your report's "Claims examined and upheld" or findings sections as appropriate. Each names
 the file and line where it lives.
 
@@ -258,6 +267,19 @@ the file and line where it lives.
     (c) The proposed minimal fix is to prune `__pycache__` too. Is that the right shape, or does
     pruning artefacts by name one at a time guarantee a third instance? What would `git ls-files`
     or an explicit manifest cost that the ledger did not weigh?*
+24. **Three rounds of review have now been run on this repository, all by the same reviewer,
+    and each round's fixes generated the next round's findings.** Rounds 1, 2 and 3 produced
+    15, 9 and 11 findings, and 35 changes have been applied across them. *Nothing anywhere
+    measures whether these skills are better than when they started. Is this converging or
+    over-fitting? Concretely: (a) are there changes in `fe9bbac..540c60a` that add words
+    without adding enforcement — length that reads as rigour? (b) has the accumulated
+    apparatus — invariants, two-axis verdicts, echo audits, claim cards, calibration digests,
+    backlog artifacts, workload gaps — passed the point where a competent operator would
+    actually follow it, and is there evidence in the ledger of the author failing to follow
+    its own procedure? (c) `review-adjudication/SKILL.md` is 572 lines to adjudicate a review;
+    what would a much shorter version actually lose? **You are the first reviewer with no
+    stake in any prior round's findings, which makes you the only one positioned to answer
+    this. Treat it as the most important claim on the list.***
 
 ## 5b. The unseeded pass — report it separately
 
@@ -331,22 +353,22 @@ both the bug and a written case for keeping it.
 | | |
 |---|---|
 | **Read** | Everything in the repository **except the three files named below**, including `.git` history and `~/.claude/skills/` if you want to compare the installed copies. Read outside the in-scope set freely for context |
-| **Write** | **Your report at `EXTERNAL-REVIEW-4.md` in the repository root — create it early and append to it as you work.** Nothing else in the repository. Throwaway probes are permitted **under `/tmp` only**; commit nothing, and report the tree clean at the end |
+| **Write** | **Your report at `EXTERNAL-REVIEW-4-GROK.md` in the repository root — create it early and append to it as you work.** Nothing else in the repository. Throwaway probes are permitted **under `/tmp` only**; commit nothing, and report the tree clean at the end |
 | **Execute** | The pytest command in §2, `git` read commands, `grep`/`find`/`shasum`, any tokenizer you have available, and anything you like under `/tmp`. Nothing that rewrites repository files — note that a bare `pytest` run inside `calibration/cases/` writes `__pycache__` |
 | **Network + installs** | No installs. **Web search is allowed and encouraged** for the Claude Code documentation claims — several findings turn on what `allowed-tools`, `disallowed-tools` and auto-compaction actually do. Cite the URL for anything sourced that way; it will be weighed as a lookup, not a discovery |
 | **Your own tools** | Subagents and MCP servers are fine. This repository is public, so if you take anything from its issue tracker or commit prose, cite it — that is a lookup, not a discovery |
 | **Effort budget** | Depth over breadth. Roughly 8–15 findings expected. One CONFIRMED finding is worth several THEORETICAL ones for credibility — though impact alone decides rank, never evidence status |
 
 **In one sentence: read anything except the three files below, run the tests and anything under
-`/tmp`, write your report to `EXTERNAL-REVIEW-4.md`, and modify nothing else.**
+`/tmp`, write your report to `EXTERNAL-REVIEW-4-GROK.md`, and modify nothing else.**
 
 ### What you must not read, and why it matters more than it looks
 
 **Do not open these, and do not let a search tool print their contents:**
 
-- `EXTERNAL-REVIEW-4-PROMPT-GROK.md` — the other reviewer's copy of this brief
-- `EXTERNAL-REVIEW-4-COVER-NOTE-GROK.md`
-- `EXTERNAL-REVIEW-4-GROK.md` — the other reviewer's report, which may appear part-written mid-run
+- `EXTERNAL-REVIEW-4-PROMPT.md` — the other reviewer's copy of this brief
+- `EXTERNAL-REVIEW-4-COVER-NOTE.md`
+- `EXTERNAL-REVIEW-4.md` — the other reviewer's report, which may appear part-written mid-run
 
 A different model is auditing this same range in parallel. **Two reports agreeing is
 corroboration only if the second could not read the first.** These files sit in the directory
@@ -371,7 +393,7 @@ answered and is an input you should read, and the whole of `REVIEW-ADJUDICATION.
 
 ## 10. Deliverable
 
-**Write your report to `EXTERNAL-REVIEW-4.md` in the repository root, as you go.** Create it early
+**Write your report to `EXTERNAL-REVIEW-4-GROK.md` in the repository root, as you go.** Create it early
 with a title and your identity — model family, product and version, reasoning effort, and your
 served model alias verbatim if your session exposes it — then append each finding as you confirm
 it. Do not hold the report in memory: a run cut short after the last finding but before the write
@@ -384,7 +406,7 @@ impact levels, and the file path. All detail goes in the file.
 Structure:
 
 ```markdown
-# External Review 4 — audit of the round-3 fixes
+# External Review 4 (Grok) — audit of the round-3 fixes
 Reviewer identity: [family, product and version, effort, served alias verbatim]
 Audit baseline: findings assessed against `fe9bbac..540c60a`; `HEAD` observed at [sha]
 
@@ -401,7 +423,7 @@ Impact is an attribute, never a section heading.]
 [§5b — what you found reading without the claims list, or a considered nothing]
 
 ## Claims examined and upheld
-[one line each for the 23, naming what upheld it — never a quote from the work itself]
+[one line each for the 24, naming what upheld it — never a quote from the work itself]
 
 ## Could not verify
 [every gap. An unstated gap reads downstream as a pass]

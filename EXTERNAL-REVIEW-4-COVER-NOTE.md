@@ -10,6 +10,13 @@ fixes, not re-find the findings.** Several of them are the kind where adding a s
 the problem is handled can look identical to handling it, and I would rather know now than
 believe it.
 
+**One thing before you start.** A different model is auditing the same range in parallel. Its
+brief, cover note and report sit in the repository root as `EXTERNAL-REVIEW-4-PROMPT-GROK.md`,
+`EXTERNAL-REVIEW-4-COVER-NOTE-GROK.md` and `EXTERNAL-REVIEW-4-GROK.md`. **Please don't open
+those three.** Two reports agreeing only means something if the second couldn't read the first,
+and nothing technically stops you — I'm asking rather than enforcing. If you do end up seeing
+one, just say so in your report; that's still useful, whereas quietly reading it isn't.
+
 The full brief is on disk. Please read it first — it pins the audit range, lists 22 load-bearing
 claims to adjudicate, and states exactly what you may and may not touch:
 
