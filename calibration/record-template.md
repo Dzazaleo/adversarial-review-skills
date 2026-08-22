@@ -11,7 +11,7 @@ Replace every «placeholder». Delete this line and the one above it.
 | **Reviewer self-report** | «verbatim, what the model said when asked what it is — e.g. `gpt-5.6-codex`, or `OpenAI Codex, GPT-5-based; exact served version not exposed to it`» |
 | **Run on** | «YYYY-MM-DD» |
 | **Expires** | «YYYY-MM-DD — run date + the window you chose. 30 days is the default, not a requirement; say which you used and why if it was not 30» |
-| **Corpus digest** | «in adversarial-review-skills, run: `find calibration/cases calibration/CALIBRATION-PROMPT.md calibration/ANSWER-KEY.md -type f ! -name .DS_Store -print0 \| sort -z \| xargs -0 shasum \| shasum \| cut -c1-12`» |
+| **Corpus digest** | «in adversarial-review-skills, run: `git ls-files -z calibration/cases calibration/CALIBRATION-PROMPT.md calibration/ANSWER-KEY.md \| sort -z \| xargs -0 shasum \| shasum \| cut -c1-12`» |
 | **Workload** | «what the six cases actually were, in numbers — e.g. `6 cases, 14 files, ~400 lines total`. This is the size the pass was earned on, and the consumer states it beside the size of the work it is adjudicating» |
 | **Project** | «the repo this record is filed in» |
 | **Result** | **PASS** / **FAIL** |
@@ -21,12 +21,25 @@ served version is common and is not a failure — record what it did say, and th
 version and effort carry the key. **Effort is not decoration:** the same model at high and at low
 reasoning effort is not the same reviewer, and a pass earned at one is not evidence about the other.
 
-The corpus digest covers the working tree, not the last commit — a case edited without committing,
-or a private replacement corpus never committed at all, changes the digest and expires the record.
-
-It covers **the instrument only**: the cases, the fixed brief, and the answer key. Not
+The digest covers **the instrument only**: the cases, the fixed brief, and the answer key. Not
 `calibration/README.md` or this template, which are operator documentation the reviewer never sees
 — a typo fix in either would otherwise expire every record on file for nothing.
+
+**It enumerates tracked files, and that is the point of the command.** An earlier version walked
+the directory with `find`, which hashed whatever happened to be sitting there — and every artefact
+anyone's tooling dropped became part of the instrument. `.DS_Store` was pruned by name, then
+pytest's `__pycache__/*.pyc` arrived through the same door, written by *following the calibration
+procedure itself*. Worse, timestamp-mode `.pyc` embeds the source file's mtime, so the post-test
+digest differed on every machine: one corpus, one commit, three different digests across three
+checkouts. Every record silently expired the first time anyone ran the fixtures, and a valid
+`PASS` read as stale. Enumerating tracked files ends the whole class — there is no artefact list
+to maintain and no next artefact to be surprised by.
+
+**What it costs, stated rather than discovered later:** a case edited but not committed does not
+change the digest, and an entirely uncommitted private replacement corpus produces the digest of
+whatever *is* tracked. Commit corpus edits before filing or trusting a record. Where a private
+corpus is genuinely untracked, this command is the wrong instrument for it and the record should
+say so on its face rather than carry a digest that describes something else.
 
 ## Traps
 

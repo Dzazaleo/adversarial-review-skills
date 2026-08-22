@@ -2599,3 +2599,977 @@ rather than an amendment, because it has its own mechanism and its own consequen
 **Consequence for `R3-CNV-2` and for the round-4 brief:** the brief written this session cites the
 digest mechanism and this correction. Both are in its scope, and claim 23 was added to point the
 next reviewer directly at this entry rather than letting it re-derive the same ground.
+
+---
+
+# Round 4 — dual-reviewer patch verification of the round-3 fixes, adjudicated 2026-08-22
+
+**Reports found:** the step-1 census globbed the whole tree for `*EXTERNAL*` report families
+excluding `*PROMPT*`, `*COVER-NOTE*`, `*ADJUDICATION*`, `*RESPONSE*`. It returned five:
+`EXTERNAL-REVIEW.md` — *adjudicated in round 1*; `EXTERNAL-REVIEW-2.md` — *adjudicated in round
+2*; `EXTERNAL-REVIEW-3.md` — *adjudicated in round 3*; `EXTERNAL-REVIEW-4.md` — *adjudicated in
+this ledger*; `EXTERNAL-REVIEW-4-GROK.md` (in the Grok worktree at
+`/Users/leo/.grok/worktrees/coding-adversarial-review-skills/adversarial-skills/`) — *adjudicated
+in this ledger*. `examples/**` returned nothing under the census pattern.
+
+**Review A:** `EXTERNAL-REVIEW-4.md` (OpenAI Codex, served alias `gpt-5.6-sol`, reasoning effort
+`high`; 2026-08-22, written 13:04). Envelope honoured: the only repository file it created was its
+own report; the two untracked `__pycache__/` directories predate the run and it said so.
+
+**Review B:** `EXTERNAL-REVIEW-4-GROK.md` (xAI Grok 4.6, Grok Build TUI / Grok Code, reasoning
+effort `high`; 2026-08-22, written 15:40). Envelope honoured: report only; it ran the fixtures in
+`/tmp` rather than in-tree specifically to avoid writing to the repository, and said so.
+
+**Reviewer identity established from:** *the user, asked directly at the start of this
+adjudication* — Grok's product, version and effort, and confirmation that Codex was the same
+identity as round 3. The Codex brief names "OpenAI's GPT-5.6 (Sol)" at `:20` and round 3's header
+records the served alias and effort; the Grok brief names only "xAI's Grok", which is why the user
+was asked. **Neither identity was read off its own report**, both of which self-report — the Codex
+report at `:3`, the Grok report at `:2`. Those self-reports are consistent with what the user gave
+and are recorded here as consistent, not as the source.
+
+**Briefs:** `EXTERNAL-REVIEW-4-PROMPT.md` (Codex) and `EXTERNAL-REVIEW-4-PROMPT-GROK.md` (Grok).
+**They are the same document apart from the reviewer name and one added claim.** Claims 1–23 are
+byte-identical; Grok's brief adds claim 24 (the over-fitting question) and its §5 header says 24
+where Codex's says 23. This is the single most important fact about what the two reports are worth
+together, and it is carried into §R4.3 rather than noted and forgotten.
+
+**Adjudicated:** 2026-08-22, by a session that did not write the work under review and did not
+write either brief.
+
+**Report state:** **both complete.** Each carries a coverage line, a ranked findings list with
+per-finding Location · Mechanism · Trigger · Consequence · Status, an unseeded-pass section, a
+per-claim adjudication list, a could-not-verify list and a prior-round disagreement list. Neither
+is truncated.
+
+**Reviewer isolation — established from artifact timestamps, not from promises.**
+
+| | |
+|---|---|
+| Codex report written | 13:04 |
+| Grok brief / cover note written | 13:57 / 13:58 |
+| Grok report written | 15:40 |
+
+**Codex could not have read anything of Grok's: none of it existed when Codex ran.** That is
+structural, not a promise, and it is the stronger of the two facts. **Grok could have read the
+Codex report** — `EXTERNAL-REVIEW-4.md` sat in the worktree it was rooted in from 13:04 onward. It
+disclosed at `:5` that it saw the three filenames in a directory listing and in `git status` and
+did not open them. The disclosure is exactly what the cover note asked for and **it is not
+verifiable by this session**. Consequence, applied throughout §R4.3: where the two reports agree,
+the agreement is re-established from primary sources as if only one reviewer had raised it —
+which is required here anyway, because both read the same brief.
+
+**Reviewer calibration — Codex: on file, PASS, and stale by the prescribed check, which counts as
+missing.** `.adversarial-review/calibration/gpt-5.6-sol-high.md` records **PASS**, expires
+**2026-09-21** (three weeks out, so not expired by date), and its identity fields match the
+reviewer on all four keys — family, product and version, effort, self-report. Its `Corpus digest`
+row reads `775e1cc8c43f`. **Recomputed with the command the record names, verbatim, it returns
+`9fb019996546`. They do not match, so the record is stale and counts as missing** (RV-1). Stated
+without adjustment, because the last two attempts to rule on this line were wrong in both
+directions: §R3.15 got the right answer by silently adding a predicate to the command, and §R3.16
+corrected it. **The command is not modified here.** What is separately true, and stated beside the
+ruling rather than instead of it: the four files separating the two digests are untracked
+`__pycache__/*.pyc`, and `git ls-files` over the same paths returns `775e1cc8c43f`, so **nothing
+that decides a calibration score has changed.** The instrument is intact; the check that reads it
+is broken. That check is `R3-F12` / `codex-10` / `grok-7`, unresolved since round 3, and this is
+the **fourth consecutive round** in which it has produced a wrong or contested calibration line.
+
+**Reviewer calibration — Grok: none on file.** `.adversarial-review/calibration/` was listed
+before concluding absence; it contains exactly one record, `gpt-5.6-sol-high.md`, and no file for
+any xAI identity, near-miss or otherwise.
+
+**So neither reviewer carries a usable calibration record this round.** For both: findings
+adjudicated normally and at the usual standard — a defect is not less real because the model that
+found it was uncalibrated. What lapses is only what their silence closes: **every load-bearing
+claim on either upheld list is a CNV entry, not coverage**, and nothing either report cleared
+carries forward into the next brief's "ground already walked" section.
+
+**Workload gap, in numbers, not adjectives.** The Codex record's `Workload` row says its PASS was
+earned on **6 cases, 17 files, 315 lines total**. This review covered **7 changed files, 951
+insertions over the pinned range `fe9bbac..540c60a`, against a repository of ~30 tracked files and
+~5,900 lines**, with the two skills alone at 497 and 572 lines. Both numbers are stated; the
+reader judges what the pass supports. For Grok there is no record and therefore no gap to state.
+
+**Upheld claims:** 15 sampled of 23 shared (Grok's 24th engaged separately) · 4 re-opened as
+`U-1`–`U-4`.
+
+**Findings in: 27 (codex 14 + grok 13) · Rows out: 27 — 26 in the §R4.4 table, plus `grok-13`
+ruled as `P-1` in the process block because its fix lands in the brief, not the code · +1
+process, +11 CNV, +15 prior-review disagreements ruled.** No findings merged. Where the two
+reviewers found the same defect the rows stay separate and cross-reference, so a row number names
+exactly one reviewer's finding.
+
+**Round 3 was declared CLOSED and is not closed.** §R3.12 marks it CLOSED; §R3.16 then appended
+`R3-F12` carrying an unresolved `PENDING OWNER`. Under the skill's own closure predicate — no
+unresolved `PENDING OWNER` — round 3 remains open. That is `codex-13`, ruled below. Round 4 is
+appended rather than filled into round 3 because these are two new reports of a new range; round
+3's one outstanding obligation is carried forward explicitly as **R4-Q3** rather than left behind.
+
+## R4.1 — Situation in one paragraph
+
+Round 3 produced eleven findings and ten fixes, all applied in commit `540c60a` and all marked
+`✔ executed`. Two reviewers were then handed near-identical briefs asking them to attack those
+fixes rather than re-find the findings, with 23 load-bearing claims each (Grok got a 24th), a
+pinned range, and an explicit instruction that a ledger row saying `✔ executed` is a claim by the
+party under review. Both returned complete reports: Codex 14 findings, Grok 13. **They agree on
+the substance of nine defects and contradict each other on two points of fact.** Of the 27
+findings, 24 are CONFIRMED or CONFIRMED (partial), 1 is REFUTED, and 2 are held for the owner on
+a decision the reviewers surfaced new evidence about. The dominant result is that the round-3
+fixes were real edits that mostly did not close their findings: several changed one site of a
+claim that lives at two or three, and several added a sentence describing an enforcement that the
+tooling does not provide. Nothing here says the work is complete, correct, or ready to ship.
+
+## R4.2 — Re-verification performed before accepting anything
+
+Every command below was run from the repository root against the working tree, which is unchanged
+from the reviewed commit for everything under `skills/` (`git diff --stat 540c60a..HEAD -- skills/`
+is empty, so the line numbers both reviewers cite are valid against the audited range). The one
+test that writes files ran in a throwaway `git archive` under the session scratchpad, never in the
+tree. Expectations are stated before each command. **Deviation from step 2, recorded rather than
+hidden:** the re-verification below ran *before* the ledger skeleton was written to disk, not
+after. Step 2 requires the skeleton first. This is the third recorded instance of a conforming
+session breaking this skill's own ordering rules — `R3-F6` was the first, §R3.15's modified digest
+command the second — and it is corroborating evidence for `codex-5` / `grok-9` rather than an
+excuse. The claim cards were cut before any verdict was written, in the session scratchpad.
+
+### RV-1 — the corpus digest, three ways (bears on: calibration header, `codex-10`, `grok-7`)
+
+**Expected before running:** prescribed command returns `9fb019996546` on this tree (both reports
+say so); `__pycache__`-pruned returns `775e1cc8c43f`; `git ls-files` returns `775e1cc8c43f`
+(Grok's claim, which no prior round tested).
+
+```
+$ find calibration/cases calibration/CALIBRATION-PROMPT.md calibration/ANSWER-KEY.md \
+    -type f ! -name .DS_Store -print0 | sort -z | xargs -0 shasum | shasum | cut -c1-12
+9fb019996546
+$ find … ! -name .DS_Store ! -path '*__pycache__*' …
+775e1cc8c43f
+$ git ls-files -z calibration/cases calibration/CALIBRATION-PROMPT.md calibration/ANSWER-KEY.md \
+    | sort -z | xargs -0 shasum | shasum | cut -c1-12
+775e1cc8c43f
+$ grep 'Corpus digest' .adversarial-review/calibration/gpt-5.6-sol-high.md
+| **Corpus digest** | `775e1cc8c43f` |
+```
+
+**All three as expected.** Both reviewers' figures reproduce exactly. Grok's `git ls-files`
+proposal is verified working: it returns the record's stored value with no named-artefact list.
+
+### RV-2 — is the post-test digest portable? (bears on: `codex-10`, and it went against expectation)
+
+Codex claims the recorded `775e1cc8c43f → 9fb019996546` transition is **not** reproducible on a
+clean machine, and reports `775e1cc8c43f → ce0a9e5f3046` from a clean archive.
+
+**Expected before running:** a clean archive gives `775e1cc8c43f` before tests. After tests it
+gives *something other than* `9fb019996546` — and, if Codex's mtime mechanism is right, possibly
+something other than its own `ce0a9e5f3046` too, since my checkout timestamps differ from both.
+
+```
+$ git archive 540c60a | tar -x -C <scratchpad>/arch && cd <scratchpad>/arch
+$ find … ! -name .DS_Store …            # before any test run
+775e1cc8c43f
+$ python3 -m pytest -q calibration/cases/clean-wordcount calibration/cases/trap-unfalsifiable-test
+8 passed in 0.01s
+$ find … ! -name .DS_Store …            # after
+6e12a662226f
+$ find … ! -name .DS_Store ! -path '*__pycache__*' …
+775e1cc8c43f
+$ python3 --version; python3 -m pytest --version
+Python 3.14.3
+pytest 9.0.2
+```
+
+**Result: `6e12a662226f` — a third distinct value**, on the same Python 3.14.3 and pytest 9.0.2
+the ledger's own run used, differing only in checkout mtimes. Three machines, three post-test
+digests: `9fb019996546` (this working tree), `ce0a9e5f3046` (Codex), `6e12a662226f` (a clean
+archive here). **This confirms Codex's mechanism more strongly than Codex's own evidence did**,
+and it means `R3-F12`'s Trigger row records a machine-local number as though it were the trigger's
+result. The instrument itself is unaffected: cache-pruned and `git ls-files` both return
+`775e1cc8c43f` everywhere.
+
+### RV-3 — both frontmatters (bears on: `codex-1`, `grok-1`, `grok-10`)
+
+**Expected:** both exactly `Read, Write, Grep, Glob`.
+
+```
+$ sed -n '1,12p' skills/adversarial-review-prompt/SKILL.md   # and review-adjudication
+allowed-tools:
+  - Read
+  - Write
+  - Grep
+  - Glob
+```
+**As expected**, both files. No `Bash`, `Edit`, `Agent` in either grant.
+
+### RV-4 — the documentation both reports rest on (bears on: `codex-1`, `codex-2`, `grok-1`, `grok-10`)
+
+Every quotation either reviewer attributed to Anthropic's docs was fetched and checked verbatim.
+**All of them reproduce exactly.** The load-bearing ones:
+
+- `code.claude.com/docs/en/skills` — *"The `allowed-tools` field grants permission for the listed
+  tools during the turn that invokes the skill… **It does not restrict which tools are available:
+  every tool remains callable**, and your permission settings still govern tools that are not
+  listed."*
+- same page — *"Workspace trust doesn't gate this field. Claude Code applies a project skill's
+  `allowed-tools` whenever you or Claude invoke the skill, including in a `-p` run in a folder
+  you've never trusted. **A skill can grant itself broad tool access**, so review the
+  `allowed-tools` of skills checked into a repository before you run Claude Code there."* — the
+  docs warn about precisely the distributed-CC0-repository case `grok-1` names as its trigger.
+- same page — *"…re-attaches the most recent invocation of each skill after the summary, **keeping
+  the first 5,000 tokens of each**. Re-attached skills share a combined budget of 25,000 tokens."*
+- same page — *"Keep `SKILL.md` under 500 lines."* — `review-adjudication` at 572 is 72 lines past
+  it, as Grok says.
+- `code.claude.com/docs/en/permissions` — *"Claude Code checks file permissions against
+  `Edit(path)` and `Read(path)` rules only. If you write a path rule for `Write`, `NotebookEdit`,
+  `Glob`, or the legacy `MultiEdit` tool instead, Claude Code accepts the rule but **never consults
+  it**… **Use `Edit(docs/**)` in place of `Write(docs/**)`**"* — **this is new evidence the
+  round-3 Q1 decision did not consider**, and it is why `codex-1`/`grok-1` are reopened rather
+  than filed as a settled residual. See R4-Q1.
+- same page — *"A `Read` deny rule also blocks the Edit and Write tools on the same path,
+  including creating a new file there."*
+- same page — *"Claude Code recognizes a built-in set of Bash commands as read-only and runs them
+  without a permission prompt in every mode. These include `ls`, `cat`, `echo`, `pwd`, `head`,
+  `tail`, `grep`, `find`…"* — Grok's narrow form of claim 4 is right and the ledger's §R3.14 hedge
+  was too pessimistic.
+- same page, and decisive for `codex-2` — *"Read and Edit deny rules apply to Claude's built-in
+  file tools and to file commands Claude Code recognizes in Bash, such as `cat`, `head`, `tail`,
+  and `sed`. **They don't apply to arbitrary subprocesses that read or write files indirectly**,
+  like a Python or Node script that opens files itself."*
+- `code.claude.com/docs/en/tools-reference` — the `Agent` row reads **Permission required: No**,
+  and `Agent` appears in the list of tools that do not require permission. **This refutes
+  `grok-10`.** `Bash` reads **Permission required: Yes**.
+
+### RV-5 — the escalation's blindness claim (bears on: `codex-4`, `grok-3`)
+
+**Expected:** `:439` still carries the unqualified "never saw the report".
+
+```
+$ grep -n -i 'blind\|never saw\|never seen\|not handed' skills/review-adjudication/SKILL.md
+47:  that was not handed the report. Without both, the verdict is `COULD NOT DETERMINE`. (§5)
+269: blindness exists in exactly one place in this skill — the subagent in step 5's escalation, which
+270: is never *handed* the report — and that is the only place the word is used for it.
+439:- **That same verdict also requires a second opinion that never saw the report.** Spawn a
+474:  is not told will assume the stronger one. Never write "blind" for a check that was merely
+```
+**As expected.** The file states three different strengths of the same claim, and `:474`
+explicitly forbids what `:439` implies. Confirmed without needing either reviewer's argument.
+
+### RV-6 — the §10 continuation gap (bears on: `codex-8`, `grok-6`)
+
+**Expected:** no match in the skill; the instruction exists only in the template.
+
+```
+$ grep -n 'continue\|one word' skills/adversarial-review-prompt/SKILL.md
+exit=1
+$ grep -n 'continue\|one word' skills/adversarial-review-prompt/references/prompt-template.md
+367-369: …the operator will send one word to continue, and you resume from exactly there.
+375: to send a single "continue".
+```
+**As expected.** §10's hand-off checklist (`:476-497`) was read in full: it lists the capability
+line, where the report lands, the residual doubts, the pipe alternative and the envelope caveat.
+It does not list the continuation action.
+
+### RV-7 — the overwrite guard's scope (bears on: `codex-6`, `grok-5`)
+
+**Expected:** the guard names the brief and cover note only.
+
+```
+$ sed -n '324,331p' skills/adversarial-review-prompt/SKILL.md
+**Never overwrite an existing brief or cover note.** Check the path before writing; where a
+file is already there, take the next free name…
+$ sed -n '529,531p' skills/review-adjudication/SKILL.md
+- Completed rounds append only. A superseded ruling gets a new row citing the row it supersedes;
+  the original row stays as written.
+```
+**As expected.** Two artifacts named; the report path and the ledger are governed by prose with no
+existence check. *Noted for the record:* this ledger was appended with `cat >>`, not written, and
+the round-3 text above is byte-unchanged — which is the discipline holding by choice, exactly the
+point `grok-5` makes.
+
+### RV-8 — invariant 4 against step 2 (bears on: `codex-5`, `grok-9`)
+
+**Expected:** the two orderings are stated as both reviewers describe.
+
+```
+$ sed -n '42,44p'   review-adjudication/SKILL.md   → "created **before** the ledger is written"
+$ sed -n '211,212p' review-adjudication/SKILL.md   → "Then write the skeleton to disk."
+$ sed -n '499p'     review-adjudication/SKILL.md   → "created before the ledger is written"
+```
+**As expected, with one qualification neither reviewer made.** "The ledger is written" is
+ambiguous between *the file first exists* (step 2) and *the ledger is finalized* (step 7). Under
+the second reading there is no contradiction. But the round-3 session applied the first reading —
+which is why it recorded a violation at `R3-F6` — and both reviewers independently reached the
+same reading. A rule that three separate readers take to be unsatisfiable is unusable whichever
+reading is "correct". Ruled `CONFIRMED (partial)` on that basis: the ambiguity is established, the
+strict impossibility is not.
+
+### RV-9 — the guillemet gate, broken deliberately (bears on: claim 14, upheld by both)
+
+The skill requires that a gate be tested by breaking it, not by reading it.
+
+**Expected:** the gate fires on the unfilled template and goes silent once nothing is unfilled.
+
+```
+$ grep -nF 'independence sentence — one of the three branches below' …/prompt-template.md
+39:> of them at all. «independence sentence — one of the three branches below». **You will notice
+$ grep -c '«|»' <copy of the unfilled template>
+60          # gate fires
+```
+**As expected — claim 14 upheld, and upheld by execution rather than by reading.** One thing my
+own test surfaced and which is *not* a defect, recorded so a later reader does not re-derive it:
+a naive line-based substitution leaves orphaned guillemets on the template's multi-line
+instruction blocks, because those blocks are meant to be *deleted* rather than substituted. That
+is an artifact of my substitution, not of the gate. No finding.
+
+### RV-10 — the brief's own inventory figure (bears on: `grok-13`)
+
+**Expected:** 2480, against the brief's "2,466 total".
+
+```
+$ git show 540c60a:REVIEW-ADJUDICATION.md | wc -l
+    2480
+$ grep -n '2,466' EXTERNAL-REVIEW-4-PROMPT.md
+101:| `REVIEW-ADJUDICATION.md` (the round-3 section and its appended correction) | 2,466 total |
+```
+**As expected.** Off by 14, in both briefs. The other six in-scope counts and the
+`7 files changed, 951 insertions(+), 19 deletions(-)` range both reproduce.
+
+### RV-11 — the tokenizer dispute (bears on: `codex-11`, `grok-4`, and the two reviewers disagree)
+
+Codex measured with Claude Code 2.1.239's native token accounting and places the 5,000-token
+boundary at prompt line **227** and adjudication line **205**. The ledger's §R3.14 recorded bands
+of **288–322** and **265–302** from a word-count heuristic. Grok, with no tokenizer, bounded it
+at **257–324** and **233–304** — bounds that *exclude* Codex's measured values.
+
+**I have no Anthropic tokenizer available, so I cannot settle the exact line.** What I can do is
+test the implied rates for consistency:
+
+```
+$ head -n L file | wc -c
+prompt SKILL.md      through 227: 15,935 chars    through 288: 20,475    total 36,217
+adjudication SKILL.md through 205: 15,749 chars    through 265: 20,079    total 42,961
+```
+
+| Source | implied chars/token |
+|---|---|
+| Codex, prompt @227 | 15,935/5,000 = **3.19** |
+| Codex, adjudication @205 | 15,749/5,000 = **3.15** |
+| Codex, prompt full file | 36,217/11,843 = **3.06** |
+| Codex, adjudication full file | 42,961/14,129 = **3.04** |
+| Ledger's band, prompt @288–322 | **4.10–4.63** |
+| Ledger's band, adjudication @265–302 | **4.02–4.53** |
+
+**Codex's four independent measurements agree with each other to within 5%.** The ledger's bands
+imply a rate ~35% higher. For markdown this dense with backticked identifiers, guillemets,
+em-dashes and section symbols — all of which fragment badly — ~3.1 chars/token is plausible and
+~4.3 is not. I therefore rule Codex's figures **credible but not independently reproduced here**,
+and the ledger's recorded "verification" **false as a verification** regardless of who is right
+about the exact line, because §R3.10's own `R3-CNV-2` admits no tokenizer was ever run.
+
+**What does not depend on the dispute:** both `<invariants>` blocks end at lines 45 and 50 and
+survive under every estimate, including the most aggressive. And the round's *new* obligations —
+Q4(b)'s recording rule at `:467-476`, the overwrite how-to at `:324-331` — sit past the cut under
+**every** estimate on the table, including the ledger's own most generous band. `grok-4` is
+therefore CONFIRMED independently of the tokenizer question.
+
+### RV-12 — the round-3 report's own text (bears on: `codex-3`, `codex-14`)
+
+**Expected:** the report shows history-derived findings, and the sixth bullet is an endorsement.
+
+```
+$ grep -n 'Reopen the earlier|BACKLOG.md' EXTERNAL-REVIEW-3.md
+35:- Reopen the earlier "unbounded Write/Edit" finding: the recorded prose-only fix did not close…
+107:- **Keep the public-corpus limitation prominent.** You have already captured this well in
+     `BACKLOG.md`… That remains the largest validity limitation of calibration, even though it is
+     honestly documented.
+```
+**As expected, both.** `:35` names an *earlier finding* the reviewer could only have learned from
+repository history; `:107` credits `BACKLOG.md` by name. §R3.4's *"No document primed this
+reviewer"* is disproved by the report it describes. And `:107` asks for no change and praises what
+exists — it is an endorsement, which the round-3 header's own sentence concedes in its second
+clause while denying in its first (*"Every one of those six states a defect… and the last of them
+states an endorsement"*).
+
+### RV-13 — vocabulary and the backlog artifact (bears on: claim 20, upheld by both)
+
+```
+$ grep -rn 'COULD NOT VERIFY' . --include='*.md'
+# only historical mentions: REVIEW-ADJUDICATION.md (quoting the old text), BACKLOG.md:89 (origin)
+$ sed -n '149,153p' calibration/README.md   → reads `COULD NOT DETERMINE`
+$ BACKLOG.md B-3  → carries **Origin**, **Scope note**, **Location**, **Mechanism**, **Consequence**
+```
+**Claim 20 upheld**, verified rather than accepted: the vocabulary swap is complete and `B-3`
+carries the three fields the skill requires, with the corpus half correctly left to `B-1`.
+
+### RV-14 — working state at close
+
+```
+$ git status --short
+?? EXTERNAL-REVIEW-4.md
+?? calibration/cases/clean-wordcount/__pycache__/
+?? calibration/cases/trap-unfalsifiable-test/__pycache__/
+```
+Identical to the state at session start. The only file this session wrote in the repository is
+this ledger (appended). The throwaway archive and the claim cards live in the session scratchpad.
+
+## R4.3 — Echo audit: what these two reports are actually worth together
+
+This is the section that decides how much weight the rest of the round carries, and the answer is
+uncomfortable, so it is stated in numbers first.
+
+**Both reviewers read the same brief.** Claims 1–23 are byte-identical between
+`EXTERNAL-REVIEW-4-PROMPT.md` and `EXTERNAL-REVIEW-4-PROMPT-GROK.md`; only claim 24 differs. Every
+one of those 23 claims is a pointed sub-question that names the file, the line and the suspected
+defect — *"Is that the qualified claim or the original one?"*, *"Does `ledger-template.md` have a
+field for it?"*, *"What about the **report** path?"*. **A reviewer that comes back agreeing has
+answered a question, not found a defect.** That is not the reviewers' failure; it is what a
+directed brief buys, and the brief said so. But it means agreement between these two reports is
+almost entirely explained by shared direction, and cannot be scored as corroboration.
+
+### Per-finding probe against the brief
+
+Each finding was queried against both briefs and both cover notes using its own identifiers.
+
+| Finding | Brief claim that named it | Status |
+|---|---|---|
+| codex-1, grok-1 | claims 1, 2 (`:136`, `:141`) | **echo** |
+| codex-2 | none — no claim mentions the subagent's retained `Bash` | **free** |
+| codex-3 | claim 22 (`:247`), which supplied the counter-evidence | **echo** |
+| codex-4, grok-3 | claim 11 (`:191`), which quotes `:439` and asks the question | **echo** |
+| codex-5, grok-9 | claims 7, 8 (`:165`, `:171`) — pointed at the wording and the slip, not the collision | **partial** |
+| codex-6, grok-5 | claim 17 (`:229`), which asks about the report path and the ledger by name | **echo** |
+| codex-7, grok-8 | claims 9, 10 (`:176`, `:182`), including the README line | **echo** |
+| codex-8 (§10 half), grok-6 | claim 19 (`:237`) | **echo** |
+| codex-8 (invariant-4 half) | none | **free** |
+| codex-9 | claim 7 asks to check each invariant; this instance not named | **partial** |
+| codex-10, grok-7 | claim 23 (`:260`), including (b) and (c) | **echo** |
+| codex-11, grok-4 | claims 5, 6 (`:156`, `:162`) | **echo** (the measurement is new work) |
+| codex-12, grok-12 | claim 15 (`:212`) — near-verbatim | **echo** |
+| codex-13 | claim 21 (`:250`) asked §R3.12 vs §R3.15; this is §R3.16 | **partial** |
+| codex-14 | claim 22 (`:255`) — supplied the word "inflation" | **echo** |
+| grok-2 | claim 14 named the placeholder, not the next sentence | **free** |
+| grok-10 | claim 3 (`:145`) — wrote the finding, including the CNV-exit clause | **echo** |
+| grok-11 | claim 12 (`:196`) — wrote the finding, including the `:31` question | **echo** |
+| grok-13 | none — a process defect the standing instruction invites generically | **free** |
+
+**Tally: 18 echoes, 3 partial, 4 free** (`codex-2`, `codex-8`'s invariant-4 half, `grok-2`,
+`grok-13`). **The four free findings are what these reports' evidentiary weight actually rests
+on**, and all four are CONFIRMED below — which is worth more than the raw count of 27 suggests,
+because a report whose unprompted findings all survive verification has demonstrated something its
+prompted findings cannot.
+
+### The author's residual doubts — ruled per doubt, by this session's own searches
+
+The hand-off was supplied by the user on request and is quoted into the record below. Per the
+skill, its labels are treated as unverified until checked: **claims of presence have been reliable
+in this project; claims of absence have not.** Every doubt was re-searched here against all four
+documents — both briefs and both cover notes — using the doubt's own identifiers as queries, not a
+paraphrase.
+
+| # | Doubt (abridged) | Hand-off said | **This session found** | Ruling |
+|---|---|---|---|---|
+| D1 | The `<invariants>` duplication may be actively lossy — a compacted agent applies a flattened rule | claims 5, 7; mechanism itself "no line found" | `invariants` at CODEX `:53 :156 :165`, GROK `:53 :165 :174 :276`. `lossy`, `flatten`, `duplicat` → **no line** in any of the four | **partial leak.** The topic is directed; the specific mechanism is not |
+| D2 | The write-boundary invariant contradicts its own frontmatter | claims 2; quoted at `:47`, `:49` | `whatever the tool grants allow` at CODEX `:49 :141`, GROK `:49 :150`; `Write boundary` at CODEX `:47`, GROK `:47` | **in the brief** |
+| D3 | "Independent by construction" may be overstated | claim 22 | `independent by construction` at CODEX `:247`, GROK `:256`; `primed` same lines | **in the brief** |
+| D4 | The fallback is unfalsifiable — one sentence removes an obligation | claim 10 | `unavailable` at CODEX `:182 :184`, GROK `:191 :193`; `checkable` at CODEX `:185`, GROK `:194` | **in the brief** |
+| D5 | The whole exercise may be over-fitting | absent from Codex; claim 24 in Grok, "treat it as the most important claim" | `over-fit` GROK `:274` only; `same reviewer` GROK `:270` only; `converging`, `measures whether` GROK only. **No line in either Codex file** | **absent for Codex, directed for Grok** |
+
+No cover note returned a hit on any doubt query; the only `twice` hit
+(`COVER-NOTE-GROK:12`, *"matter enough to say twice"*) is unrelated context.
+
+**What that scores.** Four of five doubts are in both briefs, so any agreement on D2, D3, D4 —
+and on D1's directed half — is a prompted answer and is **scored as nothing**; those findings were
+ruled below from primary sources as if neither reviewer had spoken. D5 is the one doubt this
+session ruled genuinely absent for a reviewer, and **Codex raised nothing about over-fitting**, so
+no corroboration is scored there either — an absent doubt that goes unraised is not evidence in
+any direction. Grok's claim-24 answer is a directed answer to a doubt the brief deliberately
+planted, and is scored as nothing.
+
+**Net: no finding in either report is scored as independent corroboration of an author's private
+doubt this round.** The four free findings above earn their weight for a different reason — they
+were not in the brief at all — and that is the whole of this round's independent evidence.
+
+### The second reviewer bought less than it looks, and one thing it bought is real
+
+The parallel-reviewer design was intended to buy independent corroboration. Because both briefs
+carry the same 23 claims, **it did not buy that.** What it did buy, and this is not nothing:
+
+1. **Two contradictions of fact that a single report would have shipped uncontested** — `grok-10`
+   vs Codex's claim 3 on whether an `Agent` spawn prompts (Grok wrong, RV-4), and the tokenizer
+   bounds (Grok's bounds exclude Codex's measurements, RV-11). Disagreement is the one signal a
+   second reviewer produces that direction cannot manufacture.
+2. **One free finding each way** — `grok-2` (the leftover payoff sentence) and `codex-2` (the
+   subagent's retained `Bash`). Neither reviewer found the other's. On a shared brief, that is the
+   clearest evidence that two models genuinely read differently.
+3. **Behavioural corroboration on `grok-13`** — both reviewers independently invented the same
+   workaround for the brief's pytest contradiction (copy the fixtures to `/tmp`), Codex without
+   reporting it as a defect. Two reviewers independently working around the same instruction is
+   stronger evidence that the instruction is broken than either one's assertion would be.
+
+## R4.4 — Adjudication
+
+26 rows here; `grok-13` is ruled as `P-1` in the process block below. Both axes on every row.
+
+| # | Finding | Class | Verdict | Disposition |
+|---|---|---|---|---|
+| codex-1 | `Write` remains an unbounded, prompt-free grant *(high)* | broken contract | **CONFIRMED** — RV-3, RV-4. Both grants parse to `Read, Write, Grep, Glob`; the docs say the grant does not restrict, is not gated by workspace trust, and warn about exactly this in a checked-in repository | **PENDING OWNER — proposed: FIX NOW.** Does not block. **Reopened, not settled:** round-3 Q1 locked (b) knowing `disallowed-tools` existed, but it did not know that `Write(path)` rules are never consulted while `Edit(path)` rules are. That is evidence the locked decision did not consider, so per step 3 this is a reopened decision, not a residual. See **R4-Q1** **PENDING OWNER discharged by R4-Q1 (c)+(d), §R4.6a. ✔ executed 2026-08-22** — `Write` dropped from both grants (`Read, Grep, Glob`); every write now goes through normal permission handling. `README.md` gains an `Edit(path)` settings snippet and the note that `Write(path)` rules are never consulted. |
+| codex-2 | The supposedly enforced read-only verifier can still write through `Bash` *(high)* | false-green gate | **CONFIRMED** — RV-4. `review-adjudication/SKILL.md:452-455` calls the allowlist *"the enforcement, and prose is not"* while prescribing `tools: Read, Bash, Glob, Grep`. The docs are decisive: deny rules *"don't apply to arbitrary subprocesses that read or write files indirectly, like a Python or Node script that opens files itself."* **One of four free findings** | **FIX NOW** — `skills/review-adjudication/SKILL.md:452-455`. Minimal fix: stop calling the allowlist enforcement of non-modification. Either drop `Bash` from the prescribed list, or state plainly that the list bounds *which tools exist*, not what they may write, and that a `Bash`-capable verifier is trusted rather than confined **✔ executed 2026-08-22** — queue 1. `review-adjudication/SKILL.md` no longer calls the allowlist "the enforcement": it states that the list bounds which tools exist, not what they may write, that `Bash` is a write capability, and that such a verifier is trusted rather than confined, with the docs quoted. The obligation is also in invariant 5. |
+| codex-3 | Round 3's findings were not independent "by construction" *(high)* | invalid assumption | **CONFIRMED** — RV-12. `EXTERNAL-REVIEW-3.md:35` reopens an earlier finding by name; `:107` credits `BACKLOG.md`. §R3.4's *"No document primed this reviewer"* is disproved by its own source report | **FIX NOW** — append a correction entry superseding §R3.4's independence claim. The original text stays as written. The weaker true statement is available: independent of a *claims list*, not of the repository's history **✔ executed 2026-08-22** — queue 12, correction **C-1** (§R4.11). §R3.4 superseded, not edited; the weaker true statement recorded. |
+| codex-4 | The blindness fix changed one site and left the governing rule false *(medium)* | internal contradiction | **CONFIRMED** — RV-5. Three strengths of one claim in one file: `:47` "not handed", `:269-270` "never *handed*", `:439` "never saw", and `:474` forbidding what `:439` implies | **FIX NOW** — align `skills/review-adjudication/SKILL.md:439` to "was not handed the report", and `HOW-IT-WORKS.md:479-485` likewise. Paired with `grok-11`'s template field; same fix lands both **✔ executed 2026-08-22** — queue 2. `:439` → "was not handed the report"; `HOW-IT-WORKS.md` likewise; `ledger-template.md` gains a **Verifier exposure** clause. Repo-wide grep for "never saw/seen the report" now returns nothing. |
+| codex-5 | `FIX LATER`'s ordering rule is impossible under the mandatory sequence *(medium)* | internal contradiction | **CONFIRMED (partial)** — RV-8. *Established:* three independent readers (the round-3 author, and both reviewers) took "before the ledger is written" to mean the step-2 skeleton write, and the round-3 session recorded a violation on that reading. *Unestablished:* strict impossibility — "the ledger is written" also reads as step 7's finalization, under which the rule is satisfiable | **FIX NOW** — restate invariant 4 and §6 as *"before the row receives a `FIX LATER` disposition"*. That is unambiguous under either reading and needs no change to step 2 **✔ executed 2026-08-22** — queue 3. Invariant 4 and §6 now read "created **before the row receives its `FIX LATER` disposition**", which is unambiguous under either reading of "the ledger is written". |
+| codex-6 | The collision guard still leaves the report artifact available to overwrite *(medium)* | broken contract | **CONFIRMED** — RV-7. The guard at `:324` names the brief and cover note; the report path is generated separately at `:277`, `:349`, `:396` with no existence check and no suffix binding | **FIX NOW** — extend the guard at `skills/adversarial-review-prompt/SKILL.md:324-331` to the report path, and bind the report suffix to the brief's. Merged in execution with `grok-5`, which adds the ledger **✔ executed 2026-08-22** — queue 4. The guard now covers brief, cover note **and report**, requires an actual `ls`/`Glob` check, and binds the suffixes. Invariant 6 carries it above the cut. |
+| codex-7 | The residual-doubt fix still contradicts the advertised fresh-machine workflow *(medium)* | internal contradiction | **CONFIRMED** — `README.md:152-153` still reads *"Everything it writes stands on its own, so nothing later depends on keeping this session open."* The step-1 input makes that false | **FIX NOW** — correct the `README.md` line, and add a required header field to `ledger-template.md` recording whether the doubts were supplied, unavailable, or never existed. Merged in execution with `grok-8` **✔ executed 2026-08-22** — queue 5. `README.md`'s "nothing later depends on keeping this session open" replaced with an explicit instruction to keep the hand-off; `ledger-template.md` gains a **required** residual-doubts header field so absence of the check cannot read as a pass. |
+| codex-8 | The no-filesystem route is contradicted by the surviving invariants and omits continuation *(medium)* | internal contradiction | **CONFIRMED**, both halves — RV-6. Invariant 4 (*"The report is a file the reviewer creates"*) and invariant 1 (*"The deliverable is two files"*) are unconditional; `:140-146` and `:383-385` carve a supported exception to both. §10 omits the continuation item. **The invariant-4 half is one of four free findings** | **FIX NOW** — qualify invariants 1 and 4 with the no-filesystem exception, and add the continuation action to §10's checklist. The §10 half is merged in execution with `grok-6` **✔ executed 2026-08-22** — queue 6. Invariants 1 and 4 now carry the no-filesystem exception, and §10's checklist gains the continuation item. `grep 'continue'` over the skill, which exited 1, now matches. |
+| codex-9 | The hoisted residual-doubt invariant contradicts the full method *(medium)* | internal contradiction | **CONFIRMED** — prompt invariant 5 says doubts *"stay out of the brief"* unconditionally; `:307-310` says the overlap with a pointed claim sub-question is *"the normal case, not a slip"* and *"Do not blunt a claim to protect a doubt"*; §9 at `:422-425` locates the harm in the hand-off, not the brief. **This round is the worked example: D5 was deliberately written into the Grok brief as claim 24** | **FIX NOW** — qualify invariant 5 to match: the doubts *list* stays out; a claim that overlaps a doubt stays sharp and is declared **✔ executed 2026-08-22** — queue 7. Invariant 5 now reads "the residual-doubts *list* stays out" and states that a claim overlapping a doubt stays **sharp**, matching §5 and §9 instead of contradicting them. |
+| codex-10 | The digest defect is broader and less reproducible than `R3-F12` records *(medium)* | invalid assumption | **CONFIRMED, and strengthened by this session** — RV-1, RV-2. A clean archive on the ledger's own Python and pytest produced a **third** value, `6e12a662226f`. Three machines, three post-test digests. `R3-F12`'s Trigger row records a machine-local number as the trigger's result | **PENDING OWNER — proposed: FIX NOW.** Does not block. This is round-3's Q5, still unanswered, carried forward as **R4-Q3**. `git ls-files` is verified working (RV-1) **PENDING OWNER discharged by R4-Q3 (b), §R4.6a. ✔ executed 2026-08-22** — the digest command is now `git ls-files`, verified to return `775e1cc8c43f` (the filed record's value), to be unmoved by a fixture run, and — break-tested — to still move on a real instrument edit (`823e4f23a61b`). |
+| codex-11 | The compaction verification used the wrong tokenizer and wrong cut bands *(medium)* | false-green gate | **CONFIRMED (partial)** — RV-11. *Established:* §R3.14's "pass — well above the recomputed cut band" was a word-count heuristic that §R3.10's own `R3-CNV-2` admits was never tokenized, so it was not a verification. *Unestablished here:* the exact line — no tokenizer available. Codex's four measurements are internally consistent at 3.04–3.19 chars/token; the ledger's bands imply 4.0–4.6, which this content does not support | **FIX NOW** — mark §R3.14's compaction row as an unverified estimate by appended correction, and change both skills' in-file "roughly line 280/270" to a stated *estimate* with its method named. The exact line is `CNV-4` **✔ executed 2026-08-22** — queue 11 and 12. Both skills' cut warnings now say **"Estimated"**, name the method (~3.1 chars/token) and the recomputed lines (221 / 214); §R3.14's "pass" is superseded by correction **C-3**. The exact line stays `CNV-4`. |
+| codex-12 | The three independence branches have no human or mixed-authorship case *(medium)* | omitted alternative | **CONFIRMED** — the three branches at `prompt-template.md:54-73` all presume an author family, and no step in §1 collects one. Merged in execution with `grok-12` | **FIX NOW** — add author provenance to §1's required inputs and a fourth branch (human / mixed / undetermined author family) **✔ executed 2026-08-22** — queue 9. Author provenance is now a required §1 input, and the template carries a fourth branch for human / mixed / several / undetermined authorship. |
+| codex-13 | Appending `R3-F12` made the round's CLOSED status false *(medium)* | internal contradiction | **CONFIRMED** — §R3.12 marks round 3 CLOSED; §R3.16 appends `R3-F12` with `PENDING OWNER`. The skill's closure predicate forbids exactly that combination | **FIX NOW** — append a round-3 status record stating that closure lapsed when `R3-F12` was added, and that it is discharged by **R4-Q3**. Round-3 text is not edited **✔ executed 2026-08-22** — queue 12, correction **C-4** (§R4.11). Round 3's status record written; with R4-Q3 answered its last obligation is discharged and round 3 closes. |
+| codex-14 | The ledger inflates ten defect claims into eleven findings *(low)* | hygiene | **CONFIRMED (narrow)** — RV-12. *Established:* bullet 6 is an endorsement, the round-3 header's own sentence concedes it, and row `R3-F11` rules it "not a defect". *Not a defect:* giving the endorsement a row was right — dropping it would have been the failure the skill exists to prevent. What is wrong is the header sentence asserting all six state defects, and the yield metric downstream | **FIX NOW** — appended correction restating the count as *ten defect claims plus one endorsement, eleven rows*. Cheap, and it lands in the same correction block as `codex-3` **✔ executed 2026-08-22** — queue 12, correction **C-2** (§R4.11). Restated as ten defect claims plus one endorsement, eleven rows. No verdict or disposition moves. |
+| grok-1 | The permission fix left an unrestricted `Write` grant over the same prose envelope *(high)* | broken contract | **CONFIRMED** — RV-3, RV-4. Same defect as `codex-1`, re-established from primary sources. **Grok adds the material fact:** `Write(path)` rules are accepted but never consulted, `Edit(path)` is the consulted form, and Q1 never offered it | **PENDING OWNER — proposed: FIX NOW.** Does not block. See **R4-Q1**, which exists because of this row's evidence **PENDING OWNER discharged by R4-Q1 (c)+(d), §R4.6a. ✔ executed 2026-08-22** — as `codex-1`. The `Edit(path)` fact this row surfaced is what reopened Q1 and is recorded as correction **C-5**. |
+| grok-2 | The independence-sentence fix left the payoff line unconditional *(high)* | internal contradiction | **CONFIRMED** — `prompt-template.md:39-40`. The placeholder is followed, inside the same emitted quote, by *"**You will notice different things, and those things are the entire value of this exercise.**"* — which flatly contradicts the same-family branch the author may have just selected. **The single unseeded finding of the round, and it is the sharpest one** | **FIX NOW** — `skills/adversarial-review-prompt/references/prompt-template.md:39-40`. Move the payoff sentence inside the branch structure so each branch carries its own, or make it conditional **✔ executed 2026-08-22** — queue 8. The payoff sentence is out of the emitted block and inside each of the four branches, so a same-family brief no longer promises "you will notice different things" one sentence after denying it. |
+| grok-3 | The operational blindness claim was not updated *(high)* | internal contradiction | **CONFIRMED** — RV-5. Same defect as `codex-4`, re-established independently. Grok locates it precisely: `:439` is the line an adjudicator reads *at the moment of* a high-impact `REFUTED` | **FIX NOW** — same edit as `codex-4`; one fix closes both rows **✔ executed 2026-08-22** — queue 2, same edit as `codex-4`. |
+| grok-4 | The compaction hoist put the new obligations on the side of the cut they were written to survive *(high)* | false-green gate | **CONFIRMED** — RV-11, and **independent of the tokenizer dispute**: Q4(b)'s recording rule at `:467-476` and the overwrite how-to at `:324-331` fall past the cut under *every* estimate on the table, including the ledger's own most generous band. Both files also got longer, so the discarded fraction rose | **PENDING OWNER — proposed: FIX NOW.** Does not block. The real remedy is the Q2(b) restructure the owner did not authorize in round 3; the minimal hoist has now been shown to trade one exposure for a smaller version of itself. See **R4-Q2** **PENDING OWNER discharged by R4-Q2 (b), §R4.6a. ✔ executed 2026-08-22** — restructure done: rationale moved into five new `references/` files, `review-adjudication` 572→498 lines and `adversarial-review-prompt` 529→484, both now under the documented 500. Both of this round's new obligations were folded into the `<invariants>` blocks, so they sit above the estimated cut instead of past it. |
+| grok-5 | The overwrite guard does not cover the report or the ledger, and "check the path" is not a mechanism *(high)* | broken contract | **CONFIRMED** — RV-7. Adds the ledger half to `codex-6`: `review-adjudication/SKILL.md:529` is one prose sentence with no existence check, over a `Write` grant. *Recorded for the reader:* this ledger was appended, not written, and the round-3 text is byte-unchanged — the discipline held here by choice, which is precisely the finding | **FIX NOW** — merged with `codex-6`: extend the guard to the report path and the ledger, and specify the existence check as a command rather than an instruction **✔ executed 2026-08-22** — queue 4. As `codex-6`, plus the ledger half: §7 now requires appending and **proving** it (`git diff` shows additions, no deletions), and invariant 1 carries it. |
+| grok-6 | The chat-delivery "continue" instruction never reaches the operator checklist *(medium)* | broken contract | **CONFIRMED** — RV-6. A grep of the prompt skill for `continue` and for `one word` returns nothing (exit 1); the instruction lives only at `prompt-template.md:367-376` | **FIX NOW** — merged with `codex-8`: add the continuation action to §10's hand-off checklist **✔ executed 2026-08-22** — queue 6, same edit as `codex-8`. |
+| grok-7 | The corpus digest is expired by the documented test command; pruning `__pycache__` by name repeats the round-2 shape *(medium)* | invalid assumption | **CONFIRMED** — RV-1. All of Grok's figures reproduce exactly, including the `git ls-files` result no prior round had tested | **PENDING OWNER — proposed: FIX NOW.** Does not block. Merged with `codex-10` into **R4-Q3** **PENDING OWNER discharged by R4-Q3 (b), §R4.6a. ✔ executed 2026-08-22** — as `codex-10`. `git ls-files`, which this row proposed, is what shipped. |
+| grok-8 | Residual doubts: restated as a user-paste, README still denies the dependency, the fallback is a cheap exit *(medium)* | broken contract | **CONFIRMED** — same README line as `codex-7`, plus the cheap-exit half: nothing makes the unavailability declaration costly or checkable. *Noted:* this round the hand-off **was** supplied, so the fallback was not exercised — the finding is about the case where it is | **FIX NOW** — merged with `codex-7`: correct the README line and add the required header field, which is what makes the declaration visible rather than free **✔ executed 2026-08-22** — queue 5, same edits as `codex-7`. The required header field is what makes the "unavailable" declaration visible rather than free. |
+| grok-9 | Invariant 4 cannot be followed, and its author demonstrated that in the adjacent paragraph *(medium)* | internal contradiction | **CONFIRMED (partial)** — RV-8, on the same reasoning as `codex-5`. Grok is right that the instance did not lose a deferral: `B-3` is complete. **This session is a third data point** — its own re-verification ran before the skeleton was written (§R4.2) | **FIX NOW** — merged with `codex-5` **✔ executed 2026-08-22** — queue 3, same edit as `codex-5`. |
+| grok-10 | Dropping `Agent` makes the mandatory second opinion a permission prompt with a documented `COULD NOT DETERMINE` exit *(medium)* | invalid assumption | **REFUTED** — RV-4. The premise is false: `code.claude.com/docs/en/tools-reference` lists `Agent` with **Permission required: No**, and names it among the tools that do not require permission. Dropping `Agent` from `allowed-tools` therefore costs nothing — an unlisted tool falls through to permission settings, and `Agent`'s setting is no-prompt. Codex's claim 3 reached the same conclusion from the same source | **NO ACTION.** *Residue recorded rather than dropped:* Grok's adjacent observation that `COULD NOT DETERMINE` is a cheap exit at the expensive moment is real, but it is not what this finding claimed and Grok itself calls that path "conservative rather than a false `REFUTED`". No defect behind it. **Escalation not triggered** — the reviewer rated this *medium*, not high or critical, and this session did not author the work; the refutation rests on a primary-source table row anyone can check, not on a reading of the code. No subagent was spawned, and this session was operating under an instruction not to spawn one **NO ACTION — nothing executed, correctly.** The premise was refuted from primary source (RV-4); no defect stands behind it. |
+| grok-11 | Q4(b)'s recording requirement has no field in the template the skill says to follow *(medium)* | broken contract | **CONFIRMED** — `ledger-template.md` was read in full. Its `Reviewer isolation` field at `:31` is about external reviewers and prior artifacts; there is no field, no example row and no guillemet instruction for verifier exposure anywhere in the template | **FIX NOW** — add a verifier-exposure line to the template's verdict-row guidance. Merged in execution with `codex-4` / `grok-3`, since the three are one incomplete fix **✔ executed 2026-08-22** — queue 2. `ledger-template.md` now carries a **Verifier exposure** clause in the `REFUTED` row and a paragraph requiring it on every second-opinion refutation. |
+| grok-12 | The three independence branches do not cover real authorship, and the same-family sentence is an untested assertion *(low)* | omitted alternative | **CONFIRMED**, both halves. Author family is never collected; and *"the blind spots you share with its author are the ones most likely to survive this review"* is asserted nowhere established — in a document whose stated purpose is to stop plausible assertions passing as fact | **FIX NOW** — merged with `codex-12` for the branch gap; separately, either source the same-family sentence or restate it as a caution rather than a mechanism **✔ executed 2026-08-22** — queue 9. Fourth branch added; and the same-family blind-spot sentence is downgraded to a caution, with an explicit note that nothing here measures it. |
+### Process and prompt defects
+
+| ID | What it was | Verdict | Disposition |
+|---|---|---|---|
+| **P-1** (`grok-13`) | The brief contradicts itself on pytest, and its inventory count for the ledger is wrong | **CONFIRMED**, both halves — RV-10. (1) §2 prescribes an in-tree pytest run; §8 forbids modifying repository files *and notes in the same row that a bare pytest run writes `__pycache__`*. The two cannot both be obeyed and the brief never states the resolution. **Both reviewers independently invented the same workaround** — run it under `/tmp` — which is behavioural evidence the instruction is broken, not an assertion about it. (2) §3 gives `REVIEW-ADJUDICATION.md` as "2,466 total" where the pinned commit has **2480**. This is round-2 `F9` recurring in the brief that cites `F9` as ground already walked | **FIX NOW** — in `adversarial-review-prompt`: require the brief's executable-test line to name a location that does not violate its own write envelope, and require inventory counts to be produced by running the command rather than carried forward. Both land in the skill, not the code under review **✔ executed 2026-08-22** — queue 10. The skill now requires each executable-test line to be checked against the write envelope (and a `/tmp` location named where it writes), and requires every inventory count to be produced by running the command at the pinned commit rather than carried forward. |
+**Raised by this adjudication, not by either reviewer, and therefore not counted in the totals:**
+the Codex cover note says the brief *"lists 22 load-bearing claims"* while the brief itself says 23
+and contains 23. The Grok pair agree at 24. Neither reviewer reported it, and Codex adjudicated all
+23 regardless, so nothing was lost — but it is the same brief/cover-note disagreement `P-1`(2) and
+round-2 `F9` describe, in a third location. Folded into `P-1`'s fix.
+
+### Reviewers' could-not-verify items
+
+| ID | Item | Verdict | Disposition |
+|---|---|---|---|
+| **CNV-1** (codex) | No empirical before/after on whether removing `Bash` reduces verification depth (claim 4) | **COULD NOT DETERMINE** | **VERIFY** — matched adjudication runs with and without the grant. **Does not block.** Partly answered by RV-4: the built-in read-only Bash set runs unprompted in every mode, so most documentary re-verification is unaffected; `pytest` and write-capable shell still prompt |
+| **CNV-2** (codex) | Did not spawn a subagent to observe report reading (`R3-CNV-1`) or target mutation through retained `Bash` | **COULD NOT DETERMINE** | **VERIFY** — spawn a read-only subagent in a scratch copy and observe. **Does not block.** Neither `codex-2` nor `codex-4` depends on it: both are textual/documentary and are CONFIRMED without it |
+| **CNV-3** (codex) | Token measurements are exact only for the measured configuration (Claude Code 2.1.239, `claude-opus-5[1m]`) | **CONFIRMED** as stated — this is a correct and unprompted limitation | **VERIFY** — re-measure on the operator's own configuration before relying on the exact line. **Does not block** |
+| **CNV-4** (codex, grok) | The exact 5,000-token line in either `SKILL.md` | **COULD NOT DETERMINE** — RV-11. No tokenizer available to this session either; Codex's figures are credible and unreproduced, the ledger's bands are implausible, Grok's bounds exclude Codex's values | **VERIFY** — run both rendered files through the tokenizer Claude Code uses and read off the line. **Does not block**, because `grok-4` holds under every estimate |
+| **CNV-5** (codex) | No comparative same-family / different-family reviewer populations (claim 16) | **COULD NOT DETERMINE** | **VERIFY** — matched blinded review runs. **Does not block.** Same gap as `CNV-9`; it is why `grok-12`'s second half is CONFIRMED |
+| **CNV-6** (codex) | Did not execute either skill end to end against synthetic multi-round / browser / mixed-authorship scenarios | **COULD NOT DETERMINE** | **VERIFY** — the skill validator already deferred as `BACKLOG.md` `B-3`. **Does not block** |
+| **CNV-7** (grok) | Whether a live session prompts on an `Agent` spawn or on `python3 -m pytest` after the grant change | **REFUTED as to `Agent`** — RV-4 settles it: `Agent` requires no permission. **COULD NOT DETERMINE as to `pytest`** | **VERIFY** — the `pytest` half only. **Does not block.** The `Agent` half is closed and is why `grok-10` is refuted |
+| **CNV-8** (grok) | Whether a spawned subagent actually opens the report when not handed it (`R3-CNV-1`) | **COULD NOT DETERMINE** | **VERIFY** — same check as `CNV-2`. **Does not block** |
+| **CNV-9** (grok) | Whether same-family reviewers actually share the author's blind spots (claim 16) | **COULD NOT DETERMINE** | **VERIFY** — same check as `CNV-5`. **Does not block.** Until then the same-family sentence is unsourced, which `grok-12` correctly reports |
+| **CNV-10** (grok) | Transcription fidelity of `EXTERNAL-REVIEW-3.md` (`R3-P2`) | **SETTLED ALREADY** — ruled `ACCEPTED AS-IS` with the owner's words at §R3.13: *"no fix is available retroactively"* | **NO ACTION** |
+| **CNV-11** (grok) | Contents of `EXTERNAL-REVIEW-4.md` and the Codex brief/cover note, by instruction | **CONFIRMED** as an honest disclosure of a deliberate blind spot — the isolation the cover note asked for | **NO ACTION.** Recorded in the header's isolation block; it is unverifiable by this session and is not treated as established |
+
+### Disagreements with prior rounds
+
+| ID | Raised by | Claim | Verdict | Disposition |
+|---|---|---|---|---|
+| **D-1** | both | Round-2 `F4`'s fix was incomplete: a subagent allowlist retaining `Bash` is not an enforced no-write boundary | **CONFIRMED** — RV-4 | **FIX NOW** via `codex-2`. Row `F4` at `:1468` stays as written; this entry supersedes its closure framing |
+| **D-2** | both | Round-2 `F1` (`.DS_Store` prune) was a narrow repair recorded as a closure, and `R3-F12` is the same door | **CONFIRMED** — RV-1, RV-2 | **PENDING OWNER** via **R4-Q3**. Row `F1` at `:1465` stays as written |
+| **D-3** | both | Round-3 `R3-F1`'s executed/closed framing overstates closure while bare `Write` remains | **CONFIRMED** — RV-3, RV-4 | **PENDING OWNER** via **R4-Q1** |
+| **D-4** | codex | Round-3 `R3-F1`: option (c) was incorrectly described as path enforcement | **CONFIRMED** — `disallowed-tools` removes whole tools, not paths (RV-4). *And more than Codex knew:* `Edit(path)` **is** consulted for writes, so path enforcement was available and unoffered | **FIX NOW** — appended correction to the Q1 option description; feeds **R4-Q1** |
+| **D-5** | both | Round-3 `R3-F3` (residual doubts) is a fallback, not closure; README still promises the opposite | **CONFIRMED** | **FIX NOW** via `codex-7` / `grok-8` |
+| **D-6** | both | Round-3 `R3-F4` reached one site; the mandatory rule, the public explanation, the template field and the "sanitized copy" remain | **CONFIRMED** — RV-5 | **FIX NOW** via `codex-4` / `grok-3` / `grok-11` |
+| **D-7** | both | Round-3 `R3-F7`'s guard is complete for brief and cover note only | **CONFIRMED** — RV-7 | **FIX NOW** via `codex-6` / `grok-5` |
+| **D-8** | both | Round-3 `R3-F9`'s operator-facing half never reached §10's checklist | **CONFIRMED** — RV-6 | **FIX NOW** via `codex-8` / `grok-6` |
+| **D-9** | codex | Round-3 `R3-P3`: "all eleven findings independent by construction" is refuted by the report's own text | **CONFIRMED** — RV-12 | **FIX NOW** via `codex-3` |
+| **D-10** | grok | Round-3 `R3-F5`: the payoff sentence in the emitted quote was not updated | **CONFIRMED** | **FIX NOW** via `grok-2` |
+| **D-11** | grok | Round-3 `R3-F2` is the one row that already records its own incompleteness, and should not read as closing the finding | **CONFIRMED** — §R3.14 does record it; the row still reads `✔ executed` | **PENDING OWNER** via **R4-Q2** |
+| **D-12** | grok | Round-3 §R3.12 and §R3.15 contradict each other by design of append-only correction; a reader who stops at CLOSED is misinformed | **CONFIRMED**, and worse than stated — `codex-13` shows §R3.16 also left an unresolved `PENDING OWNER` under a CLOSED heading | **FIX NOW** via `codex-13` |
+| **D-13** | grok | Round-3's eleven-row expansion was right | **REFUTED in part** — the expansion was right, but Grok's stated ground ("each bullet states a defect") is false for bullet 6, which is an endorsement (RV-12). Codex is right here and Grok is wrong | **NO ACTION** on the expansion; the count language is fixed via `codex-14`. Re-opened as `U-1` |
+| **D-14** | codex | Round-3's `R3-F12` is "a new artifact name but not a new root cause"; round 2 had already identified unauthored runtime files | **CONFIRMED** | **PENDING OWNER** via **R4-Q3** |
+| **D-15** | both | No disagreement that `R3-F8` / `R3-F10` are closed, or that `B-3` is well-formed | **CONFIRMED** — RV-13 verified both independently rather than accepting the agreement | **NO ACTION** |
+
+### Disagreements between the two reviewers
+
+| | Contested point | Resolved how | Outcome |
+|---|---|---|---|
+| 1 | Does dropping `Agent` cause a permission prompt? Grok: yes (`grok-10`). Codex: no (claim 3) | RV-4, primary source: `Agent` — *Permission required: No* | **Codex right, Grok wrong.** `grok-10` REFUTED |
+| 2 | Where does the 5,000-token cut land? Codex measured 227/205; Grok's heuristic bounds are 257–324/233–304, which **exclude** Codex's values | RV-11. No tokenizer here; implied-rate consistency strongly favours Codex, but neither is reproduced | **Unresolved — `CNV-4`.** Neither presumed right; the ledger's own bands are rejected regardless |
+| 3 | Is the eleven-row expansion sound because "each bullet states a defect"? Grok yes; Codex says the sixth is an endorsement | RV-12, direct reading of `EXTERNAL-REVIEW-3.md:107` | **Codex right.** `U-1` |
+| 4 | Are the in-file "roughly line 280/270" estimates biased early (safe) or late (unsafe)? Grok: early, safe. Codex: late by 53–65 lines | RV-11 | **Codex right if its measurement holds; unresolved with `CNV-4`.** Grok compared against the ledger's band rather than a measurement, which is comparing an estimate to an estimate |
+| 5 | `codex-2` (subagent `Bash`) and `grok-2` (payoff sentence): each found what the other missed | Both re-established from primary sources here | **Both right.** The clearest evidence the two models read differently |
+
+## R4.5 — Owner decisions required
+
+Three. Two are reopenings of round-3 decisions on evidence those decisions did not have; one is
+round 3's own unanswered Q5, carried forward rather than left behind.
+
+### R4-Q1 — how to bound `Write`, now that the consulted path rule is known
+
+**What turns on it:** round 3 locked Q1(b) — drop `Bash`/`Edit`/`Agent`, keep `Write` — on the
+understanding that no path-aware option existed short of a hook. **That understanding was wrong,
+and the correction is what reopens this.** Anthropic's permissions documentation says path rules
+for `Write` are *"accepted but never consulted"* while `Edit(path)` rules **are** consulted for
+writes, and explicitly instructs *"Use `Edit(docs/**)` in place of `Write(docs/**)`"*. A path-aware
+option was available in round 3 and was never on the menu. Separately, the skills docs warn about
+exactly this repository's shape: *"A skill can grant itself broad tool access, so review the
+`allowed-tools` of skills checked into a repository before you run Claude Code there."*
+
+**Options:**
+- **(a) Accept the residual as locked.** Costs nothing now; leaves a publicly distributed skill
+  granting unprompted writes to any path, including in `-p` runs in never-trusted folders, and
+  leaves invariant 1's *"whatever the tool grants allow"* as an aspiration.
+- **(b) Add `disallowed-tools: Edit, NotebookEdit`** — round 3's unadopted option (c). Cheap.
+  Does not touch bare `Write`, so it closes the smaller half of the hole. On its own it does not
+  make invariant 1 true.
+- **(c) Drop `Write` from both grants.** The skills' own writes then go through normal permission
+  handling — roughly three to six prompts per run, on the ledger, backlog artifacts and the brief.
+  Buys: no unprompted write anywhere, and invariant 1 becomes a statement about behaviour rather
+  than intent. Costs: friction on the deliverable, which is the reason round 3 kept `Write`.
+- **(d) Ship a recommended `Edit(<path>)` permission-settings snippet in the README**, alongside
+  any of the above. This is the only genuinely path-scoped form the tooling consults. Costs: it
+  lives in the user's settings, so a distributed skill can recommend it and cannot enforce it —
+  documentation, not a mechanism, and it should be labelled as such.
+
+**Recommendation:** **(c) with (d).** A repository whose central thesis is that a prose boundary
+over a broad grant is not enforcement should not ship one; (c) is the only option that makes the
+skills' own claim true, and the friction it costs is small and falls on the author rather than
+the user. (d) gives anyone who wants real path scoping the one form that works.
+**Blocks:** nothing. All twelve queued fixes can land before this is answered.
+
+### R4-Q2 — the compaction remedy, now that the minimal hoist has been measured
+
+**What turns on it:** round 3 locked Q2(a), the minimal hoist, and §R3.14 recorded honestly that
+it made both files *longer*. Round 4 measured the consequence: the round's **new** obligations —
+the Q4(b) recording rule at `review-adjudication/SKILL.md:467-476` and the overwrite how-to at
+`adversarial-review-prompt/SKILL.md:324-331` — sit past the compaction cut under every estimate
+available, including the ledger's own most generous band. The rules added to survive compaction
+did not; only the summary of the older rules did. `review-adjudication` is 572 lines against a
+documented guidance of 500.
+
+**Options:**
+- **(a) Accept.** The `<invariants>` blocks do survive, which is what the finding asked for. The
+  tail exposure is the price, and it grows with every future fix.
+- **(b) Authorize the Q2(b) restructure** left available in round 3: move detail into
+  `references/`, bring both `SKILL.md` files under 500 lines. Costs real work, and the
+  history-of-failures prose that makes these rules motivated would move out of the main file —
+  Grok's claim-24 answer argues that prose is load-bearing for compliance. Buys: the obligations
+  come back above the cut, and the trade stops repeating.
+- **(c) A second narrow hoist** — fold Q4(b) and the overwrite how-to into the invariants blocks.
+  Cheapest. Repeats exactly the trade `grok-4` identifies: the block grows, the file grows, the
+  next fix is past the cut again.
+
+**Recommendation:** **(b).** Two rounds have now shown the minimal hoist buys a summary and pays
+in tail; (c) buys the same thing again at the same price. If (b) is too much work now, (a) is more
+honest than (c) — accepting a known exposure beats a third iteration that hides it.
+**Blocks:** nothing, but it should be settled before the next round adds more rules to the tail.
+
+### R4-Q3 — the corpus digest's shape *(this is round 3's Q5, still unanswered)*
+
+**What turns on it:** the digest has now produced a wrong or contested calibration line in **four
+consecutive rounds**, including this ledger's header. Round 4 established that the recorded
+`775e1cc8c43f → 9fb019996546` transition is **not portable**: a clean archive on the same Python
+and pytest produced a third value, `6e12a662226f` (RV-2). The digest is hashing machine state, not
+the instrument.
+
+**Options:**
+- **(a) Prune `__pycache__` by name**, round 3's minimal proposal. One predicate in two places.
+  Guarantees a third instance — `.pytest_cache`, a `.mypy_cache`, the next plugin's artefact.
+- **(b) Digest tracked files via `git ls-files`.** **Verified working in RV-1**: it returns
+  `775e1cc8c43f`, the exact value on the record, with no named-artefact list and no runtime cost.
+  One-line change. Costs: it omits intentionally untracked private replacement cases, if those
+  ever exist.
+- **(c) An explicit instrument manifest** — one maintained path list, usable for tracked or
+  private corpora. Codex's preferred general fix. Costs: a list that must be kept in step with the
+  corpus, which is a new way to be silently wrong.
+
+**Recommendation:** **(b) now, (c) only if a private corpus is ever actually used.** (b) is
+verified, one line, and already agrees with every filed record; (c) buys a capability nobody
+currently needs and adds a maintenance obligation. **Until this is answered, round 3 cannot close
+and no calibration record in this project can be trusted to read correctly.**
+**Blocks:** round 3's closure, and the meaningfulness of the calibration line in every future
+ledger header. It does not block any of the twelve queued fixes.
+
+## R4.6 — Locked owner decisions from this adjudication
+
+*None yet. R4-Q1, R4-Q2 and R4-Q3 are open. The owner's answers are recorded here verbatim and
+dated when they arrive; an owner ruling that lives only in chat is the same failure as a review
+that lives only in chat.*
+
+## R4.7 — Amendments required
+
+The `FIX NOW` queue as an executable list. **Not executed** — fixes are a separate, explicit act,
+and this session has not been given one. Twelve items; 24 findings map onto them because several
+findings are the same defect seen by two reviewers or at two sites.
+
+| # | File and change | Answers |
+|---|---|---|
+| 1 | `skills/review-adjudication/SKILL.md:452-455` — stop calling the subagent allowlist "the enforcement". Either drop `Bash` from the prescribed `tools:` list, or state that the list bounds which tools exist, not what they may write, and that a `Bash`-capable verifier is trusted rather than confined | `codex-2`, `D-1` |
+| 2 | `skills/review-adjudication/SKILL.md:439` → "was not handed the report"; `HOW-IT-WORKS.md:479-485` likewise; add a verifier-exposure line to `references/ledger-template.md`'s verdict-row guidance | `codex-4`, `grok-3`, `grok-11`, `D-6` |
+| 3 | `skills/review-adjudication/SKILL.md:42-44` and `:499` — restate as "before the row receives a `FIX LATER` disposition" | `codex-5`, `grok-9` |
+| 4 | `skills/adversarial-review-prompt/SKILL.md:324-331` — extend the overwrite guard to the report path, bind the report suffix to the brief's, and specify the existence check as a command; `skills/review-adjudication/SKILL.md:529` — same for the ledger | `codex-6`, `grok-5`, `D-7` |
+| 5 | `README.md:152-153` — correct the "nothing later depends on keeping this session open" promise; add a required header field to `references/ledger-template.md` recording whether the doubts were supplied, unavailable, or never existed | `codex-7`, `grok-8`, `D-5` |
+| 6 | `skills/adversarial-review-prompt/SKILL.md` — qualify invariants 1 and 4 with the no-filesystem exception; add the continuation action to §10's hand-off checklist | `codex-8`, `grok-6`, `D-8` |
+| 7 | `skills/adversarial-review-prompt/SKILL.md:38-40` — qualify invariant 5: the doubts *list* stays out of the brief; a claim that overlaps a doubt stays sharp and is declared | `codex-9` |
+| 8 | `skills/adversarial-review-prompt/references/prompt-template.md:39-40` — move "You will notice different things" inside the branch structure, or make it conditional | `grok-2`, `D-10` |
+| 9 | `skills/adversarial-review-prompt/SKILL.md` §1 — collect the work's author provenance; `references/prompt-template.md:54-73` — add a fourth branch for human / mixed / undetermined author family, and either source or downgrade the same-family blind-spot sentence | `codex-12`, `grok-12` |
+| 10 | `skills/adversarial-review-prompt/SKILL.md` — require the brief's executable-test line to name a location consistent with its own write envelope, and require inventory counts to be produced by running the command | `P-1` |
+| 11 | Both skills — change the in-file "roughly line 280/270" warnings to a stated *estimate* naming its method | `codex-11`, `U-4` |
+| 12 | `REVIEW-ADJUDICATION.md` — one appended correction block, editing nothing: §R3.4's independence claim, the "eleven findings" count language, §R3.14's compaction "pass", the round-3 status record, and the Q1 option description | `codex-3`, `codex-13`, `codex-14`, `codex-11`, `D-4`, `D-9`, `D-12` |
+
+Backfill each row with its commit as the work lands. A ledger whose disposition column still says
+"queued" three rounds later is telling you something true.
+
+## R4.8 — Claims examined and upheld, and the ones re-opened
+
+The two reports adjudicated 47 claims between them (Codex 23, Grok 24, sharing 23). **Neither
+reviewer holds a usable calibration record, so none of that list is coverage** — every claim on it
+is a `COULD NOT DETERMINE` entry unless re-established here.
+
+**Sampled: 15 of the 23 shared claims**, chosen as the ones whose truth a later brief would rely
+on and which were cheap to settle from primary sources: claims 1, 2, 3, 5, 6, 7, 11, 12, 14, 17,
+18, 19, 20, 22, 23. All were re-established by the RV checks above rather than accepted.
+Independently verified and upheld as both reviewers ruled: **claim 14** (the guillemet gate — and
+upheld *by breaking it*, RV-9, not by reading it), **claim 20** (vocabulary complete, `B-3`
+carries all three required fields, RV-13), **claim 23(a)** (both digests reproduce, RV-1),
+**claim 6** (both files grew, 463→497 and 523→572).
+
+**Re-opened:**
+
+| ID | Claim as the reviewer left it | Verdict | Disposition |
+|---|---|---|---|
+| **U-1** | Grok's claim 22: the eleven-row expansion is sound because *"each bullet states a defect with a location"* | **REFUTED** — RV-12. Bullet 6 of `EXTERNAL-REVIEW-3.md:107` asks for no change and praises what exists; it is an endorsement. Codex is right and Grok is wrong. The *expansion* was still correct — giving the endorsement a row was better than dropping it | **NO ACTION** on the expansion; the count language is corrected via queue item 12 |
+| **U-2** | Grok's claim 3: *"COULD NOT DETERMINE empirically whether a prompt appears"* on an `Agent` spawn, with the finding built on the premise that it does | **REFUTED** — RV-4. `Agent` is documented as requiring no permission. The claim was determinable from the primary source the reviewer was already citing, and was not determined | **NO ACTION.** This is why `grok-10` falls |
+| **U-3** | Grok's claim 5: heuristic bounds of 257–324 and 233–304 for the 5,000-token cut | **COULD NOT DETERMINE** — RV-11. The bounds exclude Codex's measured 227 and 205, so at most one of the two reports can be right and this session cannot settle which | **VERIFY** — see `CNV-4`. Does not block |
+| **U-4** | Grok's "considered and not raised": the in-file "roughly line 280/270" estimates are *"biased early, which is the safe direction"* | **CONFIRMED as unestablished** — Grok reached "safe" by comparing an estimate to another estimate (the ledger's band). Against the only measurement on the table they are biased *late*, the unsafe direction, by 53–65 lines | **FIX NOW** via queue item 11 |
+
+## R4.9 — What this round could not settle, and why that is acceptable
+
+Stated explicitly, because an unstated gap reads as a pass.
+
+1. **The exact compaction cut in either file** (`CNV-4`, `U-3`). No tokenizer was available to
+   this session, and the two reports disagree. Everything that depends on it is ruled independent
+   of it: `grok-4` holds under every estimate, and `codex-11`'s established half is that the
+   ledger's "verification" was never a verification, which is true whatever the line is.
+2. **Every behavioural claim about how a Claude session actually acts** — whether a subagent opens
+   an unhandled report, whether it mutates through `Bash`, whether prompt friction reduces the
+   number of checks an adjudicator runs (`CNV-1`, `CNV-2`, `CNV-7`, `CNV-8`). No skill was
+   executed end to end by anyone this round. The absence of a validator is `BACKLOG.md` `B-3` and
+   is not re-reported. Every finding that would have rested on such a demonstration was ruled from
+   documentary or textual evidence instead, and each says so.
+3. **Whether same-family reviewers share the author's blind spots** (`CNV-5`, `CNV-9`). Nothing in
+   this repository measures it, which is exactly why `grok-12`'s second half is CONFIRMED: the
+   sentence asserting it should not be in a document written to stop such assertions.
+4. **Whether Grok read the Codex report.** It was on disk in the worktree Grok was rooted in, from
+   13:04 onward. Grok disclosed that it did not open it. That disclosure is unverifiable here, so
+   every point of agreement between the two reports was re-established from primary sources
+   regardless — which was required anyway, since both read the same brief.
+5. **What either reviewer's silence covers: nothing.** Neither holds a usable calibration record —
+   Codex's is stale by the prescribed digest check, Grok has none on file — so no claim on either
+   upheld list carries forward into the next brief's "ground already walked" section except the
+   fifteen re-established here.
+
+**Nothing in this round establishes that the work is complete, correct, or ready to ship.**
+
+## R4.10 — Round 4 status: OPEN
+
+Closure requires: `R4-Q1`, `R4-Q2` and `R4-Q3` answered and recorded in §R4.6; the twelve `FIX
+NOW` items executed and their rows backfilled with execution references; and `P-1` executed. The
+`CNV` entries are open `VERIFY` items and are explicitly **non-blocking**; each names the check
+that would settle it.
+
+**Round 3 also remains open**, on the single obligation `R3-F12` / **R4-Q3**. It has been open
+since 2026-08-22 despite §R3.12's CLOSED heading — which is `codex-13`, ruled above, and repaired
+by queue item 12.
+
+**Did any round-3 fix open a new path to the failure it closed?** Asked explicitly, as the
+template requires. **Yes, in two places, and both are ruled above rather than left as a note.**
+The minimal compaction hoist (`R3-F2`) lengthened both files and pushed the round's own new
+obligations past the cut — `grok-4`. And the `allowed-tools` narrowing (`R3-F1`) removed `Bash`
+from the grant while `review-adjudication` §5 remained a `Bash`-driven procedure; §R3.14 named
+that as a question for round 4, and RV-4 answers it: the built-in read-only command set runs
+unprompted in every mode, so the friction is real but much smaller than feared, and only
+`pytest` and write-capable shell are affected.
+
+## R4.6a — Locked owner decisions from this adjudication *(appended 2026-08-22)*
+
+The owner's words, verbatim and complete:
+
+> *"proceed with your recommended options"*
+
+**What that settles.** The three questions in §R4.5 were each posed with a recommendation. The
+message accepts them as a set and directs execution, which is the separate explicit act §R4.7
+required. Each is locked at its recommended option:
+
+| | Decision | Locked as |
+|---|---|---|
+| **R4-Q1** | How to bound `Write` | **(c) with (d)** — drop `Write` from both skills' `allowed-tools`, so every write goes through normal permission handling; and ship a recommended `Edit(<path>)` permission-settings snippet in `README.md`, labelled as a recommendation the skill cannot enforce |
+| **R4-Q2** | Compaction remedy | **(b)** — the restructure held available since round 3. Move detail into `references/`, bring both `SKILL.md` files under the documented 500-line guidance, and get this round's new obligations back above the compaction cut |
+| **R4-Q3** | Corpus digest shape | **(b)** — digest tracked files via `git ls-files`, verified in RV-1 to return `775e1cc8c43f`, the value already on the filed record |
+
+**Execution authorized.** The twelve `FIX NOW` items in §R4.7 and the three decisions above are
+executed in this session, against `0d65b51`. Every row is backfilled with what actually changed.
+Execution and verification follow in §R4.11.
+
+## R4.11 — Corrections to round 3, appended 2026-08-22
+
+Round 3's text is not edited. Each entry below supersedes a statement made there; the original
+stays exactly as written, because the record of having been wrong is part of what the ledger is
+for. Five corrections, all earned by round-4 findings.
+
+### C-1 — §R3.4's independence claim is false as stated *(answers `codex-3`, `D-9`)*
+
+**What §R3.4 said:** *"No document primed this reviewer, so no finding can be an echo of one…
+**all eleven findings are independent by construction.**"*
+
+**What is true:** the absence of a bespoke brief rules out *brief* echoes and nothing else. The
+reviewer was handed the repository, and its report proves it used the history —
+`EXTERNAL-REVIEW-3.md:35` opens with *"Reopen the earlier 'unbounded Write/Edit' finding"*, which
+names a finding it could only have learned from prior artifacts, and `:107` reads *"You have
+already captured this well in `BACKLOG.md`"*. At least those two items were reached through
+documents, not independently.
+
+**The weaker true statement, which is what should have been written:** the eleven findings are
+independent of a *claims list*, because there was none. They are not independent of the
+repository's accumulated history, which was readable throughout. §R3.4's phrasing overclaims a
+real but narrower fact, and downstream readers were invited to overweight the report on it.
+
+### C-2 — "Findings in: 11" counts an endorsement as a finding *(answers `codex-14`)*
+
+**What the round-3 header said:** *"Every one of those six states a defect with a location and a
+consequence, and the last of them states an endorsement."* Those two clauses contradict each other
+in one sentence.
+
+**What is true:** the sixth bullet (`EXTERNAL-REVIEW-3.md:107`) asks for no change and praises what
+exists. It is an endorsement. Row `R3-F11` already ruled it *"not a defect"* with `NO ACTION`.
+
+**What changes:** the count is restated as **ten defect claims plus one endorsement, eleven rows**.
+**What does not change:** giving the endorsement a row was correct — dropping it for typography is
+the failure this skill exists to prevent, and Grok's claim-22 answer was right about that much and
+wrong about the bullet. No verdict or disposition moves. Any later metric citing "eleven findings"
+as reviewer yield should read ten.
+
+### C-3 — §R3.14's compaction row recorded an estimate as a verification *(answers `codex-11`, `U-4`)*
+
+**What §R3.14 said:** *"Invariants survive compaction | both `<invariants>` blocks well above the
+recomputed cut band | **pass** — `:22-45` and `:26-50`, against bands of 288–322 and 265–302."*
+
+**What is true:** those bands came from a word-count heuristic, and §R3.10's own `R3-CNV-2` records
+that no tokenizer was ever run. **A pass computed from an unverified estimate is not a
+verification**, whatever the number turns out to be. Round 4 measured the implied rates: the
+ledger's bands require ~4.0–4.6 characters per token, while four independent measurements from the
+round-4 reviewer sit at 3.04–3.19 on the same files. This session has no tokenizer either and
+does not settle the exact line (`CNV-4`), but the recorded "pass" was not one.
+
+**What stands:** the conclusion that both `<invariants>` blocks survive. That holds under every
+estimate on the table, including the most aggressive.
+
+### C-4 — round 3's CLOSED status lapsed when `R3-F12` was appended *(answers `codex-13`, `D-12`)*
+
+**What §R3.12 says:** *"Round 3 status: CLOSED 2026-08-22."* **What §R3.16 then did:** appended
+`R3-F12`, a new numbered round-3 finding, with disposition `PENDING OWNER`.
+
+The skill's closure predicate forbids exactly that combination — closure requires no unresolved
+`PENDING OWNER`. **Round 3 has therefore been open since `R3-F12` was written, not closed**, and a
+reader who stopped at the CLOSED heading was told otherwise.
+
+**Status record, which is what was missing:** round 3's one outstanding obligation was `R3-F12`'s
+`PENDING OWNER`, carried into round 4 as **R4-Q3**, answered by the owner at §R4.6a and executed
+below. **With that discharged, round 3 closes — 2026-08-22.** Appending a correction to a closed
+round remains legal; leaving the round's *status* stale while doing so is what went wrong, and a
+status record is now the required repair.
+
+### C-5 — round-3 Q1's option (c) was described as path enforcement *(answers `D-4`)*
+
+**What §R3.3's `R3-F1` row said:** that `disallowed-tools` was *"a real restriction — cheaper than
+the proposed plugin hook for everything except path-aware rules."*
+
+**What is true, and it is more than round 3 or round 4's first reviewer knew:** `disallowed-tools`
+removes whole tools, never paths. But path-aware write control **did** exist and was never on the
+menu. Anthropic's permissions documentation: *"Claude Code checks file permissions against
+`Edit(path)` and `Read(path)` rules only. If you write a path rule for `Write`… Claude Code accepts
+the rule but never consults it… **Use `Edit(docs/**)` in place of `Write(docs/**)`**."* An
+`Edit(path)` rule governs the `Write` tool, including creating a new file.
+
+So round 3's Q1 was decided over an option space missing its best option, which is why `codex-1`
+and `grok-1` were ruled **reopened** rather than filed as an accepted residual. **R4-Q1** put the
+full menu in front of the owner.
+
+## R4.12 — Execution: what landed, and what it verifiably did
+
+Twelve `FIX NOW` items and three owner decisions executed 2026-08-22 in one session, against
+`0d65b51`. Per-item detail is backfilled into each row in §R4.4; the checks below are the ones
+that apply across the batch. Each states its expectation before its result.
+
+| Check | Expectation stated first | Result |
+|---|---|---|
+| Both frontmatters re-parse | valid YAML, four keys each | **pass** — `name`, `description`, `argument-hint`, `allowed-tools` on both |
+| No write capability in either grant | no `Write`, `Bash`, `Edit`, `Agent` | **pass** — both now `Read, Grep, Glob` |
+| Both files under the documented 500 lines | under 500 | **pass** — 484 and 498, from 529 and 587 |
+| New obligations above the estimated cut | verifier exposure and append-not-rewrite inside `<invariants>` | **pass** — lines 32–35 and 49, against an estimated cut at 214 |
+| No unresolved placeholder ships | no `«»` outside prose *about* guillemets | **pass** — 3 hits, all backticked references to the check itself |
+| Every `references/` link resolves | no broken relative link under `skills/**` | **pass** — clean, including the five new files |
+| Fixtures still pass | `8 passed` | **pass** — `8 passed in 0.01s`, run outside the tree |
+| Digest matches the filed record | `775e1cc8c43f` under the newly prescribed command | **pass** — matches; the Codex record is **current again**, having been stale under the old command |
+| `grep 'continue'` over the prompt skill | was exit 1, should now match | **pass** — matches at `:39` and `:460` |
+| `never saw/seen the report`, repo-wide | zero hits | **pass** — zero |
+
+### The gate test, done by breaking it
+
+A digest that always returns the same value is not a check. In a throwaway clone under the session
+scratchpad:
+
+```
+baseline in a clean clone:            775e1cc8c43f
+after a real instrument edit:         823e4f23a61b     # committed one line to ANSWER-KEY.md
+after reverting and running pytest:   775e1cc8c43f     # 8 passed
+```
+
+**The gate still fails on a real instrument change and no longer fails on a test run** — which is
+the whole of what `R3-F12` / `codex-10` / `grok-7` asked for, and the first time in four rounds
+that the calibration line reads correctly by following the written procedure.
+
+### What went the wrong way, recorded rather than buried
+
+**The restructure moved 9,300 characters of rationale out of the two skills and into five new
+`references/` files.** That is a real loss and it should be named: the history-of-failures prose —
+the dated leak cases, the worked examples of dismissal — is what makes several of these rules
+motivated rather than arbitrary, and an agent that never opens a reference file now gets the rule
+without the reason. Grok's claim-24 answer argued precisely that this prose is load-bearing for
+compliance. The trade was taken because the alternative measured worse: those passages sat *past*
+the compaction cut, so a compacted agent lost them either way and lost the obligations with them.
+Now the obligations survive and the reasoning is one link away. **It is a trade, not a clean win**,
+and if a future round finds agents ignoring rules they no longer understand, this is the change to
+suspect.
+
+**Two things this round did not fix and did not queue.** The exact compaction line is still
+unmeasured (`CNV-4`) — the estimates in both skills now say "estimated" and name their method, which
+is honest but is not a measurement. And nothing here validates the skills themselves; `BACKLOG.md`
+`B-3` still holds that, and it would have caught several of this round's defects mechanically.
+
+### Did any round-4 fix open a new path to the failure it closed?
+
+Asked explicitly, as the template requires. **Two candidates, named for round 5 rather than ruled
+here**, since ruling on the effect of one's own fix is the self-review this ledger exists to demote:
+
+1. **Dropping `Write` from both grants** means every artifact these skills produce now prompts. The
+   permission outcome is correct and intended. Whether the added friction causes an author to write
+   fewer artifacts — to skip the backlog file, or fold the cover note into the brief — is a
+   behavioural question no static reading settles. It is the same shape as round 3's `Bash` removal,
+   which RV-4 showed was milder than feared.
+2. **The restructure** is the loss named above. A reviewer should be pointed at whether any
+   obligation lost its motivating case, and whether any reference file now contains something that
+   is actually an instruction.
+
+## R4.13 — Round 4 status: OPEN
+
+All twelve `FIX NOW` items and all three owner decisions are executed and backfilled. What remains:
+
+- **`CNV-1`–`CNV-11` are open `VERIFY` items and are explicitly non-blocking**; each names the
+  check that would settle it. `CNV-4` (the exact compaction line) is the one worth spending on.
+- **Nothing in this round establishes that the work is complete, correct, or ready to ship.** It
+  establishes that 24 findings were confirmed and 24 changes landed against them.
+
+**Round 3 closes here — 2026-08-22.** Its last outstanding obligation, `R3-F12`'s `PENDING OWNER`,
+was carried as **R4-Q3**, answered at §R4.6a and executed above. Correction **C-4** records that
+its earlier CLOSED marker was premature from the moment `R3-F12` was appended.
+
+**The next round audits `0d65b51..HEAD`** — this commit range, containing 24 fixes of which every
+one is prose except the frontmatter change and the digest command. That ratio is what round 5
+should be pointed at first, and it is the same question Grok's claim 24 asked and answered against
+round 3.

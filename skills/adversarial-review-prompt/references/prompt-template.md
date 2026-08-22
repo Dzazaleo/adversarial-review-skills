@@ -27,7 +27,7 @@ Verbatim-worthy — except for **two factual claims buried inside it, and you se
 keeping the words.** The first is the provenance sentence: where the target contains inherited
 code, human edits, or third-party work, state the actual provenance instead — a false "every line"
 primes the reviewer to distrust evidence on a fabricated basis. The second is the independence
-sentence, left as a placeholder below and resolved by the three branches that follow the quote:
+sentence, left as a placeholder below and resolved by the four branches that follow the quote:
 
 > Every line of the code you are about to audit was written by one model, reviewed by that
 > same model, and then verified by that same model against tests it also wrote. It currently
@@ -36,8 +36,8 @@ sentence, left as a placeholder below and resolved by the three branches that fo
 > That is exactly the problem. A model validating its own work carries the same blind spots
 > into the review that it had while writing — the same misreadings of the spec, the same
 > unexamined assumptions, the same things it never thought to test because it never thought
-> of them at all. «independence sentence — one of the three branches below». **You will notice
-> different things, and those things are the entire value of this exercise.**
+> of them at all. «independence sentence and its payoff line — one of the four branches
+> below, quoted whole».
 >
 > - **Confirmation is near-worthless output.** If you spend your effort re-deriving what is
 >   already claimed correct and agreeing, this audit has failed.
@@ -51,22 +51,41 @@ sentence, left as a placeholder below and resolved by the three branches that fo
 > Assume competence, not correctness. The «work» is carefully built. Where it is wrong, it
 > is wrong in ways its author cannot see — those places are what you are here for.
 
-**Resolving the independence sentence — three branches, and you must know which you are in.**
-The reviewer's identity is a required input to this skill (§1) precisely so this sentence can be
-written truthfully. **Never emit the unconditional "You have a different architecture and
-different training":** this skill explicitly supports handing the brief to another fresh Claude
-session, and a great many review products are thin layers over a small pool of base models, so
-the product's name does not settle lineage.
+**Resolving the independence sentence — four branches, and you must know which you are in.**
+Both halves are required inputs to this skill (§1) — the reviewer's identity *and* the work's
+author provenance — precisely so this sentence can be written truthfully. **Never emit the
+unconditional "You have a different architecture and different training":** this skill explicitly
+supports handing the brief to another fresh Claude session, and a great many review products are
+thin layers over a small pool of base models, so the product's name does not settle lineage.
+
+**Each branch carries its own payoff line, and you quote the branch whole.** The payoff is what
+tells the reviewer why its disagreement is worth anything, so it has to be true of the branch it
+sits in — an unconditional "you will notice different things" appended to the same-family branch
+contradicts the sentence immediately before it.
 
 - **Known and different family** — name both: *"This work was written by «author family». You
-  are «reviewer family». You have a different architecture and different training."*
+  are «reviewer family». You have a different architecture and different training. **You will
+  notice different things, and those things are the entire value of this exercise.**"*
 - **Same family** — say what is bought and what is not: *"This work was written by «family», and
   so are you. Your context is fresh and you did not write it — but you do not bring a different
-  architecture, so the blind spots you share with its author are the ones most likely to survive
-  this review. Weight your own agreement accordingly."*
-- **Unknown lineage** — claim nothing: *"The lineage of the model reviewing this is not known to
-  the author, so no claim is made about whether your architecture differs from its author's.
-  What is certain is that you did not write this work and have nothing invested in it."*
+  architecture, and any blind spot you share with its author is one this review is least likely
+  to catch. Weight your own agreement accordingly. **What you bring is a clean read and no stake
+  in the answer, and that is what this exercise is asking you to spend.**"*
+- **Human, mixed, or several authors** — say which, and claim only what follows: *"This work was
+  written by «humans / a mix of human and model authors / several model families». No single
+  architecture sits behind it, so no claim is made about how yours differs. **What is certain is
+  that you did not write it and have nothing invested in it, and that is enough for this to be
+  worth doing.**"*
+- **Unknown lineage on either side** — claim nothing: *"The lineage of the model reviewing this,
+  or of the author of the work, is not known to the author of this brief, so no claim is made
+  about whether your architecture differs from its author's. **What is certain is that you did
+  not write this work and have nothing invested in it.**"*
+
+The same-family wording above is deliberately weaker than it used to be. *"The blind spots you
+share with its author are the ones most likely to survive this review"* reads as a mechanism and
+is not established anywhere — nothing in this project has measured whether same-family reviewers
+share an author's blind spots. It is stated as a caution rather than a finding, in a document
+whose whole purpose is to stop plausible-sounding claims passing as fact.
 
 A false independence claim is not a harmless flourish. It tells the reviewer that its
 disagreement is evidence of an architectural difference which may not exist, inflating exactly

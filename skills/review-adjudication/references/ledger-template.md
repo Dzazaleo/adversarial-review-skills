@@ -39,6 +39,12 @@ as none on file». «Where it is anything but PASS, add: findings adjudicated no
 recorded as CNV, not coverage»
 **Workload gap:** «the size the pass was earned on, from the record's Workload row, beside the size
 of the work this review covered — both in numbers. State them; do not characterise the gap»
+**Author's residual doubts:** «supplied by the user and quoted into §«N» — «D» doubts, each
+ruled present/absent by this session's own searches» / «unavailable — the authoring session's
+hand-off could not be produced, so no finding is scored as independent corroboration; this is
+absence of the check, not evidence the doubts were kept out» / «none existed — the brief was not
+written by `adversarial-review-prompt`»». **This line is required.** Without it a ledger cannot be
+told apart from one where the audit was silently skipped, and the skipped case is the common one
 **Upheld claims:** «S» sampled of «T» listed · «K» re-opened as `U-N`
 **Findings in: «N» · Rows out: «N» · +«K» process, +«M» CNV, +«D» prior-review disagreements
 ruled** «numbered counts must match; if merged, say which IDs; state each auxiliary count even
@@ -93,7 +99,7 @@ One row per finding. Both axes, always.
 |---|---------|-------|---------|-------------|
 | 1 | «title, verbatim from the report» | «false-green gate / wrong result / broken contract / invalid assumption / omitted alternative / internal contradiction / robustness / hygiene» | **CONFIRMED** | **FIX NOW** — «the minimal fix, named, with the file or plan task it lands in» |
 | 2 | «title» | «class» | **OWNER RULING REQUIRED** | **PENDING OWNER** — see §4. «Blocks / does not block» execution |
-| 3 | «title» | «class» | **REFUTED** | **NO ACTION** — «the evidence, with the command; not the reasoning» |
+| 3 | «title» | «class» | **REFUTED** | **NO ACTION** — «the evidence, with the command; not the reasoning». «Where a second opinion was required: **Verifier exposure —** it ran «with `Write`/`Edit` excluded / unbounded», and «read only a sanitized copy at «path» / could have read the report, which sat in the directory it was spawned into»» |
 | 4 | «title» | «class» | **SETTLED ALREADY** | **NO ACTION** — «decision cited: file:line, quoted» |
 | 5 | «title» | «class» | **CONFIRMED** | **FIX LATER** — «backlog artifact path, which must already exist» |
 | 6 | «title» | «class» | **CONFIRMED (partial)** | «what is established vs unestablished, then the disposition» |
@@ -105,6 +111,12 @@ why in the row. When more than one report feeds a round, prefix each ID with the
 (`codex-3`, `fable-3`) so a row number names exactly one finding.
 
 No bare "ACCEPTED" — it means both "the finding is real" and "we are shipping with it."
+
+**Every `REFUTED` that required a second opinion carries a verifier-exposure clause**, in the row
+itself, saying two things: whether the verifier's tools were restricted, and whether it could have
+read the report. Neither is decoration. A reader who is not told assumes the stronger version of
+both, and "blind" is never the word for a check that was merely uninformed — the `Reviewer
+isolation` line in the header is about the *external reviewer* and does not cover this.
 
 ### Process and prompt defects
 

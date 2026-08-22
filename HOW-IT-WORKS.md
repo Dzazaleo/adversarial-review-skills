@@ -479,9 +479,13 @@ record.
 Genuine blindness exists in exactly one place, because it is expensive and only one case earns it:
 refuting a high or critical finding about code you wrote yourself.
 
-There, a second opinion is fetched that has never seen the report at all — it gets the claim card
-and the code, and is asked to establish whether the mechanism holds, not to check the ruling, since
-checking a ruling mostly means being handed a conclusion to agree with. If the two disagree, the
+There, a second opinion is fetched that **is not handed the report** — it gets the claim card and
+the code, and is asked to establish whether the mechanism holds, not to check the ruling, since
+checking a ruling mostly means being handed a conclusion to agree with. Read that as narrowly as
+it is written: not being handed the report is not the same as being unable to read it. The
+subagent is spawned into the working directory where the report sits, and it keeps `Read` and
+`Glob`. What the escalation buys is a verifier whose *prompt* contains only the claim; buying
+actual blindness takes a sanitized copy, and the ledger records which of the two it got. If the two disagree, the
 verdict is `COULD NOT DETERMINE` and the disagreement goes in the ledger.
 
 One convention from the refutation pipelines this resembles is deliberately **not** adopted. Those

@@ -127,12 +127,13 @@ A record is stale when any of these is true, and stale is treated exactly as mis
   nothing here can. Shorten it freely; the cost of a shorter window is one twenty-minute rerun.
 - **The reviewer's identity differs from the record's** — a different family, a different product
   version, a different reasoning effort, or a different self-reported string.
-- **The instrument changed.** The record names a digest rather than a commit, so an uncommitted
-  edit to a case or a private replacement corpus expires the record too. A different digest is a
-  different measurement. The digest covers what actually decides a result — `cases/`, the fixed
-  brief, and the answer key — and deliberately **not** this file or the record template, which are
-  operator documentation the reviewer never sees. Fixing a typo in the protocol should not throw
-  away every record you hold.
+- **The instrument changed.** A different digest is a different measurement. The digest covers
+  what actually decides a result — `cases/`, the fixed brief, and the answer key — and
+  deliberately **not** this file or the record template, which are operator documentation the
+  reviewer never sees. Fixing a typo in the protocol should not throw away every record you hold.
+  It enumerates **tracked** files (`git ls-files`), so running the fixtures cannot expire a record
+  and an uncommitted corpus edit will not register: commit corpus changes before filing or
+  trusting a record. `record-template.md` carries the command and the reasoning.
 
 Do not re-date a stale record. Re-run it.
 

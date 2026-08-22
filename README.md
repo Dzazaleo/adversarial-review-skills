@@ -136,6 +136,38 @@ Restart Claude Code. You don't need to remember a command — just say what you 
 
 Or call them by name: `/adversarial-review-prompt`, `/review-adjudication`.
 
+### What these skills are allowed to do — and how to bound it yourself
+
+Both declare `allowed-tools: Read, Grep, Glob` and nothing more. **Neither pre-approves any write
+tool**, so every file they create — the brief, the cover note, the ledger, a backlog entry — goes
+through your normal permission handling and you see it before it happens. That is deliberate: the
+skills argue at length that a prose boundary over a broad permission grant is not enforcement, and
+they should not ship one.
+
+Their prose write-envelopes are still *instructions*, not a sandbox. If you want the boundary
+actually enforced, put it in your own permission settings, where Claude Code will consult it:
+
+```jsonc
+// .claude/settings.json  — deny writes outside the review artifacts
+{
+  "permissions": {
+    "deny":  ["Edit(**)"],
+    "allow": ["Edit(**/*REVIEW*.md)", "Edit(**/BACKLOG.md)"]
+  }
+}
+```
+
+**Use `Edit(path)`, not `Write(path)`.** Claude Code checks file permissions against `Edit(path)`
+and `Read(path)` rules *only*; a path rule written for `Write` is accepted and then never
+consulted, and it warns at startup when you do it
+([permissions docs](https://code.claude.com/docs/en/permissions)). An `Edit` rule covers the
+`Write` tool too, including creating a new file.
+
+This is a recommendation the skills cannot enforce — settings are yours, not theirs. It is worth
+knowing that `allowed-tools` in a checked-in skill is not gated by workspace trust: any repository
+you clone can grant its own skills broad access, these two included. Read the frontmatter of skills
+you did not write.
+
 ## A typical run
 
 Say Claude has just written you a plan, and you'd rather not find out it was wrong after the
@@ -149,10 +181,16 @@ are what make the whole exercise worth anything.
 2. Claude reads its own plan, writes `NN-EXTERNAL-REVIEW-PROMPT.md` and a cover note, and tells
   you its own private suspicions to hold onto.
   > **Where:** the same session that wrote the plan — that's the point, since it knows which
-  > parts it was least sure of. Everything it writes stands on its own, so nothing later depends
-  > on keeping this session open. The one risk is that its own suspicions end up in the brief
+  > parts it was least sure of. The one risk is that its own suspicions end up in the brief
   > without it noticing, so it searches the saved file afterwards and tells you which ones really
   > were kept out.
+  >
+  > **Keep that hand-off.** Everything else it writes is on disk and stands on its own, but the
+  > residual doubts are reported to you in chat and are written nowhere else. Step 6 needs them
+  > verbatim to rule on which ones leaked into the brief. If you no longer have them the
+  > adjudication still runs — it records that the check could not be made and credits no finding
+  > as independent corroboration — but that is a real loss, and it is the one thing here that
+  > does not survive closing the window. Paste it somewhere durable.
 3. **You** paste the cover note into Codex / Gemini / Cursor / another Claude session.
   > **Where: a fresh session, and ideally a different model.** Another Claude session only counts
   > if it hasn't seen the plan. Show the plan to the session that wrote it and you get agreement
@@ -164,9 +202,10 @@ are what make the whole exercise worth anything.
 6. Claude checks every finding itself — running commands where a finding is about code, going
   back to the source where it's about the plan — and writes `NN-REVIEW-ADJUDICATION.md`: every
   finding ruled on, a fix queue, and the questions that are yours to answer.
-  > **Where: a fresh session again.** It costs you nothing, because the skill works from the
-  > report and the files on disk rather than from a conversation — you can pick it up days later
-  > on a different machine. And it buys a lot. The session that wrote the plan has a stake in the
+  > **Where: a fresh session again.** It costs you almost nothing, because the skill works from
+  > the report and the files on disk rather than from a conversation — you can pick it up days
+  > later on a different machine. The single exception is the residual-doubts hand-off from
+  > step 2, which it will ask you to paste. And it buys a lot. The session that wrote the plan has a stake in the
   > findings being wrong, so letting it rule on them is self-review sneaking back in, and "we
   > already thought about that" is the cheapest sentence in the language. A session with no stake
   > has to go and look.
