@@ -94,28 +94,44 @@ Each of those is a fix. Each is also a claim about what a future reader will be 
 
 ### The audit range
 
-Three commits, pinned:
+Pinned:
 
 ```
 8c1d737  Add the reviewer-calibration corpus and the claim-card change   <- the state you reviewed
 fb237a0  Adjudicate the Codex review and apply the 14 fixes it earned    <- under review
-9d892d0  Correct a contradiction the F14 fix introduced, and one stale heading  <- under review
+9d892d0  Correct a contradiction the F14 fix introduced, and one stale heading
+3ec5baf  Add the round-2 patch-verification brief and its cover note     <- this file; see below
+25c4644  Record a scoping note: the cadre-derived rules are unaudited
+2e4e7e4  Record the calibration run: PASS, and five findings against the corpus
+e1fc88b  Fix the five corpus defects the calibration run found, plus a sixth
 ```
 
-**The work under review is `8c1d737..9d892d0`**, observed at authoring time as:
+**The work under review is `8c1d737..e1fc88b`**, observed at authoring time as:
 
 ```
-$ git diff --stat 8c1d737..9d892d0
-11 files changed, 1041 insertions(+), 65 deletions(-)
+$ git diff --stat 8c1d737..e1fc88b
+24 files changed, 2383 insertions(+), 69 deletions(-)
 ```
 
-`8c1d737` is byte-for-byte the tree you audited — all 25 blob hashes pinned in the round-1 brief
-resolve against it. So `git diff 8c1d737..9d892d0` is exactly the set of changes this round is
+`8c1d737` is byte-for-byte the tree you audited in round 1 — all 25 blob hashes pinned in that
+brief resolve against it. So `git diff 8c1d737..e1fc88b` is exactly the set of changes this round is
 about, and `git show 8c1d737:<path>` gives you the before-state of any file without reconstruction.
 
-`9d892d0` is `HEAD`. There is nothing above the range.
+`e1fc88b` is `HEAD`. There is nothing above the range.
 
-Two files in that diff are **artifacts of the round, not fixes**: `REVIEW-ADJUDICATION.md` (729
+**One commit in that range is this brief itself** (`3ec5baf`), and one is a scoping note
+(`25c4644`). Both are documentation about the review rather than work under review; ignore them
+except where §6 points you at them.
+
+**The last two commits are a second layer of change, and they are in scope.** After the fixes were
+written, the calibration corpus was run for the first time — six cases against you, in fresh
+sessions rooted outside this repository. That run **passed** (4/4 traps, 1/2 clean) and found six
+defects in the corpus itself, which were then fixed. Two of those fixes amend fixes you are also
+being asked to audit: `K-5` rewrites the record filename rule that the `F14` fix introduced, and
+`K-6` narrows the corpus digest that the `F1` fix introduced. **Fixes-to-fixes are the least
+reviewed material here** — they were written last, fastest, and with the most confidence.
+
+Two files in that diff are **artifacts of the round, not fixes**: `REVIEW-ADJUDICATION.md` (1078
 lines, the ledger) and `BACKLOG.md` (59 lines). They are in scope as *evidence*, per §5 — you are
 checking rulings against them — but a prose complaint about how the ledger is written is not a
 finding unless it changes what someone would do.
@@ -123,31 +139,36 @@ finding unless it changes what someone would do.
 ### Commands
 
 ```bash
-git diff 8c1d737..9d892d0                     # the whole change
+git diff 8c1d737..e1fc88b                     # the whole change
 git show 8c1d737:calibration/ANSWER-KEY.md    # any file as you reviewed it
+git log --oneline 8c1d737..e1fc88b            # the six commits, in order
 cd /tmp && mkdir -p a2 && cd a2 && cp -R <repo>/calibration/cases/clean-wordcount wc1
 (cd wc1 && python3 -m pytest -q)              # observed: 5 passed
 ```
 
-The two pytest suites and the case files are **unchanged in this range** — deliberately, and that
-is itself claim 3. The fixtures still print `5 passed` and `3 passed`.
+The two pytest suites are unchanged in substance and still print `5 passed` and `3 passed`. The
+*case files* did change late in the range — `K-1` added `calibration/cases/clean-copy-link/viewer.html`
+and `K-2` corrected an interpreter name in two case READMEs. That is claim 3 and claim 21.
 
 ## 4. Scope
 
-**In scope — the diff `8c1d737..9d892d0`:**
+**In scope — the diff `8c1d737..e1fc88b`:**
 
 | Path | Lines now | What changed |
 |---|---|---|
 | `calibration/ANSWER-KEY.md` | 101 | one trap gained a second primary defect; the pass-rule overclaim corrected; a paragraph pricing the 1-of-2 threshold |
-| `calibration/CALIBRATION-PROMPT.md` | 46 | the fixed brief gained a counterweight to "agreement means failure" |
-| `calibration/README.md` | 132 | isolation narrowed to "not confinement"; record key rewritten; filename fallback added; expiry rewritten |
-| `calibration/record-template.md` | 61 | identity block replaced with four fields; corpus commit → corpus digest; severity note demoted |
-| `skills/review-adjudication/SKILL.md` | 482 | seven separate amendments — frontmatter, calibration input, claim-card rule, pre-registration, echo rule, subagent boundary |
+| `calibration/CALIBRATION-PROMPT.md` | 47 | the fixed brief gained a counterweight to "agreement means failure"; envelope rewritten by `K-3` |
+| `calibration/README.md` | 142 | isolation narrowed to "not confinement"; record key rewritten; expiry rewritten; then `K-4` (identity capture), `K-5` (filename rule), `K-6` (digest scope) |
+| `calibration/record-template.md` | 65 | identity block replaced with four fields; corpus commit → corpus digest; severity note demoted; digest narrowed by `K-6` |
+| `calibration/cases/clean-copy-link/viewer.html` | 16 | **new** — added by `K-1` so the plan names a file that exists. A change to a negative control |
+| `calibration/cases/*/README.md` | — | `K-2`: `python` → `python3` in two case READMEs |
+| `.adversarial-review/calibration/` | — | the calibration record and six archived raw reports. Evidence for claim 24 |
+| `skills/review-adjudication/SKILL.md` | 485 | seven separate amendments — frontmatter, calibration input, claim-card rule, pre-registration, echo rule, subagent boundary |
 | `skills/adversarial-review-prompt/SKILL.md` | 416 | calibration input rewritten; calibration pointer becomes a URL |
 | `skills/adversarial-review-prompt/references/prompt-template.md` | 373 | two authoring rules added (§3 inventory, §8b expected status) |
 | `HOW-IT-WORKS.md` | 781 | the public-corpus concession rewritten; three consistency corrections |
 | `README.md` | 239 | "Keep the clone" added to Install |
-| `REVIEW-ADJUDICATION.md` | 729 | the ledger — evidence, see §5 |
+| `REVIEW-ADJUDICATION.md` | 1078 | the ledger — evidence, see §5 |
 | `BACKLOG.md` | 59 | the F9 deferral artifact |
 
 **Read for context, not in scope for findings:** `examples/**`, `EXTERNAL-REVIEW.md` (your own round-1
@@ -188,21 +209,26 @@ decision is very much yours.
 
 ## 6. Load-bearing claims — adjudicate every one
 
-Return **CONFIRMED**, **REFUTED**, or **COULD NOT DETERMINE** for each of the 20 below, one line
+Return **CONFIRMED**, **REFUTED**, or **COULD NOT DETERMINE** for each of the 24 below, one line
 each minimum. The italicised sub-question is the seam.
 
 ### A. Fixes that changed a mechanism
 
-**1.** F1's fix replaces `git rev-parse --short HEAD` with a content digest:
-`find calibration -type f | sort | xargs shasum | shasum | cut -c1-12`
-(`calibration/record-template.md:14`, expiry rule at `calibration/README.md:103-105`). The ledger
-claims this makes the corpus identity change when the corpus changes without a commit.
+**1.** F1's fix replaces `git rev-parse --short HEAD` with a content digest
+(`calibration/record-template.md:14`, expiry rule at `calibration/README.md:106-111`). The ledger
+claims this makes the corpus identity change when the corpus changes without a commit. **`K-6` then
+narrowed it**, after the first real record exposed that digesting the whole `calibration/` tree
+expired records for edits to operator documentation the reviewer never sees. It now reads
+`find calibration/cases calibration/CALIBRATION-PROMPT.md calibration/ANSWER-KEY.md -type f | sort | xargs shasum | shasum | cut -c1-12`.
 *Run it. Does it hold up as an identity? Consider: `find` with no `-print0` and `xargs` splitting on
 whitespace; what happens with a filename containing a space; whether `xargs` can invoke `shasum`
 more than once on a large tree and change the output; whether `.DS_Store` or an editor swapfile
 inside `calibration/` silently moves the digest; and whether the value is stable on a machine that
 is not this one. An identity that changes when the corpus did not is a different failure from the
-one it replaced, but it is still a failure — it expires records for no reason.*
+one it replaced, but it is still a failure — it expires records for no reason. **Then check `K-6`'s
+narrowing in the other direction: is the new file set the right one?** It now excludes
+`calibration/README.md`, which contains the isolation recipe and the scoring rule. If an operator
+changes how cases are scored, should every record survive that?*
 
 **2.** F2's fix adds a counterweight at `calibration/CALIBRATION-PROMPT.md:7-11` beside the
 "if you spend your effort … agreeing, this review has failed" framing at `:3-5`.
@@ -215,20 +241,25 @@ instrument been changed silently?*
 **3.** Q1's implementation gives `trap-unfalsifiable-test` two primary defects, either of which
 scores it (`calibration/ANSWER-KEY.md:29`, rationale at `:32-40`, pass rule at `:70-71`, record at
 `calibration/record-template.md:35-40`).
-*The case files were deliberately not touched. Verify that: `git diff 8c1d737..9d892d0 --
-calibration/cases/` should be empty. Then the harder question — the scoring vocabulary column at
-`:29` now merges two defects' search terms, and `calibration/README.md:50` still tells the scorer to
-find the passage by searching those terms. Does the scoring procedure still work, or does a search
-that now matches twice as much text make the "assertion, not vocabulary" rule harder to apply than
-it was?*
+*The scoring vocabulary column at `:29` now merges two defects' search terms, and
+`calibration/README.md:50` still tells the scorer to find the passage by searching those terms.
+Does the scoring procedure still work, or does a search that now matches twice as much text make
+the "assertion, not vocabulary" rule harder to apply than it was? Note that the case files were
+untouched when this change was made and were then edited later by `K-1`/`K-2` — see claim 21.*
 
 **4.** F14/Q3's implementation replaces the record's identity block with four fields
-(`calibration/record-template.md:7-16`, note at `:18-24`), rewrites the key in
-`calibration/README.md:72-80`, and adds a filename fallback at `:82-88`.
+(`calibration/record-template.md:7-16`, note at `:18-24`) and rewrites the key in
+`calibration/README.md:72-80`. **`K-5` then rewrote the filename rule** (`:89-95`), because the
+original form contradicted its own stated intent — it said to slug the model identity while also
+promising that a run at a different effort files a separate record, which a bare model slug cannot
+express. The primary form now ends with the effort.
 *Both skills look the record up **by filename**. Follow that path end to end: given a reviewer that
-reports only "OpenAI Codex, GPT-5-based", can an adjudicator and a brief-author independently
-arrive at the same filename? If two people would file the same reviewer under two different names,
-the lookup misses and the record reads as absent — which is the state the fix was written to escape.*
+reports only "OpenAI Codex, GPT-5-based" at high effort, can an adjudicator and a brief-author
+independently arrive at the same filename? If two people would file the same reviewer under two
+different names, the lookup misses and the record reads as absent — which is the state the fix was
+written to escape. A real record now exists at
+`.adversarial-review/calibration/gpt-5.6-sol-high.md`; check whether the rule as written actually
+produces that name, or whether the scorer had to improvise.*
 
 **5.** F4's fix renames `Task` → `Agent` (`skills/review-adjudication/SKILL.md:12`) and adds a
 delegation-boundary rule at `:379-385`.
@@ -279,7 +310,7 @@ adjacent discovery and is not confinement.
 in particular, does it match what you actually observed about a process rooted at the temp
 directory? And does anything downstream still treat a calibration run as blind?*
 
-**11.** F13 — `calibration/README.md:96-100` marks 30 days "a chosen default, not a derived one".
+**11.** F13 — `calibration/README.md:106-109` marks 30 days "a chosen default, not a derived one".
 *Cheapest possible fix for the finding as stated. Is the finding as stated the whole finding? The
 record template at `:13` still computes `Expires` as run date + 30 days with no way to record that a
 shorter window was chosen — does the concession change anything an operator does?*
@@ -357,6 +388,51 @@ been run, and that five fixes correct claims about behaviour that still rests on
 where you are being asked for a judgement rather than a check — answer it in one paragraph, and
 only if you have something the round did not.*
 
+### E. The corpus fixes — written after the run, reviewed by nobody
+
+These landed in `e1fc88b`, hours after the fixes in group A–C, in response to defects the
+calibration run found in the corpus. They are the newest and least examined material in the range.
+
+**21.** `K-1` added `calibration/cases/clean-copy-link/viewer.html` (16 lines) because the case was
+the only one in the corpus with no source tree, so a reviewer that compared the plan against the
+filesystem correctly reported the feature as unimplemented — and was failed for it on a *clean
+control*, for the same move that scores a HIT in `trap-ghost-dependency`.
+*This is a change to a negative control, so the bar is: **does the case still contain no defect at
+`high` or `critical`?** Review `clean-copy-link` as if you had been handed it cold. If the added
+file introduces anything a competent reviewer would rate serious, the repair has broken the control
+in the opposite direction, and that is worse than the ambiguity it fixed. Also check the plan and
+the new file agree: the plan says the button goes "next to the page title" and "no new files, no
+dependency."*
+
+**22.** `K-3` rewrote the fixed brief's envelope (`calibration/CALIBRATION-PROMPT.md:43-47`) because
+it told the reviewer to run the test suite and to write nothing but its report — impossible for
+pytest, which writes caches. It now says "Write `REVIEW.md`, and change no file that was already
+here. A test runner leaving its own caches behind is expected and is not a violation."
+*Does that resolve the contradiction or relocate it? Read the whole envelope as one instruction and
+say whether a reviewer could now violate it without noticing. And weigh the cost: this is the
+**fixed brief**, the constant the whole corpus holds still so that a measurement is of the reviewer
+rather than of that day's prompt. Every prior record is invalidated by touching it. Was that worth
+paying for a cache-file ambiguity?*
+
+**23.** `K-4` added an instruction (`calibration/README.md:76-84`) that the operator capture the
+reviewer's identity from the first session before closing it, and states that the question must
+**not** go in the fixed brief because asking a reviewer what model it is announces that the session
+is an evaluation.
+*Is that reasoning right? Consider what a reviewer does differently when it suspects it is being
+measured, and whether the alternative — an operator reconstructing a reasoning-effort setting from
+memory days later — is actually the smaller risk.*
+
+**24.** The calibration record at `.adversarial-review/calibration/gpt-5.6-sol-high.md` claims
+**PASS — 4/4 traps, 1/2 clean**, scored by the same model that wrote the answer key. The six raw
+reports it was scored from are archived beside it under
+`runs/2026-08-22-gpt-5.6-sol-high/`, one per case.
+***Re-score them yourself.*** Open `calibration/ANSWER-KEY.md`, then each archived report, and
+decide independently whether each trap's primary defect was **asserted** rather than mentioned.
+Report every disagreement with the recorded scoring. This is the one claim here that is fully
+checkable from artifacts on disk, and it is also the first material that has ever existed for
+settling `CNV-3` — whether two scorers applying that rule to the same outputs agree. Your
+disagreements, or their absence, are the finding either way.
+
 ## 7. Ground already walked — do not re-report these
 
 Round 1 is `EXTERNAL-REVIEW.md` (yours) and `REVIEW-ADJUDICATION.md` (the rulings). Three earlier
@@ -373,11 +449,23 @@ Three items are settled by the **owner**, not the adjudicator, and are recorded 
 - **Q2** — the "at least one of two clean cases" threshold stands; only the overclaim was corrected.
 - **Q3** — the record binds family, product version and reasoning effort.
 
+**The calibration run of 2026-08-22 is also ground already walked.** Its six findings — `K-1` to
+`K-6` — are recorded in `REVIEW-ADJUDICATION.md` with evidence, and five of them are fixed in this
+range. Do not re-report the defects themselves; claims 21–24 ask whether the *fixes* hold. Two
+things from that run are worth knowing as context: the corpus found six defects in itself on first
+use, and the record it produced is already **stale**, because three of the fixes changed the
+instrument it pins.
+
 **Open and explicitly not closed**, so not findings unless you have something new:
 
 - **F9** — no corpus-level consistency check exists. Deferred, `BACKLOG.md` §B-1.
-- **CNV-1, CNV-2, CNV-3** — crowd-out in `trap-undelivered-goal`, discriminative value of
-  `trap-key-to-client`, scorer reproducibility. All three need reviewer runs nobody has done.
+- **CNV-1** — crowd-out in `trap-undelivered-goal`. One data point now exists and runs *against*
+  the feared direction: the 2026-08-22 run found the quiet Goal-2 gap and missed the loud
+  `NotImplementedError` entirely. Not settled; n=1.
+- **CNV-2** — discriminative value of `trap-key-to-client`. Still needs a shallow-baseline
+  comparison nobody has run.
+- **CNV-3** — scorer reproducibility. **No longer unanswerable** — see claim 24, which asks you to
+  do exactly the independent re-scoring it calls for.
 - The three prior-round findings the round-1 brief listed at
   `examples/audit-of-adversarial-review-prompt/EXTERNAL-REVIEW.md:134,138,140`.
 
@@ -397,11 +485,11 @@ modify nothing inside the repository.**
 | **Mutation testing** | **Authorized, in a temp copy only.** Copy anything to `/tmp` and mutate it freely. Never mutate a file inside the repository, not even to revert it afterwards |
 | **Network + installs** | No installs, no fetching of dependencies. Web search **is** allowed for checking a factual claim (whether `Agent` is the current Claude Code tool name, `xargs`/`shasum` behaviour on large inputs) — cite the URL, and it will be weighed as a lookup rather than a discovery |
 | **Your own tools** | Subagents and MCP servers are fine |
-| **Effort budget** | Roughly 45–75 minutes. This range is a third the size of round 1's and you already know the terrain. Depth beats breadth. 20 claims is the floor of the job, not the whole of it |
+| **Effort budget** | Roughly 60–90 minutes. You already know the terrain, but the range grew: it now carries a second layer of fixes-to-fixes and a calibration run to re-score. Depth beats breadth. 24 claims is the floor of the job, not the whole of it |
 
-At the end, run `git status --short` and paste the output. Observed while writing this brief, with
-this file and its cover note already committed, the tree was **completely clean — no modified files
-and no untracked ones.** So the expected result is exactly one line, `?? EXTERNAL-REVIEW-2.md`.
+At the end, run `git status --short` and paste the output. Observed while writing this refresh, with
+every commit in the range already made, the tree was **completely clean — no modified files and no
+untracked ones.** So the expected result is exactly one line, `?? EXTERNAL-REVIEW-2.md`.
 
 Run the command and report what you actually see rather than matching it against that sentence. If
 they differ, say so as a process finding: last round's equivalent assertion was reconstructed from
@@ -450,7 +538,7 @@ the owner's call.
 
 ### Also required
 
-- **Claims examined and upheld** — one line each, for every one of the 20 you did not turn into a
+- **Claims examined and upheld** — one line each, for every one of the 24 you did not turn into a
   finding. Say what you did, not what the document says. This is your coverage evidence
 - **Could not verify** — every claim you could not settle, and what would settle it
 - **Mutation results** — what you mutated, what survived, what the suite noticed
