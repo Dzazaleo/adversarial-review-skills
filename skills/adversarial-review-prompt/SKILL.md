@@ -20,10 +20,16 @@ two files: the audit brief, and a short paste-ready cover note that hands it ove
 
 <invariants>
 **These hold for the whole task.** After an auto-compaction Claude Code re-attaches only the
-**first 5,000 tokens** of this skill, so a later part of it can vanish mid-task with no signal.
-**Estimated** cut: around line 221, from a measured ~3.1 characters per token on this file's
-prose — an estimate, not a tokenizer run, and biased late if anything. Each rule below is stated
-in full in its own section; this block is the copy that survives.
+**first 5,000 tokens** of this skill; where several skills were invoked they share a 25,000-token
+budget and an older one can be dropped **entirely**. Treat everything past **line ~205** as gone,
+and re-invoke this skill after a compaction. Each rule below is stated in full in its own section.
+
+**The references, and when to open each.** `prompt-template.md` before writing any part of the
+brief — **it is the authority on the framing block and its four branches** ·
+`cover-note-template.md` before writing the cover note, including the no-filesystem variant ·
+`example-audit-prompt.md` for a worked brief **where it exists — it ships absent by default, so
+skip it without comment** · `why-this-is-hard.md` is background only —
+**this file and the template override it wherever they differ.**
 
 1. **You write the prompt. You do not perform the review.** The deliverable is two files —
    except for a reviewer with no filesystem, which gets the brief alone and no cover note.
@@ -445,8 +451,10 @@ one `ls` away from the reviewer.
 ## 10. Hand off
 
 Report to the user, briefly:
-- The two file paths: the brief, and the cover note
-- The cover note itself, verbatim in one fenced block, ready to paste
+- The brief's path — and, **for a reviewer with a filesystem**, the cover note's path too
+- **For a reviewer with a filesystem:** the cover note itself, verbatim in one fenced block, ready
+  to paste. **For a reviewer without one:** no cover note exists — tell the user to attach the
+  brief to the chat, and that the report comes back in chat for them to save
 - Which directory the reviewer's session must be rooted at for the path in it to resolve
 - The brief's scope and the number of load-bearing claims the reviewer must adjudicate
 - The reviewer's model family, and plainly whether it is the same family that wrote the work
@@ -457,8 +465,9 @@ Report to the user, briefly:
   cases, about twenty minutes, and it is per model rather than per review, so it is paid once.
   Do not hold up the hand-off over it or repeat the recommendation
 - The capability line from §7 — every path the reviewer may write, the report file included
-- Where the report will land, and that they should check that file exists when the run ends
-  rather than trusting the chat reply: the chat reply is a summary by design now
+- Where the report will land. **For a reviewer with a filesystem**, that they should check that
+  file exists when the run ends rather than trusting the chat reply, which is a summary by design.
+  **For one without**, that the user is the one who saves it
 - **Only for a reviewer with no filesystem: that they must send a single "continue" if the
   report stops at a section boundary.** The brief tells the reviewer to stop there and wait; the
   reviewer cannot resume itself, so if this never reaches the user a truncated report gets filed

@@ -54,7 +54,8 @@ Two things about how to deliver it, which the brief also states:
    of why, grounded in something that actually happened where it has: a chat reply that never
    arrived, a run that was cut short, a closed session.» Writing that one file is authorized.
    Everything under «src/, scripts/, tests/» and all config files stay read-only, and commit
-   nothing.
+   nothing. «Network, stated either way and never omitted: Web search is allowed — cite the
+   URLs. / No network access; work only from what is in the repository.»
 
 2. In your reply here, give me only a short summary: your coverage line, the ranked finding
    titles with impact levels, and the file path. Keep all detail in the file.
@@ -67,6 +68,12 @@ looks like a test failure but isn't.»
 
 The capitalised `WRITE YOUR REPORT TO A FILE` is deliberate: it is the one instruction whose
 loss costs the entire run, and it is competing with a long brief for the reviewer's attention.
+
+**Every permission axis the brief states, this note states too — including the ones that grant
+nothing.** Invariant 3 is `agree exactly`, and omission breaks it as surely as contradiction: a
+reviewer reading only this note cannot tell an ungranted capability from an unmentioned one. Round
+6 shipped a brief granting web search beside a cover note silent on network, and the silence was
+the finding. Walk the brief's permission table row by row before sending this.
 
 ---
 
@@ -81,11 +88,21 @@ repo. A path it cannot open is useless and the write instruction is impossible. 
 this cover note at all. Tell the user instead: attach the brief as a file if the chat accepts
 uploads — most do, and an attachment preserves the fences and tables a paste mangles — and
 paste it whole only as a last resort; the report will come back in chat, and they should save
-it to `NN-EXTERNAL-REVIEW.md` themselves.
+it to `NN-EXTERNAL-REVIEW.md` themselves. **And tell them to send a single "continue" if the
+report stops at a section boundary** — the brief tells the reviewer to stop there and wait, and
+it cannot resume itself, so a user who is not told files a truncated report as a complete one.
+Say this here rather than relying on the skill's §10 checklist: §10 sits below the compaction cut
+and this variant does not.
 
-**Several reviewers, one brief.** Give each reviewer its own report path —
-`NN-EXTERNAL-REVIEW-<reviewer>.md` — so the second run cannot overwrite the first, and say in
-each cover note that the file is that reviewer's alone.
+**Several reviewers, one brief — or one range split across briefs.** Give each reviewer its own
+report path — `NN-EXTERNAL-REVIEW-<reviewer>.md` — so the second run cannot overwrite the first,
+and say in each cover note that the file is that reviewer's alone. **This is not optional when the
+runs may overlap in time**, and it applies to a split audit as much as to a shared brief: two
+sessions writing one path is not a race the later one loses politely, it is the earlier report
+destroyed. **Bind the cover note to its brief in the same breath** — each cover note names the
+brief it belongs to and the reviewer it is for, so a note pasted into the wrong session is visible
+in its first line rather than after the run. A reviewer given the wrong note follows it correctly
+and audits the wrong half; that has happened here.
 
 **A follow-up or delta review.** Point 1 must say whether to append to the existing report or
 start a new file, and name it. A reviewer left to guess will overwrite.

@@ -44,8 +44,9 @@ compaction cut.
   evidence, and a reader who is not told assumes otherwise.
 
   **What the allowlist does not buy — and this goes in the ledger too.** Excluding `Write` and
-  `Edit` stops the verifier modifying the target. It does nothing about *reading*: the report
-  is in the directory you spawned it into, and it kept `Read`, `Glob` and `Bash`. Real
+  `Edit` stops *those two tools*; it does not stop the verifier writing, because the list above
+  keeps `Bash` and `Bash` writes. And it does nothing about *reading*: the report is in the
+  directory you spawned it into, and it kept `Read`, `Glob` and `Bash`. Real
   blindness takes a **sanitized copy** — a scratch directory holding the claim card and only
   the source files the claim concerns — and where you build one, say so. **Where you do not,
   the second opinion still counts, and you write beside the verdict that the verifier could

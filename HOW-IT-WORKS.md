@@ -45,8 +45,13 @@ Two skills, four files, one loop.
                                       "already covered" section
 ```
 
-Everything is a file on disk, sitting next to the work. Nothing that matters lives in a chat
-window. That is a deliberate constraint rather than a preference — §4 explains why.
+Everything is a file on disk, sitting next to the work. That is a deliberate constraint rather
+than a preference — §4 explains why. **There is exactly one exception, and it is a known cost
+rather than an oversight:** the author's residual doubts are reported to the user in chat at
+hand-off and written nowhere else, because putting them on disk beside the brief is putting them
+where the reviewer reads them. Adjudication needs them verbatim; if the window is closed they are
+gone, the leakage check records that it could not be made, and no finding is credited as
+independent corroboration.
 
 `NN` copies whatever numbering the surrounding work already uses: a phase number, a PR number.
 If there is no such numbering — a standalone skill, a bare repo — the files drop the prefix and
@@ -158,10 +163,11 @@ in its coverage count.
 
 ### Keeping your own suspicions out of it
 
-The author's own hunches about what is wrong are **kept out of the brief entirely**, and out of
-the cover note as well — the cover note gets read first, so planting a suspicion there is worse,
-not better. They go to you instead, in the hand-off, as three to five questions with a mechanism
-attached to each.
+The author's own hunches are delivered to you in the hand-off — three to five questions with a
+mechanism attached to each — rather than written into the brief or the cover note. **The *list*
+is what stays out**, not every sentence a hunch touches: hunches and load-bearing claims come out
+of the same reading, so a claim usually sits near one, and that overlap is declared rather than
+denied. See below for why the author cannot certify absence.
 
 The reason is that the two cases are worth very different amounts. A suspicion you plant gets
 echoed back at you. A suspicion the reviewer arrives at on its own is independent corroboration,
@@ -408,7 +414,8 @@ forces push toward wrongly dismissing real findings.
 **1. You are usually mid-task and want it closed.** Dismissal is the cheapest way to get there, and
 it wears respectable clothes: "pre-existing", "out of scope", "scaffold only", "will handle later".
 *A finding you just found and immediately deferred is the tell.* So deferring has to cost something.
-`FIX LATER` requires a backlog file that exists on disk **before the ledger is written**, with the
+`FIX LATER` requires a backlog file that exists on disk **before the row receives its `FIX LATER`
+disposition**, with the
 finding's location, mechanism and consequence copied into it — the ledger row alone does not contain
 them, and a stub with nothing but a path is a dropped finding with a deferral label on it. *(The
 content requirement was added after round 2: the original rule checked that the file existed, not

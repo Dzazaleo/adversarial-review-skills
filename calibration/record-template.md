@@ -35,9 +35,11 @@ checkouts. Every record silently expired the first time anyone ran the fixtures,
 `PASS` read as stale. Enumerating tracked files ends the whole class — there is no artefact list
 to maintain and no next artefact to be surprised by.
 
-**What it costs, stated rather than discovered later:** a case edited but not committed does not
-change the digest, and an entirely uncommitted private replacement corpus produces the digest of
-whatever *is* tracked. Commit corpus edits before filing or trusting a record. Where a private
+**What it costs, stated rather than discovered later:** it enumerates tracked *names* and then
+hashes **working-tree bytes**, so editing a tracked case without committing **does** move the digest
+— what it cannot see is a file that was never added, and an entirely uncommitted private replacement
+corpus therefore produces the digest of whatever *is* tracked. Commit corpus edits before filing or
+trusting a record, or a clean checkout will disagree with the record you just filed. Where a private
 corpus is genuinely untracked, this command is the wrong instrument for it and the record should
 say so on its face rather than carry a digest that describes something else.
 

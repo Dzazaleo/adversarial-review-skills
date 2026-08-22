@@ -66,11 +66,13 @@ contradicts the sentence immediately before it.
 - **Known and different family** — name both: *"This work was written by «author family». You
   are «reviewer family». You have a different architecture and different training. **You will
   notice different things, and those things are the entire value of this exercise.**"*
-- **Same family** — say what is bought and what is not: *"This work was written by «family», and
-  so are you. Your context is fresh and you did not write it — but you do not bring a different
-  architecture, and any blind spot you share with its author is one this review is least likely
-  to catch. Weight your own agreement accordingly. **What you bring is a clean read and no stake
-  in the answer, and that is what this exercise is asking you to spend.**"*
+- **Same family** — say what is bought and what is not, and do not assert the unmeasured part:
+  *"This work was written by «family», and so are you. Your context is fresh and you did not write
+  it, but you do not bring a different architecture. Whether same-family reviewers share an
+  author's blind spots has not been measured, here or anywhere this brief can cite — treat it as
+  an open risk rather than a finding, and say so if your agreement starts to feel easy. **What you
+  bring is a clean read and no stake in the answer, and that is what this exercise is asking you
+  to spend.**"*
 - **Human, mixed, or several authors** — say which, and claim only what follows: *"This work was
   written by «humans / a mix of human and model authors / several model families». No single
   architecture sits behind it, so no claim is made about how yours differs. **What is certain is
@@ -81,11 +83,14 @@ contradicts the sentence immediately before it.
   about whether your architecture differs from its author's. **What is certain is that you did
   not write this work and have nothing invested in it.**"*
 
-The same-family wording above is deliberately weaker than it used to be. *"The blind spots you
-share with its author are the ones most likely to survive this review"* reads as a mechanism and
-is not established anywhere — nothing in this project has measured whether same-family reviewers
-share an author's blind spots. It is stated as a caution rather than a finding, in a document
-whose whole purpose is to stop plausible-sounding claims passing as fact.
+The same-family wording went through two rounds of weakening before it reached the form above.
+Both earlier versions asserted a relative likelihood about shared blind spots — the second was the
+first one inverted — and both reached the reviewer, while the admission that the likelihood was
+unmeasured stayed in this author-facing paragraph where the reviewer never saw it. The branch now
+hands the reviewer the uncertainty itself instead. Nothing in this project has measured whether
+same-family reviewers share an author's blind spots, and a document whose whole purpose is to stop
+plausible-sounding claims passing as fact cannot emit one. **Do not restore either earlier
+phrasing; `scripts/validate.py` fails the build if it reappears.**
 
 A false independence claim is not a harmless flourish. It tells the reviewer that its
 disagreement is evidence of an architectural difference which may not exist, inflating exactly

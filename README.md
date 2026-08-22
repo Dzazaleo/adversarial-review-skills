@@ -44,9 +44,11 @@ not quietly let it go.
 It also gives you a short **cover note**: the message you actually paste into Codex, Gemini,
 Cursor, or another Claude session. You don't have to paste a 400-line document into a chat box.
 
-Then it tells you privately what *it* suspects is wrong. Those suspicions are deliberately kept
-out of the brief, so the other model has to find them on its own. If it does, that's real
-confirmation. If it never mentions them, they're still open.
+Then it tells you privately what *it* suspects is wrong. The *list* stays out of the brief — though
+a sharp claim often lands near a suspicion, because both came from the same reading, and blunting
+the claim would cost more than the overlap does. So the author declares the overlap rather than
+certifying there is none, and **whether a finding was genuinely independent is the adjudicator's
+ruling, not the author's**. If it never mentions them, they're still open.
 
 It will also tell you which model family you're about to send this to. Plenty of review tools
 are built on the same few underlying models, so two of them can be one opinion bought twice.
@@ -83,7 +85,8 @@ flagged, not followed.
 Then the rules that do the real work, most of which are rules against the easy answer:
 
 - **Dismissal has to cost something.** "We'll do it later" means a real backlog file on disk,
-written before the ledger, with the finding's location, cause and consequence copied into it. A
+written before the row gets its `FIX LATER` disposition, with the finding's location, cause and
+consequence copied into it. A
 promise with nothing behind it is a dropped finding with a nicer name.
 - **Disproving a finding is as much work as making one.** If the reviewer brought evidence and
 you want to say it's wrong, bring evidence back. Reading the code and feeling reassured is not
@@ -140,22 +143,32 @@ Or call them by name: `/adversarial-review-prompt`, `/review-adjudication`.
 
 Both declare `allowed-tools: Read, Grep, Glob` and nothing more. **Neither pre-approves any write
 tool**, so every file they create — the brief, the cover note, the ledger, a backlog entry — goes
-through your normal permission handling and you see it before it happens. That is deliberate: the
+through your normal permission handling rather than a skill-level grant. Note what that is and is
+not: `allowed-tools` grants, it does not restrict, so the write tools remain callable and your own
+settings decide what happens. Under `acceptEdits`, an auto or bypass mode, or a matching allow
+rule, those writes still proceed without stopping for you. That is deliberate: the
 skills argue at length that a prose boundary over a broad permission grant is not enforcement, and
 they should not ship one.
 
 Their prose write-envelopes are still *instructions*, not a sandbox. If you want the boundary
 actually enforced, put it in your own permission settings, where Claude Code will consult it:
 
-```jsonc
-// .claude/settings.json  — deny writes outside the review artifacts
+**An allowlist is not expressible here, and this is the trap to avoid.** Rules are evaluated
+deny → ask → allow, the first match wins, and specificity does not change the order — so
+`deny: ["Edit(**)"]` paired with a narrow `allow` blocks the review artifacts too, and the skills
+cannot produce anything at all. Per the docs, *"a deny rule can't carry allowlist exceptions."*
+Name the paths you want protected instead:
+
+```json
 {
   "permissions": {
-    "deny":  ["Edit(**)"],
-    "allow": ["Edit(**/*REVIEW*.md)", "Edit(**/BACKLOG.md)"]
+    "deny": ["Edit(src/**)", "Edit(scripts/**)", "Edit(**/*.py)"]
   }
 }
 ```
+
+For a real "nothing outside this directory" boundary, that is
+[the sandbox](https://code.claude.com/docs/en/sandboxing), not permission rules.
 
 **Use `Edit(path)`, not `Write(path)`.** Claude Code checks file permissions against `Edit(path)`
 and `Read(path)` rules *only*; a path rule written for `Write` is accepted and then never
@@ -182,8 +195,10 @@ are what make the whole exercise worth anything.
   you its own private suspicions to hold onto.
   > **Where:** the same session that wrote the plan — that's the point, since it knows which
   > parts it was least sure of. The one risk is that its own suspicions end up in the brief
-  > without it noticing, so it searches the saved file afterwards and tells you which ones really
-  > were kept out.
+  > without it noticing, so it searches the saved file afterwards and reports what the search
+  > landed on, with the raw output. It cannot certify absence — a session cannot vouch for what it
+  > left out of a document it wrote — so where a search finds nothing the wording is "no line
+  > found — unverified", and the adjudicator re-runs it.
   >
   > **Keep that hand-off.** Everything else it writes is on disk and stands on its own, but the
   > residual doubts are reported to you in chat and are written nowhere else. Step 6 needs them

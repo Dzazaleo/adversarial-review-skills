@@ -92,20 +92,33 @@ detector for a class of defect a script would catch in milliseconds. Until a val
 skills' correctness depends on the next review round noticing, and a round that does not notice
 reads as a pass.
 
-**Status, 2026-08-22 — `scripts/validate.py` exists and covers ten of these.** Written after round
-4, which found several defects a script would have caught in milliseconds. It checks: frontmatter
-parses and declares the required keys; no write-capable tool is pre-approved; `SKILL.md` stays
-under the documented 500 lines; no unresolved `«»` ships in a `SKILL.md`; every relative
-`references/` link resolves; no unescaped `|` sits inside a ledger table cell; every verdict in the
-current round carries a disposition; `NO ACTION` appears only under `REFUTED` or `SETTLED ALREADY`
-and no bare `ACCEPTED` appears at all; the current round's findings-in equals its rows-out; and
-every filed calibration record's digest matches the instrument. Closed rounds are append-only, so
-defects there are reported as warnings rather than errors.
+**Status, 2026-08-22 (revised after round 6) — `scripts/validate.py` exists: 13 named invariants
+over 12 checks**, two names sharing the frontmatter implementation. It checks: frontmatter parses
+and declares the required keys; no write-capable tool is pre-approved, **including when
+`allowed-tools` is written as a YAML string**; `SKILL.md` stays under the documented 500 lines; no
+unresolved `«»` ships in a `SKILL.md`; every relative `references/` link resolves, **titles and
+all**; no unescaped `|` sits inside a ledger table cell, **while a backslash-escaped one passes**;
+every verdict carries a disposition; `NO ACTION` appears only under the verdicts that permit it and
+no bare `ACCEPTED` appears at all; **the stated rows-out equals the numbered finding rows that
+actually exist**; every filed calibration record's digest matches the instrument **and is inside
+its expiry window**; no retired rule wording survives in live prose; and every invariants block
+exists and cites real sections. Closed rounds are append-only, so defects there are **reported as
+warnings** — visible, never failing the build.
 
-**Each of the ten was break-tested** — mutated in a throwaway copy to confirm it fails when its
-invariant is broken, because a check that cannot fail is the defect this repository keeps finding.
-9/9 mutations were caught; the tenth check (installed copies match the repository) is a warning by
-design.
+**The break-test claim that stood here until round 6 was wrong, and is replaced by measurement.**
+It read *"each of the ten was break-tested… 9/9 mutations were caught."* Round 6 re-ran the whole
+thing adversarially and found four checks silent on the invariant they were named for, two firing
+on correct work, and at least two that **could not fail at all** — `check_calibration_digests` had
+no error path, and `check_counts` compared two numbers in the same header rather than counting
+anything. The full mutation record is `REVIEW-ADJUDICATION.md` §R6.2 and §R6.16. **Every check was
+re-broken after the round-6 fixes**, both to confirm it fails on its invariant and to confirm it
+stays quiet on correct work; the results are in §R6.16.
+
+**One bound worth stating rather than discovering:** `check_retired_wordings` matches literal
+retired phrasings with whitespace, emphasis and code markup normalized away. **It does not catch a
+retired rule restated in different words**, which is the failure it was created for and which is
+not mechanically closable. It buys the copy-paste and the re-wrap; it does not buy the paraphrase.
+The `installed copies match the repository` check is a warning by design.
 
 **What remains open, and why this entry is not closed:** the validator checks artifacts, not
 behaviour. It cannot tell whether a generated brief overwrote an existing one, whether a report has
@@ -121,3 +134,26 @@ script could run. What the validator did catch, three times in one session, is t
 slips against rules the author had just written: two illegal verdict/disposition pairings and a
 missing disposition. That is the honest description of what it buys — it enforces the form, not the
 truth.
+
+
+## B-4 — `check_retired_wordings` is silent on a footnote-broken phrase
+
+**Location:** `scripts/validate.py`, `check_retired_wordings` — the normalization step that strips
+`[*_`]` before matching. Raised as `CNV-R6-1` and ruled at `REVIEW-ADJUDICATION.md` §R6.18.
+
+**Mechanism:** live prose is whitespace-normalized and has emphasis characters and backticks
+removed, then matched against literal retired phrasings. A markdown footnote marker is a bracketed
+token, not an emphasis character, so inserting one mid-phrase — after the noun in the retired
+`FIX LATER` ordering rule, say — leaves the phrase unmatched and no error is raised. Confirmed by
+execution 2026-08-22 in both spellings, plain and combined with emphasis: each returned
+`12 of 12 checks pass`, exit 0. **The retired phrasings themselves are not reproduced here** — this
+file is live prose inside the check's own glob, and quoting them would trip it. They are in
+`scripts/validate.py`.
+
+**Consequence:** contract items 1 and 4. A retired rule can survive in live prose in a spelling the
+check was extended to cover in every other form, and the run still certifies itself. The same class
+as round 6's `g6-7`, in the one spelling queue item 10 did not reach.
+
+**Why it is here rather than fixed:** the round-6 owner authorization covered 25 named items and
+this is a twenty-sixth, found while verifying one of them. The fix is small — strip footnote
+markers alongside emphasis — and belongs with the next authorized pass.

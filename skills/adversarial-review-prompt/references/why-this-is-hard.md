@@ -1,7 +1,8 @@
 # Why writing the brief is hard — the failure modes, and which rule resists each
 
-Background for `SKILL.md`. Nothing here is an instruction; every obligation it motivates is in
-the skill itself. Kept out of the main file so those obligations sit above the compaction cut.
+Background for `SKILL.md`, and **subordinate to it and to `prompt-template.md` — where they
+differ, this file is the stale one.** It carries the reasoning and the case histories; the
+obligations are in the skill, and the emitted wording is the template's.
 
 ## why this is hard
 
@@ -14,12 +15,13 @@ Everything in this skill exists to defeat that. Three levers do most of the work
 
 1. **Name the *condition*, not the contents.** You cannot list the blind spots — if you could
    see them they would not be blind, and finding them is the reviewer's entire job. What you
-   can state, because it is a fact about the process rather than about the work, is that one
-   model wrote this, reviewed it, and verified it against tests it also wrote; that a reviewer
-   with a different architecture notices different things; and that agreement is therefore a
-   failed outcome. Never imply you know what was missed. Where you genuinely do suspect
-   something, that is a *known* unknown — it is held out of the prompt entirely and handed
-   to the user for post-review comparison (§10), never written into the prompt.
+   can state, because it is a fact about the process rather than about the work, is how the work
+   was authored and reviewed — and then **only what that particular pairing actually buys.**
+   Whether a difference in architecture is among the things it buys depends on both identities,
+   which is why the emitted wording is not written here: take it from `prompt-template.md`'s four
+   branches, which are the authority. Never imply you know what was missed. Where you genuinely
+   do suspect something, that is a *known* unknown — it is held out of the prompt entirely and
+   handed to the user for post-review comparison (§10), never written into the prompt.
 2. **Demote the author's assertions to claims.** Every confident comment, test name, and
    "verified/measured/guaranteed" note is a testable assertion by the party under review,
    never evidence. This single reframing produces more findings than any checklist.

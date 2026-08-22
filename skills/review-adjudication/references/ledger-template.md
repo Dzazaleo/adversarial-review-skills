@@ -47,8 +47,8 @@ written by `adversarial-review-prompt`»». **This line is required.** Without i
 told apart from one where the audit was silently skipped, and the skipped case is the common one
 **Upheld claims:** «S» sampled of «T» listed · «K» re-opened as `U-N`
 **Findings in: «N» · Rows out: «N» · +«K» process, +«M» CNV, +«D» prior-review disagreements
-ruled** «numbered counts must match; if merged, say which IDs; state each auxiliary count even
-when it is zero»
+ruled, +«U» re-opened upheld claims, +«A» adjudicator findings** «numbered counts must match; if
+merged, say which IDs; state each auxiliary count even when it is zero»
 ```
 
 The envelope line matters. The brief's permissions are an instruction, not a sandbox — if the
@@ -104,10 +104,18 @@ One row per finding. Both axes, always.
 | 5 | «title» | «class» | **CONFIRMED** | **FIX LATER** — «backlog artifact path, which must already exist» |
 | 6 | «title» | «class» | **CONFIRMED (partial)** | «what is established vs unestablished, then the disposition» |
 | 7 | «title» | «class» | **COULD NOT DETERMINE** | **VERIFY** — «the concrete check that would settle it»; «blocks / does not block» execution; listed in the hand-off |
+| 8 | «title» | «class» | **TRUE, NOT A DEFECT** | **NO ACTION** — «the claim's Consequence quoted verbatim from the report, or `no consequence stated`»; «one clause: what would have to be true for this to be a defect here, and that it is not» |
 ```
 
 Keep the reviewer's numbering. Where you merged two findings, keep both IDs in the `#` cell and say
-why in the row. When more than one report feeds a round, prefix each ID with the reviewer tag
+why in the row.
+
+**When the vocabulary changes, earlier rounds do not become wrong.** A verdict or disposition term
+added in round N does not reach back: rows written before it were correct under the rules then in
+force, and they are history under invariant 1 — **not defects to repair.** Where a widened
+mechanical check begins reporting on the closed prefix, the round that widened it records the
+expected output, row by row, so a later session reads those lines as known history rather than as
+new work. When more than one report feeds a round, prefix each ID with the reviewer tag
 (`codex-3`, `fable-3`) so a row number names exactly one finding.
 
 No bare "ACCEPTED" — it means both "the finding is real" and "we are shipping with it."
@@ -217,7 +225,7 @@ step 1 defines closure).
 `adjudicated in round N`»
 **Review:** `«NN-EXTERNAL-REVIEW-«N».md»` («reviewer», «date»)
 **Findings in: «N» · Rows out: «N» · +«K» process, +«M» CNV, +«D» prior-review disagreements
-ruled**
+ruled, +«U» re-opened upheld claims, +«A» adjudicator findings**
 ```
 
 Then the same sections. Two additions specific to later rounds:

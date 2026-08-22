@@ -24,22 +24,26 @@ the refusal does not lapse because the reader is now Claude.
 
 <invariants>
 **These hold for the whole task.** After an auto-compaction Claude Code re-attaches only the
-**first 5,000 tokens** of this skill, so a later part of it can vanish mid-task with no signal.
-**Estimated** cut: around line 214, from a measured ~3.1 characters per token on this file's
-prose — an estimate, not a tokenizer run, and biased late if anything. Each rule below is stated
-in full in its own section; this block is the copy that survives.
+**first 5,000 tokens** of this skill; where several skills were invoked they share a 25,000-token
+budget and an older one can be dropped **entirely**. Treat everything past **line ~195** as gone,
+and re-invoke this skill after a compaction. Each rule below is stated in full in its own section.
 
-1. **Write boundary, and append rather than rewrite.** The only files this skill creates or
-   edits are the ledger, `FIX LATER` backlog artifacts, and — where the review arrived as a
-   chat transcript — the report file materialized from it. Never the code, the plans, or an
-   existing review. **Add to the ledger's end and prove it** (`git diff` shows additions, no
-   deletions); a rewritten ledger destroys the record later rounds are scored against. (§7)
+**The references, and when to open each.** `ledger-template.md` before writing the ledger (§7) ·
+`verification-standard.md` before re-verifying (§5) · `second-opinion.md` before spawning a
+verifier (§5) · `inputs-and-calibration.md` for identity and calibration (§1) ·
+`why-this-is-hard.md` is background only — **this file overrides it wherever they differ.**
+
+1. **Write boundary; current round filled in place, completed rounds append-only.** The only
+   files this skill creates or edits are the ledger, `FIX LATER` backlog artifacts, and — where
+   the review arrived as a chat transcript — the report file materialized from it. Never the
+   code, the plans, or an existing review. Fill this round's skeleton in place; **never rewrite a
+   completed round**, and prove the earlier rounds are untouched. (§7)
 2. **Two axes, never one word.** Every finding leaves with a **verdict** (is the claim true?)
-   and a **disposition** (what happens now?). Never a bare "ACCEPTED". `NO ACTION` is legal
-   only under `REFUTED` or `SETTLED ALREADY`. (§6)
-3. **Count in = count out.** One row per numbered finding, plus separately-counted ruled
-   entries for could-not-verify, process, and prior-review-disagreement items. A finding with
-   no row is the defect this skill exists to prevent. (§2, §7)
+   and a **disposition** (what happens now?). Never a bare "ACCEPTED". `NO ACTION` is legal only
+   under `REFUTED`, `SETTLED ALREADY`, or the gated `TRUE, NOT A DEFECT`. (§6)
+3. **Count in = count out.** One row per numbered finding, plus separately-counted ruled entries for
+   every auxiliary class — could-not-verify, process, prior-review disagreements, re-opened upheld
+   claims (`U-N`), **and your own findings from re-verification (`A-N`)**. A finding with no row is the defect this skill exists to prevent. (§2, §7)
 4. **`FIX LATER` costs something.** It requires a durable backlog artifact carrying the
    finding's Location, Mechanism and Consequence, created **before the row receives its
    `FIX LATER` disposition**, with its path quoted in the row. A bare stub is a drop wearing a deferral label. (§6)
@@ -53,22 +57,16 @@ in full in its own section; this block is the copy that survives.
 </invariants>
 
 <why_this_is_hard>
-The naive framing of this task — "decide what's worth implementing" — is the failure mode, not
-the goal. Four forces push on the rulings, and every rule below resists one:
-
-1. **You want the phase closed**, and dismissal is the cheapest path there. It wears good
-   clothes: "pre-existing", "out of scope", "scaffold only", "will handle later." A finding you
-   just found and immediately deferred is the tell.
-2. **Rejection is held to a lower evidence standard than accusation.** The reviewer produced
-   Location · Mechanism · Trigger · Consequence · Status; a refutation typically arrives as a
-   paragraph of reading. **The refutation carries the same burden as the finding.**
-3. **Self-review re-enters through the back door.** If you wrote the code, your refutation of a
-   finding about it carries the blind spots that produced the defect.
-4. **The quiet force running the other way:** a reviewer blind to your settled decisions will
-   reopen arguments you finished months ago, and implementing those is real damage. Screening
-   for that is legitimate and is step 3 — but it is gated, because dismissal will try to use it.
-
-Each is stated in full, with the history behind it, in
+"Decide what's worth implementing" is the failure mode, not the goal. Four forces push on the
+rulings and every rule resists one. **You want the phase closed**, and dismissal is the cheapest
+path there — it wears good clothes ("pre-existing", "out of scope", "will handle later"), and a
+finding you just found and immediately deferred is the tell. **Rejection is held to a lower
+evidence standard than accusation**: the reviewer produced Location · Mechanism · Trigger ·
+Consequence · Status, so the refutation carries the same burden as the finding. **Self-review
+re-enters through the back door** — your refutation of a finding about code you wrote carries the
+blind spots that produced the defect. And running the other way, **a reviewer blind to your settled
+decisions will reopen arguments you finished months ago**; screening for that is legitimate and is
+step 3, but gated, because dismissal will try to use it. Each in full, with the history behind it:
 [references/why-this-is-hard.md](references/why-this-is-hard.md).
 </why_this_is_hard>
 
@@ -411,6 +409,7 @@ Every row carries **both**, and they are different questions:
 | `COULD NOT DETERMINE` | Say precisely what would settle it. This is an honest, available outcome. |
 | `SETTLED ALREADY` | Relitigates a locked decision. Citation required (step 3). |
 | `OWNER RULING REQUIRED` | Not yours to rule on. Reframed as a question in the hand-off. |
+| `TRUE, NOT A DEFECT` | The claim is true **and alleges nothing wrong here.** A process observation, a fact about the reviewer rather than the work, or evidence the design worked. **Gated:** the cell quotes the claim's Consequence verbatim from the report (or says `no consequence stated`) and names in one clause what would have to be true for it to be a defect in this repository, and that it is not. **Boundary — this is not an out-of-scope route:** if the claim says anything *here* is wrong, the verdict is never this one, whatever the scope or the cost of the fix; that stays `CONFIRMED` with `FIX LATER` and its backlog artifact. |
 
 **Disposition — what happens now?**
 
@@ -419,13 +418,12 @@ Every row carries **both**, and they are different questions:
 | `FIX NOW` | Queued for execution in this phase. Name the minimal fix. |
 | `FIX LATER` | Requires a durable backlog artifact — seed/todo file, and a requirements row where the project uses them — **created before the row receives its `FIX LATER` disposition, with its path quoted in the row** — not before the ledger file exists, which step 2 has already required by then. The artifact must carry three explicitly labeled fields copied from the report — the finding's Location, Mechanism, and Consequence (the ledger row alone does not contain them) — and you verify all three are present before accepting this disposition. A bare-path stub is still a drop wearing a deferral label, and is not permitted. |
 | `ACCEPTED AS-IS` | The defect is real and will not be fixed. Requires the owner's words, quoted. You may propose it; you may not issue it. |
-| `NO ACTION` | Available only under verdict `REFUTED` or `SETTLED ALREADY`. |
+| `NO ACTION` | Available only under verdict `REFUTED`, `SETTLED ALREADY`, or `TRUE, NOT A DEFECT`. |
 | `VERIFY` | Paired with `COULD NOT DETERMINE`: name the concrete check that would settle it, say whether it blocks execution, and list it in the hand-off. |
 | `PENDING OWNER` | May pair with **any** verdict — verdict records truth, disposition records state. With `OWNER RULING REQUIRED` it marks a question about truth; with a settled verdict, write `PENDING OWNER — proposed: <disposition>` and record the owner's answer in ledger §5. Always say whether it blocks execution. |
 
-**Never write a bare "ACCEPTED."** It reads as both "we accept the finding is real" and "we accept
-the risk and are shipping it" — opposite dispositions from the same word. Past ledgers in this
-project use it in the first sense; new rows use the two-axis form.
+**Never write a bare "ACCEPTED."** It reads as both "the finding is real" and "we accept the risk and are
+shipping it" — opposite dispositions from one word. Past ledgers here use the first sense; new rows use both axes.
 
 Two more rules on the accepted pile:
 
@@ -448,12 +446,12 @@ Non-negotiables:
 - Every command you ran, with its real output, in the re-verification section. Not paraphrased.
 - Nothing in the ledger claims the work is complete, correct, or ready to ship.
 - Completed rounds append only. A superseded ruling gets a new row citing the row it supersedes;
-  the original row stays as written. **Append, never rewrite: read the existing file, and add to
-  its end.** Before saving, prove you did — `head -n <the file's prior line count> <ledger> | diff
-  - <a copy of the prior version>` must be silent, or on a version-controlled target
-  `git diff <ledger>` must show additions and no deletions. A ledger rewritten rather than
-  appended has destroyed the record every later round is scored against, and nothing downstream
-  can tell that it happened.
+  the original row stays as written. **The current round is different: its skeleton is written
+  blank and filled in place, which replaces text by design.** So prove the *completed* prefix is
+  untouched, not that the file only grew — `head -n <the prior round's last line> <ledger> | diff
+  - <a copy of the prior version>` must be silent. Where the current round is the only one, there
+  is nothing to prove. A completed round rewritten rather than appended has destroyed the record
+  every later round is scored against, and nothing downstream can tell that it happened.
 - The only files this skill creates or edits are the ledger, `FIX LATER` backlog artifacts, and —
   when the input review exists only as a chat transcript — the report file materialized from it,
   saved beside the ledger before adjudication begins. Never the code, the plans, or an existing
@@ -461,8 +459,8 @@ Non-negotiables:
   live in the session scratchpad, never beside the ledger: a card sitting in the review directory
   is the next reviewer's reading material, and it is the finding stripped of its evidence.
 - Before saving, verify one row per numbered finding and **no empty verdict or disposition cells**,
-  and state the counts in the header (numbered findings, plus process, CNV and re-opened upheld
-  claims separately, and the report's completeness state). A mismatch is a defect in your own work
+  and state the counts in the header (numbered findings, plus process, CNV, re-opened upheld claims
+  and your own `A-N` findings separately, and the report's completeness state). A mismatch is a defect in your own work
   — a merge row or a header note explains it; dropping a row never does.
 
 ## 8. Hand off

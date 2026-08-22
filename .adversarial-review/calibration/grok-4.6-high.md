@@ -65,7 +65,7 @@ capability rather than recall.
 
 **But this record is weaker than one earned with no prior exposure, and it should be read that
 way.** Nothing here can establish that the earlier session left no trace. The honest remedy is a
-private replacement corpus, which `BACKLOG.md` `B-1` already contemplates; until one exists, treat
+private replacement corpus, which `BACKLOG.md` `B-2` already contemplates; until one exists, treat
 this PASS as sound for detection capability and discount it where the question is whether the
 reviewer could have been primed.
 
