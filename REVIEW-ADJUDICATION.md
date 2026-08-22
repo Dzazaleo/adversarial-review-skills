@@ -3573,3 +3573,41 @@ its earlier CLOSED marker was premature from the moment `R3-F12` was appended.
 one is prose except the frontmatter change and the digest command. That ratio is what round 5
 should be pointed at first, and it is the same question Grok's claim 24 asked and answered against
 round 3.
+
+## R4.14 — Two findings from outside the round, appended 2026-08-22
+
+**These are not round-4 findings and are excluded from its counts.** They came from a Grok run
+that answered `CALIBRATION-PROMPT.md` while rooted at the whole repository — void as calibration
+because it read `calibration/ANSWER-KEY.md`, and not a scoped review because it had no brief for
+this target. That run is filed with its full provenance at `EXTERNAL-REVIEW-5-GROK-VOID.md`.
+
+Six of its eight findings restated round-4 defects already fixed in `9893aaa`. Two were new,
+neither round-4 reviewer having found them, and both were **live at `bf092c9`** — that is, they
+survived the twenty-four fixes applied earlier the same day. They get IDs in their own series so
+the round-4 header's `Findings in: 27 · Rows out: 27` stays exact.
+
+| # | Finding | Class | Verdict | Disposition |
+|---|---------|-------|---------|-------------|
+| X-1 | The calibration filename examples bake effort into `<identity>`, teaching a lookup of a file that does not exist | invalid assumption | **CONFIRMED** — the examples were written as finished, effort-suffixed filenames (`gpt-5.6-sol-high.md`) while labelled as the *identity* half, so an adjudicator following them looks up `gpt-5.6-sol-high-high.md`. `calibration/README.md:94-101` has always had it right; the skill's copy did not. The only record on disk is `gpt-5.6-sol-high.md` | **FIX NOW** — correct the examples to bare identities and state that `<identity>` never carries the effort. **✔ executed 2026-08-22** — `skills/review-adjudication/references/inputs-and-calibration.md`: examples corrected to bare identities (`gpt-5.6-sol`, `openai-codex-cli-0.147.0`, `openai-codex`) and a sentence added stating that `<identity>` never carries the effort |
+| X-2 | `HOW-IT-WORKS.md` still presented the unconditional architecture sentence as the current tactic | internal contradiction | **CONFIRMED** — `HOW-IT-WORKS.md:80` printed *"You have a different architecture and different training"* inside Tactic 1's quote, the second copy of the exact claim `grok-2` removed from the template. `README.md` points the technically curious straight at this file | **FIX NOW** — replace the unconditional sentence with the template's placeholder and name the template as the authority. **✔ executed 2026-08-22** — the quote now carries the same four-branch placeholder the template does, plus a paragraph explaining why it is a placeholder and naming the template as the authority |
+
+**What these two say about round 4's own work, recorded because it is the uncomfortable part.**
+
+`X-1` is worse than a miss. The round-4 restructure (`R4-Q2`) moved that exact text out of
+`SKILL.md` and into `references/inputs-and-calibration.md` **unchanged**. A defect was relocated
+and not repaired, by the session that was fixing defects, on the same day — and the move made it
+harder to find rather than easier. §R4.12 already recorded the restructure as "a trade, not a clean
+win" on the grounds that motivating prose moved out of reach; this is a second cost that was not
+anticipated: **extracted text does not get re-read on the way out.** Any future extraction should
+be treated as an edit requiring verification, not as a move.
+
+`X-2` is the shape round 4 named repeatedly and still did not catch on itself: a fix that reaches
+one site of a claim living at two. `grok-2` fixed the template; `HOW-IT-WORKS.md` held the same
+sentence; queue item 2 searched for *"never saw the report"* across the repository and found every
+site, while nothing performed the equivalent search for the architecture sentence. The lesson is
+mechanical, not moral — **when a fix removes a claim, grep the repository for the claim, not for
+the file you were told about.**
+
+Both are now checkable: `scripts/validate.py` did not catch either, and neither is expressible as
+a rule it could run. That is a bound on what the validator buys, and it is worth stating beside
+the claim in `BACKLOG.md` `B-3` that ten invariants are now mechanical.

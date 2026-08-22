@@ -77,11 +77,21 @@ What you *can* tell it is a fact about how the work was made, rather than about 
 
 > Every line of this was written by one model, reviewed by that same model, and verified by that
 > same model against tests it also wrote. It currently reads as complete and passing. That is
-> exactly the problem. You have a different architecture and different training. You will notice
-> different things, and those things are the entire value of this exercise.
+> exactly the problem. «independence sentence and its payoff line — one of the four branches in
+> `references/prompt-template.md` §1, chosen from the reviewer's identity *and* the work's author
+> provenance, and quoted whole».
 >
 > Confirmation is near-worthless output. A manufactured finding is worse than no finding. A
 > finding that survives your own attempt to refute it is worth more than ten observations.
+
+**That placeholder is deliberate, and it is the point of the tactic.** An earlier version of this
+document printed *"You have a different architecture and different training. You will notice
+different things"* unconditionally, which is false whenever the brief goes to another session of
+the family that wrote the work — and it inflates precisely the findings this exercise is least
+able to check. The template resolves it in four branches (known-different family, same family,
+human or mixed authorship, unknown lineage on either side), and **each branch carries its own
+payoff line** rather than sharing one. `references/prompt-template.md` §1 is the authority; this
+document is a second copy and was itself found stale once.
 
 Two safeguards sit inside that framing.
 

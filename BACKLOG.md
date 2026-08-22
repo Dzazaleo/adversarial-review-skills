@@ -113,3 +113,11 @@ the brief it answers, or whether the no-filesystem template variant stays consis
 filesystem one — those need the skills actually executed end to end, which nothing here does. It
 also cannot check that a claim in a brief is true, which is the class round 4 spent most of its
 findings on.
+
+**Measured bound, 2026-08-22.** Two defects (`X-1`, `X-2` in `REVIEW-ADJUDICATION.md` §R4.14) were
+found the same day the validator shipped, and **it caught neither** — one was a misleading example
+filename, the other a stale copy of a claim in a design doc. Neither is expressible as a rule a
+script could run. What the validator did catch, three times in one session, is the author's own
+slips against rules the author had just written: two illegal verdict/disposition pairings and a
+missing disposition. That is the honest description of what it buys — it enforces the form, not the
+truth.

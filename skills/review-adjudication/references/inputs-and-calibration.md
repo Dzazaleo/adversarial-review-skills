@@ -9,8 +9,12 @@ kept out of the main file so the obligations sit above the compaction cut.
   the project root. The record is keyed on what the reviewer actually is — model family, product
   *and version*, reasoning effort, and its own self-report where it gave one. The filename is
   always `<identity>-<effort>.md`, and `<identity>` is the first of these the session gave you:
-  the served model alias (`gpt-5.6-sol-high.md`), else family plus product and version
-  (`openai-codex-cli-0.147.0-high.md`), else the family alone. **List the directory before
+  the served model alias (`gpt-5.6-sol`), else family plus product and version
+  (`openai-codex-cli-0.147.0`), else the family alone (`openai-codex`). **`<identity>` never
+  carries the effort** — the effort is appended once, by the `-<effort>` half, so a
+  `gpt-5.6-sol` reviewer at high effort is filed at `gpt-5.6-sol-high.md` and never at
+  `gpt-5.6-sol-high-high.md`. The examples used to be written as finished filenames here, which
+  taught exactly that doubled lookup; `calibration/README.md` has always had it right. **List the directory before
   concluding a record is absent** — the same product does not always describe itself the same way
   from one session to the next, so a near-miss on the family is a record worth opening and checking
   the four identity fields against. Read its
