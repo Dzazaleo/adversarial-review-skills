@@ -60,7 +60,7 @@ checklist or a validation protocol.
 
 ---
 
-## B-3 — No executable validator for the skills themselves
+## B-3 — No executable validator for the skills themselves *(partly discharged 2026-08-22)*
 
 **Origin:** `EXTERNAL-REVIEW-3.md`, "Other worthwhile improvements" bullet 1 (OpenAI Codex,
 `gpt-5.6-sol` at `high` effort, 2026-08-22), impact `other`. Adjudicated `CONFIRMED` / `FIX LATER`
@@ -91,3 +91,25 @@ Each was found by a paid external reviewer reading prose, which is the most expe
 detector for a class of defect a script would catch in milliseconds. Until a validator exists, the
 skills' correctness depends on the next review round noticing, and a round that does not notice
 reads as a pass.
+
+**Status, 2026-08-22 — `scripts/validate.py` exists and covers ten of these.** Written after round
+4, which found several defects a script would have caught in milliseconds. It checks: frontmatter
+parses and declares the required keys; no write-capable tool is pre-approved; `SKILL.md` stays
+under the documented 500 lines; no unresolved `«»` ships in a `SKILL.md`; every relative
+`references/` link resolves; no unescaped `|` sits inside a ledger table cell; every verdict in the
+current round carries a disposition; `NO ACTION` appears only under `REFUTED` or `SETTLED ALREADY`
+and no bare `ACCEPTED` appears at all; the current round's findings-in equals its rows-out; and
+every filed calibration record's digest matches the instrument. Closed rounds are append-only, so
+defects there are reported as warnings rather than errors.
+
+**Each of the ten was break-tested** — mutated in a throwaway copy to confirm it fails when its
+invariant is broken, because a check that cannot fail is the defect this repository keeps finding.
+9/9 mutations were caught; the tenth check (installed copies match the repository) is a warning by
+design.
+
+**What remains open, and why this entry is not closed:** the validator checks artifacts, not
+behaviour. It cannot tell whether a generated brief overwrote an existing one, whether a report has
+the brief it answers, or whether the no-filesystem template variant stays consistent with the
+filesystem one — those need the skills actually executed end to end, which nothing here does. It
+also cannot check that a claim in a brief is true, which is the class round 4 spent most of its
+findings on.

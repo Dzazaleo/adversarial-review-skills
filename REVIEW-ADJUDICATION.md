@@ -3162,7 +3162,7 @@ round-2 `F9` describe, in a third location. Folded into `P-1`'s fix.
 | **CNV-8** (grok) | Whether a spawned subagent actually opens the report when not handed it (`R3-CNV-1`) | **COULD NOT DETERMINE** | **VERIFY** — same check as `CNV-2`. **Does not block** |
 | **CNV-9** (grok) | Whether same-family reviewers actually share the author's blind spots (claim 16) | **COULD NOT DETERMINE** | **VERIFY** — same check as `CNV-5`. **Does not block.** Until then the same-family sentence is unsourced, which `grok-12` correctly reports |
 | **CNV-10** (grok) | Transcription fidelity of `EXTERNAL-REVIEW-3.md` (`R3-P2`) | **SETTLED ALREADY** — ruled `ACCEPTED AS-IS` with the owner's words at §R3.13: *"no fix is available retroactively"* | **NO ACTION** |
-| **CNV-11** (grok) | Contents of `EXTERNAL-REVIEW-4.md` and the Codex brief/cover note, by instruction | **CONFIRMED** as an honest disclosure of a deliberate blind spot — the isolation the cover note asked for | **NO ACTION.** Recorded in the header's isolation block; it is unverifiable by this session and is not treated as established |
+| **CNV-11** (grok) | Contents of `EXTERNAL-REVIEW-4.md` and the Codex brief/cover note, by instruction | **SETTLED ALREADY** — the gap is owner-instructed, not a reviewer lapse. `EXTERNAL-REVIEW-4-COVER-NOTE-GROK.md:14`: *"**Please don't open those three** — note they are the ones *without* `-GROK` in the name"*. The disclosure at `EXTERNAL-REVIEW-4-GROK.md:5` is what the note asked for | **NO ACTION** — nothing to fix; a deliberate blind spot honoured and declared. Recorded in the header's isolation block, and **not treated as established**: this session cannot verify that the files went unread |
 
 ### Disagreements with prior rounds
 
@@ -3182,7 +3182,7 @@ round-2 `F9` describe, in a third location. Folded into `P-1`'s fix.
 | **D-12** | grok | Round-3 §R3.12 and §R3.15 contradict each other by design of append-only correction; a reader who stops at CLOSED is misinformed | **CONFIRMED**, and worse than stated — `codex-13` shows §R3.16 also left an unresolved `PENDING OWNER` under a CLOSED heading | **FIX NOW** via `codex-13` |
 | **D-13** | grok | Round-3's eleven-row expansion was right | **REFUTED in part** — the expansion was right, but Grok's stated ground ("each bullet states a defect") is false for bullet 6, which is an endorsement (RV-12). Codex is right here and Grok is wrong | **NO ACTION** on the expansion; the count language is fixed via `codex-14`. Re-opened as `U-1` |
 | **D-14** | codex | Round-3's `R3-F12` is "a new artifact name but not a new root cause"; round 2 had already identified unauthored runtime files | **CONFIRMED** | **PENDING OWNER** via **R4-Q3** |
-| **D-15** | both | No disagreement that `R3-F8` / `R3-F10` are closed, or that `B-3` is well-formed | **CONFIRMED** — RV-13 verified both independently rather than accepting the agreement | **NO ACTION** |
+| **D-15** | both | No disagreement that `R3-F8` / `R3-F10` are closed, or that `B-3` is well-formed | **SETTLED ALREADY** — both were ruled and executed in round 3 (`R3-F8` and `R3-F10` at `REVIEW-ADJUDICATION.md:2196`, both `✔ executed`), and RV-13 re-verified them here independently rather than accepting the agreement | **NO ACTION** — the rulings stand and nothing reopens them |
 
 ### Disagreements between the two reviewers
 
