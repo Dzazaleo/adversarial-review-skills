@@ -3285,7 +3285,9 @@ and no calibration record in this project can be trusted to read correctly.**
 **Blocks:** round 3's closure, and the meaningfulness of the calibration line in every future
 ledger header. It does not block any of the twelve queued fixes.
 
-## R4.6 — Locked owner decisions from this adjudication
+## R4.6 — Locked owner decisions from this adjudication *(answered — see §R4.6a)*
+
+*Written while the questions were still open; **§R4.6a carries the owner's answers, verbatim and dated**. Kept as written.*
 
 *None yet. R4-Q1, R4-Q2 and R4-Q3 are open. The owner's answers are recorded here verbatim and
 dated when they arrive; an owner ruling that lives only in chat is the same failure as a review
@@ -3366,9 +3368,17 @@ Stated explicitly, because an unstated gap reads as a pass.
 
 **Nothing in this round establishes that the work is complete, correct, or ready to ship.**
 
-## R4.10 — Round 4 status: OPEN
+## R4.10 — Round 4 status: OPEN *(superseded by §R4.13 — see the note below)*
 
-Closure requires: `R4-Q1`, `R4-Q2` and `R4-Q3` answered and recorded in §R4.6; the twelve `FIX
+> **Superseded 2026-08-22.** Written before the owner answered `R4-Q1`–`R4-Q3` and before the
+> queue was executed. Every closure requirement it lists has since been met, and its statement
+> that round 3 remains open is **no longer true** — round 3 closed once `R4-Q3` discharged
+> `R3-F12`. **§R4.13 is the current status.** This section is kept rather than rewritten because
+> the sequence is part of the record, and because leaving a stale status heading standing while
+> the situation moved is precisely `codex-13`, which this round confirmed against round 3 and
+> then reproduced here one day later.
+
+Closure required, when this was written: `R4-Q1`, `R4-Q2` and `R4-Q3` answered and recorded in §R4.6; the twelve `FIX
 NOW` items executed and their rows backfilled with execution references; and `P-1` executed. The
 `CNV` entries are open `VERIFY` items and are explicitly **non-blocking**; each names the check
 that would settle it.
