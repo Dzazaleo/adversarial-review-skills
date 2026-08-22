@@ -1469,7 +1469,7 @@ touch the *implementations* of `Q3` and of round-1 `F13`, which the brief expres
 | F5 | The K-3 envelope now permits arbitrary new files, not only test-runner caches *(low)* | **CONFIRMED** — RV-9, executed. "Write `REVIEW.md`, and change no file that was already here" bounds modification and not creation; an arbitrary `EXTRA.md` satisfies it literally while leaving an unauthorized non-cache artifact. `K-3` named the cache exception but loosened the surrounding rule | **FIX NOW** — `calibration/CALIBRATION-PROMPT.md:45-47`: "Write `REVIEW.md` and no other file, and change no file that was already here. A test runner leaving its own caches behind is expected and is not a violation." **Sequencing, not deferral:** this edits the fixed brief, so it moves the instrument digest. The only record on file is *already* stale and awaiting a re-run, so the cost is zero **if it lands before that re-run** — batch it with `F1`(a) and land both first **✔ executed 2026-08-22, first in the queue** — `calibration/CALIBRATION-PROMPT.md:45-47` now reads "Write `REVIEW.md` and no other file, and change no file that was already here." Instrument digest moved `da2a8d36e0ba` → `775e1cc8c43f`; the only record on file was already stale, so no record was lost |
 | F6 | The advertised shorter expiry conflicts with the only record-filling instruction *(low)* | **CONFIRMED** — RV-10. `calibration/README.md:107` says "Shorten it freely"; `calibration/record-template.md:13`, the only file an operator fills, says "run date + 30 days"; `grep` finds no field anywhere recording a chosen window. Following the template defeats the choice; exercising the choice means disobeying it. Reviewer's `THEORETICAL` status is correct — nothing runtime reads the date | **FIX NOW** — one line. `record-template.md:13` → «YYYY-MM-DD — run date + the window you chose; 30 days is the default», and the row carries the window so a later reader can see which was used **✔ executed 2026-08-22** — `record-template.md:13`: «run date + the window you chose. 30 days is the default, not a requirement; say which you used and why if it was not 30» |
 | F7 | The workload-gap rule supplies neither a threshold nor a place to record the compared workload *(low)* | **CONFIRMED** — RV-10. "Far larger" occurs once (`SKILL.md:90`) with no file, line, token or artifact threshold; the record has a prose standing caveat and no workload field; the ledger-template header has no size-gap field. An adjudicator satisfies the instruction by writing a sentence regardless of the facts, and a private replacement corpus cannot be reconstructed from a 12-character digest | **FIX NOW** — the option consistent with this project's own stance on unmeasured constants (`F13`: name the number honestly rather than invent a better one). Add a **workload field** to `calibration/record-template.md` (what the six cases actually are — file count and rough line count) and a **size line** to the ledger-template header; rewrite `SKILL.md:88-91` from "far larger" to "state both sizes and let the reader judge". No invented threshold. *The alternative — picking a multiple, e.g. 10× — is available and is named in the hand-off; it is not recommended, because nothing here measured it* **✔ executed 2026-08-22** — `record-template.md:15` gains a **Workload** row ("6 cases, 14 files, ~400 lines total"); `ledger-template.md:34-35` gains a **Workload gap** header line taking both numbers; `review-adjudication/SKILL.md:99-105` replaces "far larger" with state-both-sizes-in-numbers and forbids characterising the gap. No threshold invented |
-| F8 | F15's replacement pointer does not currently resolve *(high)* | **CONFIRMED (partial)** — RV-11. *Established, all reproduced exactly:* the documented install yields five files and zero calibration artifacts; `/tree/main/calibration` returns 404; a user on the documented path cannot reach the procedure. *Refuted:* "search does not find the named public repository" and "the repository URL itself is unavailable" — the repo is public (`200` on both the HTML and the API), it is this clone's `origin`, and the 404 is because `calibration/` lives only on the unpushed local branch, **8 commits ahead of `origin/main`**. The consequence stands; the diagnosis does not, and the remedy it implies is the wrong one | **PENDING OWNER — proposed: FIX NOW by publishing.** Pushing `calibration-corpus-and-claim-cards` to `main` makes all four pointers resolve with **no document change at all**. That is a publishing decision, not an adjudicator's. See **Q6**. **Does not block** the rest of the queue. *Not recommended:* copying the corpus into each skill directory — it doubles the corpus, and an answer key adjacent to the skill is the adjacency the protocol exists to prevent |
+| F8 | F15's replacement pointer does not currently resolve *(high)* | **CONFIRMED (partial)** — RV-11. *Established, all reproduced exactly:* the documented install yields five files and zero calibration artifacts; `/tree/main/calibration` returns 404; a user on the documented path cannot reach the procedure. *Refuted:* "search does not find the named public repository" and "the repository URL itself is unavailable" — the repo is public (`200` on both the HTML and the API), it is this clone's `origin`, and the 404 is because `calibration/` lives only on the unpushed local branch, **8 commits ahead of `origin/main`**. The consequence stands; the diagnosis does not, and the remedy it implies is the wrong one | **PENDING OWNER — proposed: FIX NOW by publishing → settled as Q6 option A (§R2.10); ✔ executed 2026-08-22.** `calibration-corpus-and-claim-cards` fast-forwarded `main` from `b993d5e` to `a1e9ca4` and was pushed. All four pointers now resolve — verified below. **No document changed**, which was the whole argument for option A. *Not adopted:* copying the corpus into each skill directory — it doubles the corpus, and an answer key adjacent to the skill is the adjacency the protocol exists to prevent |
 | F9 | The inventory-enumeration fix failed on the next brief that used it *(low)* | **CONFIRMED** — RV-12, exact. `418` at the pinned blob against `416` in the brief, at both `3ec5baf` and the refreshed `2ddf6d3`; and `485` against `482` in the earlier version. *Bounding figure the report did not supply:* the other **eleven** inventory counts are all correct. The rule worked; one entry was **carried forward** across a refresh while its neighbour was corrected in the same pass. **Genuinely independent** — the only finding this round the brief did not name (§R2.4) | **FIX NOW** — `skills/adversarial-review-prompt/references/prompt-template.md:79-84`: the inventory is produced by running a count over the scoped paths **at the pinned commit**, and **a refreshed brief re-runs it rather than carrying numbers forward**. That last clause is the actual defect. Lands in the same paragraph as `R2-P1`'s fix. The spent brief itself is history and is not edited **✔ executed 2026-08-22** — `references/prompt-template.md:86-93`: counts are run against the pinned commit (`git show <commit>:<path> \| wc -l`), and **a refreshed brief re-runs the whole table** rather than carrying numbers forward, with this round's 418-as-416 named as the case. `R2-P1`'s clause landed in the same paragraph |
 
 ### Process and prompt defects
@@ -1751,3 +1751,62 @@ applied.**
 - **Q7 (R2-P2) — settled: option A.** The brief template gains an unseeded pass alongside its
   directed §6, scored separately, so that a future round's independent coverage is not structurally
   zero. This becomes queue row 10.
+
+
+## R2.11 — `F8` execution: the publish, and the check that it closed
+
+Q6 settled as option A. Sequenced **after** the queue so that what became public is the repaired
+state, not the state carrying nine confirmed findings.
+
+*Expectation before running: `main` is an ancestor of the working branch, so this is a
+fast-forward and not a merge; and afterwards the four in-skill pointers resolve.*
+
+```bash
+$ git merge-base --is-ancestor origin/main HEAD && echo "fast-forward is clean"
+fast-forward is clean
+$ git rev-list --left-right --count origin/main...HEAD
+0	9
+$ git checkout main && git merge --ff-only calibration-corpus-and-claim-cards
+Updating b993d5e..a1e9ca4
+Fast-forward
+ 43 files changed, 5035 insertions(+), 9 deletions(-)
+$ git push origin main
+```
+
+Then the check that actually closes the finding — the thing the reviewer measured:
+
+```bash
+$ curl -s -o /dev/null -w "%{http_code}\n" -L https://github.com/Dzazaleo/adversarial-review-skills/tree/main/calibration
+200
+$ curl ... /main/calibration/ANSWER-KEY.md          200
+$ curl ... /main/calibration/CALIBRATION-PROMPT.md  200
+$ curl ... /main/calibration/record-template.md     200
+```
+
+Was `404` at adjudication time (RV-11); is `200` now. A user following `README.md:118-122` still
+installs five files and no corpus — that part was never the defect, and "Keep the clone" already
+says so — but the URL those five files hand them now reaches the twenty-minute procedure, which is
+what `F15` promised and `F8` found undelivered.
+
+**The cost, recorded rather than assumed away.** This publishes the answer key together with six
+archived model reports scored against it. That is the recall exposure round-1 `F10` describes; it
+was already accepted for the corpus itself, and this is an increment on it, not a new decision.
+`BACKLOG.md` §B-2 — no construction procedure for a private replacement corpus — is now the item
+standing between this project and the exposure mattering. It remains open and untouched.
+
+## R2.12 — Round 2 closure
+
+Every numbered row and every auxiliary entry carries a verdict and a disposition. No `PENDING
+OWNER` remains unresolved: Q6 and Q7 are answered in §R2.10 and executed. Every `FIX NOW` row is
+backfilled with what landed. Three `VERIFY` items remain open — `R2-CNV-1`, `R2-CNV-2`, `R2-CNV-3` —
+and all three are explicitly non-blocking, recorded in §R2.9 with the check that would settle each.
+
+**What did not happen here, and is the next thing:** the corpus has not been re-run since the
+instrument moved. `.adversarial-review/calibration/gpt-5.6-sol-high.md` remains stale by design and
+is treated as missing, so **this reviewer is uncalibrated**, and any round 3 must either re-run the
+six cases first or carry that state in its ledger header. The re-run is now cheaper than it was:
+`K-1` removed the ambiguity that failed `clean-copy-link`, and `F5`/`F1` landed before it rather
+than after, so nothing further will expire it.
+
+Nothing in this round establishes that the work is complete, correct, or finished. It establishes
+what nine findings were, what was done about each, and what is still open.
