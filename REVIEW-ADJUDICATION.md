@@ -3621,3 +3621,1614 @@ the file you were told about.**
 Both are now checkable: `scripts/validate.py` did not catch either, and neither is expressible as
 a rule it could run. That is a bound on what the validator buys, and it is worth stating beside
 the claim in `BACKLOG.md` `B-3` that ten invariants are now mechanical.
+
+---
+
+# Round 5 — split audit that did not split, adjudicated 2026-08-22
+
+**Reports found:** the `*EXTERNAL*` census returned seven report-family files. `EXTERNAL-REVIEW.md`,
+`EXTERNAL-REVIEW-2.md`, `EXTERNAL-REVIEW-3.md`, `EXTERNAL-REVIEW-4.md`, `EXTERNAL-REVIEW-4-GROK.md`
+— *adjudicated in rounds 1–4*. `EXTERNAL-REVIEW-5-GROK-VOID.md` — *not adjudicated as a round; it is
+the void calibration run whose two live findings were taken into §R4.14 as `X-1`/`X-2`*.
+`EXTERNAL-REVIEW-5-CODEX.md` and `EXTERNAL-REVIEW-5-GROK.md` — **adjudicated in this ledger**.
+
+**Review A:** `EXTERNAL-REVIEW-5-CODEX.md` (OpenAI GPT-5.6 "Sol", Codex IDE extension, reasoning
+effort not exposed to the model; 2026-08-22). Envelope honoured — it wrote only its report and
+`/tmp` probes; `git status` shows no other modification attributable to it.
+
+**Review B:** `EXTERNAL-REVIEW-5-GROK.md` (xAI Grok 4.6, Grok Build TUI; reasoning effort not
+exposed as a named knob; 2026-08-22). **Envelope breached, not by the reviewer's choice** — it wrote
+its report to `EXTERNAL-REVIEW-5-CODEX.md`, the path its (mis-pasted) cover note named, twice
+overwriting the other reviewer's file. See `P-1`.
+
+**Reviewer identity established from:** the two cover notes on disk
+(`EXTERNAL-REVIEW-5-COVER-NOTE-CODEX.md`, `-GROK.md`), the round-4 ledger header, and — for Grok —
+the live session record at `~/.grok/sessions/…/01a02a4d-dbbf-7961-819a-e66a2e1c999a/`, whose
+`system_prompt.txt` opens *"You are Grok 4.6 released by xAI"*. Not inferred from either report's
+prose.
+
+**Brief:** `EXTERNAL-REVIEW-5-PROMPT-CODEX.md` — **for both reviewers.** `EXTERNAL-REVIEW-5-PROMPT-GROK.md`
+was written, and never reached a reviewer.
+
+**Adjudicated:** 2026-08-22, by this session.
+
+**Report state:** both **complete** — each carries a coverage line, a strict closing rank, and every
+section the brief's §10 structure requires. Review B is complete *as recovered*: see `P-2` for the
+recovery and its integrity check.
+
+**Reviewer isolation:** **contaminated, and asymmetrically.** Neither model opened the other's brief
+or report file — Grok never had a `-GROK` file to open, and Codex records that it did not. But they
+worked the **same brief**, so nothing they agree on is corroboration: two reviewers handed the same
+18 directed claims are not independent whatever they could read. Worse, Grok wrote its report into
+Codex's output path while Codex was working there, and Codex records seeing portions of it while
+diagnosing failed appends. Codex's own disclosure is at `EXTERNAL-REVIEW-5-CODEX.md:5`; it says the
+core findings predate the full-report overwrite. That is the reviewer's account of its own
+sequencing and is not independently checkable from here.
+
+**Reviewer calibration — A:** **PASS**, run 2026-08-22, expires 2026-09-21, corpus digest
+`775e1cc8c43f`, from `.adversarial-review/calibration/gpt-5.6-sol-high.md`. Recomputed with the
+record's own command, unmodified — `git ls-files -z calibration/cases calibration/CALIBRATION-PROMPT.md
+calibration/ANSWER-KEY.md | sort -z | xargs -0 shasum | shasum | cut -c1-12` → `775e1cc8c43f`.
+**Matches.** Note the record is filed at `high` effort; this run's effort was not exposed to the
+model, so the effort half of the identity key is asserted by the operator, not confirmed.
+
+**Reviewer calibration — B:** **PASS**, run 2026-08-22, expires 2026-09-21, corpus digest
+`775e1cc8c43f`, from `.adversarial-review/calibration/grok-4.6-high.md`. Same command, same result.
+**Matches.** Same effort caveat.
+
+**Workload gap:** both records were earned on **6 cases, 17 files, 315 lines total; per case 40–63
+lines across 2–3 files.** This review covered **11 files and 3,190 lines** in the assigned half
+(`skills/**` 2,117 lines across 9 files, plus `HOW-IT-WORKS.md` 795 and `README.md` 278), inside a
+pinned range of 27 files / +3,530 / −406. The work reviewed is roughly **ten times** the size the
+pass was earned on, per file and in total.
+
+**Author's residual doubts:** **PENDING — the user has the hand-off and is pasting it.** Until it
+lands, **no finding in this round is scored as independent corroboration**, and the per-doubt
+leakage ruling required by §5 is unperformed. Tracked as `CNV-R5-1`. This is absence of the check,
+not evidence the doubts were kept out. The point is not academic here: with both reviewers on one
+brief, the doubts list is the only remaining channel that could distinguish a free finding from a
+directed one.
+
+**Upheld claims:** 18 listed by each reviewer against the same 18-claim list · **18 sampled** (all,
+since the two lists are directly comparable) · **4 re-opened** as `U-1`…`U-4`.
+
+**Findings in: 22 · Rows out: 22 · +3 process (P-3 withdrawn — see §R5.5), +7 CNV, +8 prior-review disagreements ruled**
+(13 numbered from Review A, 9 from Review B; no merges — overlapping findings keep separate rows and
+cross-reference, so the per-reviewer counts stay exact).
+
+## R5.1 — Situation in one paragraph
+
+Round 5 was designed as a split audit: Codex on the two skills and their references, Grok on the
+validator, the ledger and the calibration corpus, each blinded to the other's brief and report. It
+did not happen. **The Codex cover note was pasted into the Grok session.** Grok followed it exactly —
+read `EXTERNAL-REVIEW-5-PROMPT-CODEX.md`, audited the Codex half, and wrote to
+`EXTERNAL-REVIEW-5-CODEX.md`, where the live Codex session was already writing. Grok flagged the
+mismatch in its own opening paragraph and again as its ranked finding 8; it obeyed the "do not read"
+list it was given, which named the `-GROK` files it had no reason to open. The result is two
+complete, high-quality audits **of the same half, from the same brief**, one of which was destroyed
+by the collision and recovered from the reviewer's session log for this adjudication. The half that
+was supposed to be audited this round — validator, ledger, calibration corpus — **was not audited at
+all.**
+
+## R5.2 — Re-verification performed before accepting anything
+
+Every command below was run by this session against the working tree at `2565c08`. `skills/`,
+`README.md` and `HOW-IT-WORKS.md` are **byte-identical** between the pinned `d411d1e` and `2565c08`
+(`git diff --stat d411d1e..HEAD -- skills/ README.md HOW-IT-WORKS.md` → empty), so every finding
+against the pin is live at HEAD.
+
+**The three-site `FIX LATER` claim — and a lesson about the instrument.** A single-line grep found
+only two of the three sites and would have produced a wrong ruling:
+
+```
+$ grep -rn "before the ledger is written|written before the ledger" --include='*.md' .
+HOW-IT-WORKS.md:411 · README.md:86
+```
+
+The third site wraps across a line break. A two-line window finds it:
+
+```
+skills/review-adjudication/references/why-this-is-hard.md:14-15:
+  "…a durable backlog artifact that exists on disk before the | ledger is written."
+HOW-IT-WORKS.md:410-411 · README.md:85-86
+```
+
+All three confirmed. **The line-oriented grep is the wrong instrument for a repository whose rules
+live in wrapped prose** — and it is the instrument §R4.14 recommended ("grep the repository for the
+claim"). Recorded as `P-4`.
+
+**Anthropic documentation, from primary source** — not taken from either reviewer's quotation:
+
+| Claim | Source | Result |
+|---|---|---|
+| Rules evaluate deny → ask → allow; specificity does not change the order; *"a deny rule can't carry allowlist exceptions"* | `code.claude.com/docs/en/permissions` ¶64, ¶66 | **verbatim confirmed** |
+| File permissions checked against `Edit(path)`/`Read(path)` **only**; a `Write` path rule is *"accepted … but never consulted"*; `Edit` covers creating a new file | same, ¶296, ¶294 | **verbatim confirmed** |
+| Read/Edit rules *"don't apply to arbitrary subprocesses that read or write files indirectly, like a Python or Node script"* | same, ¶299 | **verbatim confirmed** |
+| `allowed-tools` is a grant: *"It does not restrict which tools are available: every tool remains callable, and your permission settings still govern tools that are not listed."* Grant is turn-scoped | `code.claude.com/docs/en/skills` ¶509 | **verbatim confirmed** |
+| Compaction keeps *"the first 5,000 tokens of each"* re-attached skill | same, ¶503 | **confirmed — and see below** |
+| *"Keep `SKILL.md` under 500 lines"* | same, ¶456 | **confirmed** (a Tip, i.e. guidance) |
+| Supporting files must be referenced from `SKILL.md` *"so Claude knows what each file contains and when to load it"* | same, ¶447 | **confirmed** |
+
+**A fact neither reviewer surfaced, from the same paragraph.** ¶503 continues: *"Re-attached skills
+share a combined budget of 25,000 tokens. Claude Code fills this budget starting from the most
+recently invoked skill, so older skills can be dropped **entirely** after compaction if you have
+invoked many in one session."* The compaction exposure is therefore **worse** than the 5,000-token
+model both skills are written against: in a session that invoked several skills, `review-adjudication`
+can be dropped whole, invariants included. Both skills' `<invariants>` blocks are built on the
+premise that *something* survives. Recorded as `A-1`.
+
+**Reference-link placement, measured** (`grep -n "references/"`):
+
+| File | Above the cut | Below the cut |
+|---|---|---|
+| `adversarial-review-prompt/SKILL.md` | `why-this-is-hard.md` :69 · `cover-note-template.md` :138 | **`prompt-template.md` :249** · `example-audit-prompt.md` :251 · :385 · :440 |
+| `review-adjudication/SKILL.md` | `why-this-is-hard.md` :72 · `inputs-and-calibration.md` :121 | **`verification-standard.md` :241,:311,:346** · **`second-opinion.md` :395** · **`ledger-template.md` :441** |
+
+The split is not random and is sharper than either reviewer stated it: **every motivation file
+survives the cut; every operational file — emit template, verification standard, second-opinion
+procedure, ledger template — is below it.** Compounded with `codex-5`/`grok-2`, `codex-6` and
+`codex-10`/`grok-5`, the three references that survive compaction are exactly the three carrying
+**stale or contradicted rules**, and the correct rules are in the files that do not survive. A
+compacted session is not merely under-informed; it is pointed at the wrong copies. Recorded as `A-2`.
+
+**Line-count history** (`git show <c>:<path> | wc -l` across the whole branch):
+
+```
+818214b/540c60a/0d65b51  arp=497  adj=572
+9893aaa … 2565c08        arp=484  adj=498
+```
+
+**529 and 587 appear nowhere in this repository's history.** A full scan of every commit
+(`git log --format=%H | while read h; …`) returned no match for either. §R4.12's *"484 and 498, from
+529 and 587"* records a true current count against a baseline that does not exist. The real drop was
+13 and 74 lines, not 45 and 89.
+
+**The net-reduction figures, and why the reviewers appeared to disagree.** Codex reported 7,403;
+Grok reported 7,354. Both are right and neither noticed the other's unit:
+
+```
+bytes:      470 + 6933 = 7403      (wc -c)
+characters:              7354      (len() of the decoded text)
+```
+
+The 49 difference is multibyte punctuation — em-dashes and curly quotes. Recorded so no later round
+re-opens it as a contradiction.
+
+**Validator length gate** (`scripts/validate.py:43,78-85`): `n = len(read(p).split("\n"))` with
+`if n >= MAX_SKILL_LINES` (500). On newline-terminated files `split("\n")` yields `wc -l + 1`, so
+`review-adjudication/SKILL.md` scores **499** against a gate of 500. Confirmed: **one line from
+failing.**
+
+**Compaction-cut arithmetic.** The documented estimates reproduce exactly under whole-file
+`chars / 3.1` including frontmatter — arp line 221 = 15,603 chars → 5,033 tokens; adj line 214 =
+15,548 → 5,015. So Grok's account of how the numbers were produced is right. Codex's measured
+figures are internally consistent to within 0.3% across three independent probes:
+
+| probe | chars to line | reported tokens | implied chars/token |
+|---|---|---|---|
+| adj :196 | 14,168 | ~4,990 | 2.839 |
+| adj :205 | 14,915 | ~5,241 | 2.846 |
+| arp :209 | 14,778 | ~5,004 | 2.953 |
+
+That consistency is hard to fabricate and is evidence the probes were actually run. **This session
+could not reproduce them** — Anthropic's tokenizer is not public, `tiktoken` is not installed, and
+installs are out of envelope. What this session *can* say is directional and it agrees with Codex:
+the documented 3.1 chars/token sits at the optimistic end for this prose, so the true cut is
+**earlier** than the labels claim, not later. The exact line is `CNV-R5-2`.
+
+## R5.3 — Echo audit: what these two reports are worth together
+
+**They are not two reports.** Both reviewers received `EXTERNAL-REVIEW-5-PROMPT-CODEX.md` and its
+18 directed claims. The skill's rule is explicit: two reviewers handed the same brief are not
+independent whatever they could or could not read. So the overlap below is **not** corroboration and
+is not counted as such anywhere in this ledger.
+
+| Overlap | A | B | Ruling basis |
+|---|---|---|---|
+| README settings snippet is deny-first and self-defeating | `codex-9` | `grok-1` | re-established from Anthropic docs ¶64/66/296, not from either report |
+| `FIX LATER` old wording live at three sites | `codex-5` | `grok-2` | re-established by two-line-window search |
+| Operational references sit below the compaction cut | `codex-1` | `grok-3` | re-established by `grep -n "references/"` |
+| Third copy of the unconditional architecture claim | `codex-10` | `grok-5` | re-established by `grep -rn "different architecture"` |
+| Same-family assertion is not a caution | `codex-11` | `grok-6` | re-established by reading `prompt-template.md:66-90` |
+| No-filesystem route incoherent | `codex-8` | `grok-4` | **different defects in the same route** — see rows; both real, neither a duplicate |
+
+**Free findings — the number the round's evidence actually rests on.** Codex reports its unseeded
+pass produced no repository defect outside the 18 claims, and declines to credit itself for three it
+reached independently. That is honest and this session accepts it: **Review A contributes 0 free
+findings.** Review B contributes **3**: `grok-7` (the why-files' false "nothing here is an
+instruction" header — claim 1 asked whether references contain instructions, not whether they deny
+it), `grok-8` (the process finding), and the `529/587` half of `grok-9` (claim 2 asked whether
+484/498 are under 500, not whether the baseline existed).
+
+So: **22 findings, 19 directed echoes, 3 free.** For comparison the ledger records round 4 at 18
+echoes / 3 partial / 4 free across 27. The directed findings are not thereby worthless — 19 of them
+verified true against primary sources — but the brief found them, and the brief was written by the
+party under review.
+
+## R5.4 — Adjudication
+
+Verdicts and dispositions. `codex-N` = Review A, `grok-N` = Review B. Impact shown is the
+reviewer's own.
+
+| # | Finding | Impact | Verdict | Disposition |
+|---|---------|--------|---------|-------------|
+| codex-1 | Required reference procedures linked only below the compaction cut | high | **CONFIRMED** — `grep -n "references/"`: `prompt-template.md` only at :249; `verification-standard.md` :241/:311/:346; `second-opinion.md` :395; `ledger-template.md` :441. All below both the documented and measured cuts. Anthropic ¶447 requires references be named from `SKILL.md` so Claude knows when to load them. The "would the model recover by glob" half stays theoretical | **FIX NOW** — add a short "Supporting files" block inside each `<invariants>` region naming every reference and when to open it. Cross-ref `grok-3`, `A-2` **✔ executed 2026-08-22** — see §R5.15 |
+| codex-2 | Extracted second-opinion procedure says a `Bash`-capable verifier cannot modify the target | high | **CONFIRMED** — `second-opinion.md:27-33` says the allowlist "bounds which tools exist, not what they may write" and a `Bash`-holding verifier is "**trusted, not confined**"; `:46-47` then says "Excluding `Write` and `Edit` stops the verifier modifying the target." The prescribed list at `:23` is `Read, Bash, Glob, Grep` — it retains `Bash`, so the false half is the one that applies by default. Anthropic ¶299 confirms subprocess writes are ungoverned. **Review B assessed this file as sound on content; it did not examine this pair — a non-examination, not a refutation** | **FIX NOW** — rewrite `:46-47` to say excluding `Write`/`Edit` stops *those tools*, and that a `Bash`-holding verifier remains write-capable, consistent with `:27-33` **✔ executed 2026-08-22** — see §R5.15 |
+| codex-3 | Real compaction cut drops reopened upheld claims because the invariant forgot them | high | **CONFIRMED (partial)** — the **omission is confirmed independent of the cut**: invariant 3 (`:40-42`) rescues "could-not-verify, process, and prior-review-disagreement" and omits the reopened-upheld-claim entries (`U-N`) that `:200-202` requires. The **cut location is not established** — probes internally consistent to 0.3% and directionally corroborated by this session's arithmetic, but not reproducible here. Split: omission → this row; cut line → `CNV-R5-2` | **FIX NOW** — add `U-N` re-opened upheld claims to invariant 3's enumeration. Cheap, and it does not wait on the tokenizer question **✔ executed 2026-08-22** — see §R5.15 |
+| codex-4 | Hoisted append invariant forbids the skill's own skeleton-first workflow | medium | **CONFIRMED** — invariant 1 (`:32-36`) states additions-only unconditionally and offers `git diff` showing no deletions as the proof; §7 (`:450-456`) scopes immutability to *completed rounds*; step 2 (`:182-187`) mandates a skeleton whose verdict cells are later filled in place, which is a replacement. The compaction-surviving summary is **stricter than the rule it summarises**. Same shape as `codex-3` in the opposite direction — that invariant is too narrow, this one too broad | **FIX NOW** — qualify invariant 1 to "completed rounds append only; the current round's skeleton is filled in place" **✔ executed 2026-08-22** — see §R5.15 |
+| codex-5 | Repaired `FIX LATER` ordering remains in three live documents in its impossible form | medium | **CONFIRMED** — `references/why-this-is-hard.md:14-15`, `HOW-IT-WORKS.md:411`, `README.md:86` all still carry the superseded wording; corrected rule at `SKILL.md:44,420`. Found only by a two-line-window search (§R5.2) | **FIX NOW** — replace all three with the `:420` wording. Cross-ref `grok-2` **✔ executed 2026-08-22** — see §R5.15 |
+| codex-6 | Extracted rationale weakens the high-impact refutation burden from `AND` to `OR` | medium | **CONFIRMED** — `SKILL.md:47` "execution evidence **and** a second opinion … Without both"; `references/why-this-is-hard.md:26-27` "execution evidence **or** an independent check". Unchanged pre-restructure text; a conjunctive gate reduced to a disjunctive one, in the file that survives compaction while the operative rule's section does not | **FIX NOW** — change `or` to `and` in the reference, or delete the sentence and point at the invariant **✔ executed 2026-08-22** — see §R5.15 |
+| codex-7 | Public docs certify doubt absence and call prompted echoes independent confirmation | medium | **CONFIRMED** — `README.md:47-49` "deliberately kept out … that's real confirmation"; `README.md:186-188` the author "tells you which ones really were kept out" — the certification the skill forbids. `HOW-IT-WORKS.md:161` says hunches are kept out "entirely", though :171-177 carries the correct rule 10 lines later. README has no such correction | **FIX NOW** — align both to "overlap is normal; the author declares it and never certifies absence; only the adjudicator scores independence" **✔ executed 2026-08-22** — see §R5.15 |
+| codex-8 | No-filesystem route still requires the cover note it forbids | medium | **CONFIRMED** — §10 (`:447-465`) carries **one** conditional item (the "continue" bullet, correctly scoped) and three unconditional ones that are impossible on this route: "The two file paths: the brief, and the cover note", "The cover note itself, verbatim", and "check that file exists when the run ends" — while `cover-note-template.md:79-84` says "Do not emit this cover note at all" and the user saves the chat reply | **FIX NOW** — scope the three bullets with the same "reviewer with a filesystem" qualifier the continue bullet already uses. Distinct from `grok-4` **✔ executed 2026-08-22** — see §R5.15 |
+| codex-9 | README enforcement snippet denies the artifacts it claims to allow | medium | **CONFIRMED** — `README.md:150-157` pairs `deny: ["Edit(**)"]` with `allow: ["Edit(**/*REVIEW*.md)", "Edit(**/BACKLOG.md)"]`. Anthropic ¶64/¶66: deny is evaluated first, specificity is irrelevant, and *"a deny rule can't carry allowlist exceptions"*. ¶296: `Edit(path)` governs `Write`. The snippet blocks every deliverable both skills exist to produce. The surrounding `Edit`-vs-`Write` paragraph is **correct** | **FIX NOW** — replace with a composition that works: deny a narrower pattern, or use `ask` + allow, or drop the deny and rely on allow-plus-default. Cross-ref `grok-1` **✔ executed 2026-08-22** — see §R5.15 |
+| codex-10 | Extracted prompt rationale still teaches the pre-branch framing | medium | **CONFIRMED** — `adversarial-review-prompt/references/why-this-is-hard.md:17-19` states the unconditional lever ("a reviewer with a different architecture notices different things; and that agreement is therefore a failed outcome") in imperative voice ("What you can state", "Never imply"), under a `:3` header claiming nothing there is an instruction. Its link at `:69` is **above** the cut; the four-branch template's only link is at `:249`, below it | **FIX NOW** — rewrite `:17-19` to point at the four branches rather than restate the unconditional claim. Cross-ref `grok-5`, `grok-7` **✔ executed 2026-08-22** — see §R5.15 |
+| codex-11 | The "downgraded caution" still asserts an unmeasured likelihood | low | **CONFIRMED** — emitted at `prompt-template.md:69-72`: "any blind spot you share with its author is one this review is least likely to catch. Weight your own agreement accordingly." The concession that this is unmeasured is at `:84-88`, **author-facing** — the reviewer never sees it | **FIX NOW** — either move the hedge into the emitted block or drop the mechanism claim and keep only "you did not write it and have no stake". Cross-ref `grok-6` **✔ executed 2026-08-22** — see §R5.15 |
+| codex-12 | Design doc still denies the chat-only dependency README now discloses | low | **CONFIRMED** — `HOW-IT-WORKS.md:48-49`: "Everything is a file on disk … Nothing that matters lives in a chat window", against `README.md:188-193` which says the residual-doubts hand-off "is written nowhere else" and "does not survive closing the window". **Demonstrated live by this adjudication**, which had to ask the user for the list because it is not on disk (`CNV-R5-1`) | **FIX NOW** — qualify `:48-49` with the one documented exception **✔ executed 2026-08-22** — see §R5.15 |
+| codex-13 | Removing write tools does not guarantee the user sees each write | low | **CONFIRMED** — `README.md:141-145` promises "you see it before it happens". Anthropic ¶509: `allowed-tools` "does not restrict which tools are available: every tool remains callable, and your permission settings still govern tools that are not listed." Under `acceptEdits`, auto/bypass, or a matching allow rule, the write proceeds unseen | **FIX NOW** — soften to "goes through your normal permission handling", dropping the guarantee **✔ executed 2026-08-22** — see §R5.15 |
+| grok-1 | README permission snippet denies every write, including the deliverables | high | **CONFIRMED** — same defect as `codex-9`, same primary sources; separate row so the per-reviewer counts stay exact. Grok additionally flags that the block is fenced `jsonc` and that comment legality in `settings.json` is undetermined — a second, independent way the snippet fails. That sub-question is `CNV-R5-3` | **FIX NOW** — folded into `codex-9`'s fix; the fix must also settle the comment question or drop the comment **✔ executed 2026-08-22** — see §R5.15 |
+| grok-2 | `FIX LATER` defect repaired in one site, left live in three | high | **CONFIRMED** — same three sites as `codex-5`, independently located. Grok's added evidence: the reference file is 84% line-verbatim from the pre-restructure skill, so the site was created *by the restructure copying unrepaired text* — the `X-1` shape recurring inside the range that was supposed to have fixed it | **FIX NOW** — folded into `codex-5`'s fix **✔ executed 2026-08-22** — see §R5.15 |
+| grok-3 | Restructure put history above the cut and operational templates below it | high | **CONFIRMED** — this session's own link census (§R5.2) reproduces it exactly and sharpens it: the surviving references are precisely the ones carrying stale rules. Cross-ref `A-2` | **FIX NOW** — folded into `codex-1`'s fix **✔ executed 2026-08-22** — see §R5.15 |
+| grok-4 | No-filesystem **cover-note** variant omits the continue instruction the invariants require | medium | **CONFIRMED** — `grep -n "continue" cover-note-template.md` → **no match**; the reviewer-facing half at `prompt-template.md:386-394` has it, and §10's last bullet has it. Grok's stated consequence ("the operator is not told") **overstates** on the uncompacted path, where §10 carries it — but §10 is at `:462-465`, far below the cut, while §1's pointer to the template variant is at `:137-139`, above it. **On the compacted path the consequence holds exactly as stated.** Distinct defect from `codex-8` | **FIX NOW** — add the continue sentence to the `cover-note-template.md` no-filesystem variant, so it does not depend on §10 surviving **✔ executed 2026-08-22** — see §R5.15 |
+| grok-5 | A third copy of the unconditional architecture claim in the new prompt `why-this-is-hard.md` | medium | **CONFIRMED** — same site as `codex-10`. Grok's framing is the more useful one: `X-2`'s own prescribed remedy was "search for the claim, not the files you were told about", and the same commit that recorded that lesson copied the claim into a new file without searching it | **FIX NOW** — folded into `codex-10`'s fix **✔ executed 2026-08-22** — see §R5.15 |
+| grok-6 | Same-family emit path is still an unmeasured assertion; the caution is author-facing only | medium | **CONFIRMED** — same as `codex-11`, reached independently and stated more precisely ("the hedge in front of the assertion is the *true* clause; the unmeasured part is still stated as fact") | **FIX NOW** — folded into `codex-11`'s fix **✔ executed 2026-08-22** — see §R5.15 |
+| grok-7 | The new why-files say they contain no instructions, then contain instructions | medium | **CONFIRMED — and one of only three free findings this round.** Both files open at `:3` with "Nothing here is an instruction". `adversarial-review-prompt/references/why-this-is-hard.md:92-99` holds the **only** copy of the doubt-search shell loop; `review-adjudication/references/why-this-is-hard.md:14-15` holds a timing rule that contradicts the skill. The header is wrong in both directions: believe it and skip the how-to, or disbelieve it and follow a stale rule | **FIX NOW** — replace the header with an accurate one naming what each file operationally contains **✔ executed 2026-08-22** — see §R5.15 |
+| grok-8 | This brief's independence sentence is false of the session that received it | medium (process) | **CONFIRMED** — `EXTERNAL-REVIEW-5-PROMPT-CODEX.md:12-16` addresses "OpenAI's GPT-5.6 (Sol)"; the session was Grok 4.6. Verified against the session's own `system_prompt.txt`. This is the operator mis-pairing, caught by the reviewer from inside it. Ruled in full at `P-1` | **FIX NOW** at the process level — see `P-1`; no repository file is defective **✘ not executed** — needs a Grok session the owner starts; this is `Q-2`(a) |
+| grok-9 | `review-adjudication/SKILL.md` sits on the last passing line of the length gate, against a baseline that never existed | low | **CONFIRMED** on both halves, **split by disposition.** (a) **529/587 appear nowhere in git** — full-history scan returned no match; real baseline 497/572. §R4.12's figure is false. (b) `split("\n")` = 499 against `n >= 500` — **one line from failing**. The "nothing was padded" reading is fair: 74 lines left the file | (a) **FIX NOW** — correction row `C-5` below, since §R4.12 is in a closed round and cannot be edited. (b) **PENDING OWNER** — proposed `ACCEPTED AS-IS`; see `Q-1`. Non-blocking **✔ executed 2026-08-22** — see §R5.15 |
+
+## R5.5 — Process findings
+
+| # | Finding | Verdict | Disposition |
+|---|---------|---------|-------------|
+| P-1 | **The round-5 split audit did not split.** The Codex cover note was pasted into the Grok session, so both reviewers received `EXTERNAL-REVIEW-5-PROMPT-CODEX.md`. `EXTERNAL-REVIEW-5-PROMPT-GROK.md` — the validator/ledger/corpus half — reached no reviewer | **CONFIRMED** — established from the Grok session's own message log: entry 5 is the Codex cover note verbatim; entry 22 is it reading the Codex brief; entries 30 and 100 are the two writes to the Codex path. The reviewer behaved correctly throughout on the instructions it was actually given | **FIX NOW** — re-run the Grok half against `EXTERNAL-REVIEW-5-PROMPT-GROK.md` with the matching cover note. Until then the validator, ledger and corpus are **unaudited** and nothing about them enters the next brief's "ground already walked" **✘ not executed** — needs a Grok session the owner starts; this is `Q-2`(a) |
+| P-2 | **A reviewer's report was destroyed by an output-path collision and survived only in a session log.** Grok's report was overwritten by Codex restoring its own file; no copy existed in the repository, in either `/tmp` workspace, or in git | **CONFIRMED** — recovered from `~/.grok/sessions/…/updates.jsonl` lines 241 and 242, which carry the 37,070-character `write` payload independently; both byte-identical, `sha256` prefix `cb4c514b76129542`. Materialized verbatim to `EXTERNAL-REVIEW-5-GROK.md` with a provenance header, under this skill's transcript-materialization allowance | **FIX NOW** — the overwrite guard (`adversarial-review-prompt` invariant 6, `:329-339`) covers brief, cover note and report by *instructing the author to check*. It did not bind here because the collision came from a **second reviewer session**, which no instruction in the authoring session can reach. Give each reviewer a reviewer-suffixed report path at brief-generation time — `cover-note-template.md:86-91` already prescribes this for "several reviewers, one brief" and it was not applied to a two-reviewer split **✔ executed 2026-08-22** — see §R5.15 |
+**P-3 was withdrawn as a row, not as an observation.** It recorded that Codex disclosed the
+contamination unprompted at `EXTERNAL-REVIEW-5-CODEX.md:5`, and that Grok disclosed the same
+collision from the opposite side — so the brief's *"if you do end up seeing one, say so"* clause
+worked on both models without being enforced. That is worth keeping, but it is not a defect, and
+forcing it into a verdict/disposition pair produced `CONFIRMED` + `NO ACTION`, which this skill
+permits only under `REFUTED` or `SETTLED ALREADY`. **`scripts/validate.py` caught that in this
+ledger** — the ID is retired rather than reused, and the process count below reads 3.
+
+| P-4 | **`§R4.14`'s prescribed remedy — "grep the repository for the claim" — is not sufficient in this repository.** A line-oriented grep misses any rule whose wording wraps across a line break, which is most of them | **CONFIRMED** — demonstrated in §R5.2: the single-line grep found 2 of 3 `FIX LATER` sites. Had this session stopped there it would have ruled `codex-5` partially refuted | **FIX NOW** — `scripts/validate.py` should normalize whitespace before matching, and `§R4.14`'s lesson needs a correction row (`C-6`) saying the grep must be whitespace-insensitive **✔ executed 2026-08-22** — see §R5.15 |
+
+## R5.6 — Adjudicator findings, from re-verification rather than either report
+
+| # | Finding | Verdict | Disposition |
+|---|---------|---------|-------------|
+| A-1 | **Compaction exposure is worse than the model both skills are written against.** Anthropic ¶503: re-attached skills "share a combined budget of 25,000 tokens … so older skills can be dropped **entirely** after compaction if you have invoked many in one session." Both `<invariants>` blocks assume the first 5,000 tokens always survive | **CONFIRMED** from primary source. Neither reviewer surfaced the sentence, though both cited the paragraph | **FIX NOW** — state the whole-drop case in both invariant blocks and tell the reader to re-invoke the skill after compaction, which ¶505 recommends **✔ executed 2026-08-22** — see §R5.15 |
+| A-2 | **The restructure inverted reference reachability.** Every motivation file survives the cut; every operational file is below it — and the three surviving references are exactly the three carrying stale or contradicted rules (`codex-5`, `codex-6`, `codex-10`). A compacted session is pointed at the wrong copies, not merely deprived of the right ones | **CONFIRMED** by the link census in §R5.2 | **FIX NOW** — folded into `codex-1`'s fix, which must prioritise the operational files **✔ executed 2026-08-22** — see §R5.15 |
+| A-3 | **Two invariants are inaccurate summaries of their own sections, in opposite directions** — invariant 3 too narrow (`codex-3`), invariant 1 too broad (`codex-4`). Round 4 recorded "an invariant that summarizes the opposite of its own section is a defect round 4 found twice"; it is now four times | **CONFIRMED** | **FIX NOW** — add a validator check that every `(§N)` back-reference in an invariant is re-read against its section whenever either changes. Mechanical form to be determined; `BACKLOG.md` `B-3` already bounds what the validator can express **✔ executed 2026-08-22** — see §R5.15 |
+
+## R5.7 — Re-opened upheld claims
+
+Both reviewers answered the same 18-claim list, so all 18 were sampled by direct comparison. Four
+are re-opened — in each case because the two reviewers reached **different** answers, or because an
+answer rested on something this session could not accept.
+
+| # | Claim | Verdict | Disposition |
+|---|---|---|---|
+| U-1 | Claim 3 — round-4 obligations sit above the cut *and say what the full rule says* | **CONFIRMED as re-opened** — both reviewers refuted it, on **different grounds**: Codex on the `U-N` omission, Grok on the missing spawn-allowlist/sanitized-copy how-to. Both are true and they are different defects | **FIX NOW** — both fixes are already queued (`codex-3`, `codex-1`); this row records that claim 3 is not closed by either alone **✔ executed 2026-08-22** — see §R5.15 |
+| U-2 | Claim 1 — "~9,300 characters moved, meaning preserved" | **COULD NOT DETERMINE** on the quantity — both reviewers agree the intermediate post-fix/pre-extraction tree was never committed, so "moved" is not reconstructable; net reduction (7,354 chars / 7,403 bytes) and new-file total (30,455 chars) are different quantities and neither is it. **CONFIRMED REFUTED** on "meaning preserved": `codex-5/6/10`, `grok-2/5/7` | **VERIFY** — non-blocking. Settled only by recording the figure's derivation at the time it is claimed; the ledger should stop quoting it |
+| U-3 | Claim 13 — neither skill pre-approves a write tool; do they still work end to end? | **COULD NOT DETERMINE** — both reviewers confirmed interactive operation from the docs and **both declined to test headless**. Grok flags that `dontAsk` auto-denies non-pre-approved tools, which would now include `Write` on the invoking turn — a real regression relative to the previous grant, untested by anyone | **VERIFY** — `CNV-R5-4`. Run `claude -p` with each skill in a scratch directory and observe whether the first write is denied. Non-blocking for the prose fixes; blocking for any claim that the skills work headless |
+| U-4 | Claim 18 — §R4.14's lesson "extracted text does not get re-read on the way out" is the right lesson | **CONFIRMED as re-opened; the lesson is too narrow.** Grok's argument holds and this session's own §R5.2 experience strengthens it: two of the three `FIX LATER` sites were **not** extracted, and the session that wrote the §R4.14 lesson then failed to apply it. The correct lesson is the brief's own — *fixes that reach one site of something living at several* — plus `P-4`'s instrument caveat | **FIX NOW** — correction row `C-6` **✔ executed 2026-08-22** — see §R5.15 |
+
+## R5.8 — Corrections to earlier rounds
+
+| # | Correction | Supersedes |
+|---|---|---|
+| C-5 | **§R4.12's "484 and 498, from 529 and 587" states a baseline that does not exist.** Full-history scan finds `arp=497, adj=572` immediately before the restructure and no commit at 529 or 587. The current counts are correct; the drop was 13 and 74 lines. The origin of 529/587 could not be determined and is `CNV-R5-5` | §R4.12's pass line. The original row stays as written |
+| C-6 | **§R4.14's lesson is narrowed and its remedy corrected.** "Extracted text does not get re-read on the way out" describes one manifestation. The controlling failure is a fix reaching one site of a claim living at several, extracted or not — two of the three surviving `FIX LATER` sites were never extracted. And the prescribed remedy, "grep the repository for the claim", **fails on wrapped prose**: it found 2 of 3 sites here. Any such search must be whitespace-normalized | §R4.14's closing two paragraphs. The original stays as written |
+
+## R5.9 — Could not verify
+
+| # | Gap | Verdict | Disposition |
+|---|---|---|---|
+| CNV-R5-1 | The author's residual doubts for round 5 — the per-doubt leakage ruling required by §5 | **COULD NOT DETERMINE** | **VERIFY — the user has the hand-off and is pasting it.** Until it lands no finding is scored as independent corroboration. **Non-blocking** for the fix queue; blocking for any independence claim |
+| CNV-R5-2 | Where 5,000 rendered tokens actually land in either `SKILL.md` | **COULD NOT DETERMINE** — no public Anthropic tokenizer; `tiktoken` absent; installs out of envelope. Codex's probes are internally consistent to 0.3% and directionally corroborated | **VERIFY** — repeat the cached-input-token prefix probe, or use a published tokenizer when one exists. Non-blocking: every queued fix is correct under either cut |
+| CNV-R5-3 | Whether `.claude/settings.json` accepts `//` comments, as the README's `jsonc` fence implies | **COULD NOT DETERMINE** — not stated on the permissions page | **VERIFY** — write a commented settings file and start Claude Code. Blocking only for the `codex-9` fix's final wording |
+| CNV-R5-4 | Headless / `dontAsk` behaviour after dropping `Write` from `allowed-tools` | **COULD NOT DETERMINE** — no reviewer ran it; docs imply first-turn writes are now denied | **VERIFY** — see `U-3`. Non-blocking |
+| CNV-R5-5 | The origin of the 529/587 figures | **COULD NOT DETERMINE** — not `wc -l` of any committed `SKILL.md` in this history | **VERIFY** — non-blocking; likely an uncommitted working-tree state. Recorded so it is not re-derived |
+| CNV-R5-6 | Whether a real compacted session recovers unreachable references by globbing | **COULD NOT DETERMINE** — link placement confirmed; the model's post-cut behaviour is not | **VERIFY** — non-blocking |
+| CNV-R5-7 | **The entire Grok half — validator logic, ledger content, calibration corpus.** Not a reviewer's gap; the brief never reached a reviewer | **COULD NOT DETERMINE** | **VERIFY — see `P-1`.** Nothing about `scripts/validate.py`, `REVIEW-ADJUDICATION.md` or `calibration/**` was audited this round, and none of it may enter the next brief as ground already walked |
+
+## R5.10 — Disagreements with prior rounds, ruled
+
+Both reviewers raised disagreements; eight distinct ones survive de-duplication.
+
+| # | Disagreement | Ruling |
+|---|---|---|
+| D-1 | §R4.12 understates the restructure trade (A and B) | **UPHELD** — see `A-2`. The trade was described as losing motivating history; it also inverted reference reachability and copied live defects forward |
+| D-2 | Round 4's `FIX LATER` "✔ executed" reached only two operative sites (A and B) | **UPHELD** — `codex-5`/`grok-2` |
+| D-3 | Round 4's verifier-write fix is undone by its own extracted procedure (A) | **UPHELD** — `codex-2` |
+| D-4 | Round 4's no-filesystem close is partial (A and B, different halves) | **UPHELD on both halves** — `codex-8` and `grok-4` are distinct defects |
+| D-5 | Round 4's same-family downgrade changed wording, not epistemic status (A and B) | **UPHELD** — `codex-11`/`grok-6` |
+| D-6 | `R4-Q1`'s accepted settings remedy has the right tool name and an invalid composition (A and B) | **UPHELD** — `codex-9`/`grok-1`. The `Edit(path)` fact contributed by `grok-1` in round 4 is correct; the snippet built on it is not |
+| D-7 | §R4.14 draws the lesson one level too low (A and B) | **UPHELD** — `U-4`, `C-6` |
+| D-8 | §R4.12's "from 529 and 587" records a baseline that never existed (B only) | **UPHELD** — `C-5` |
+
+## R5.11 — Owner decisions required
+
+| # | Question | Options and what each costs | Blocks execution? |
+|---|---|---|---|
+| Q-1 | `review-adjudication/SKILL.md` is one line from failing the validator's 500-line gate, and every queued fix adds lines. What gives? | **(a)** Raise `MAX_SKILL_LINES` and record why the 500 is guidance, not a limit — cheapest, but loses the ratchet that forced the restructure. **(b)** Extract more prose — but `A-2` shows extraction currently makes rules *less* reachable, so this pays the gate by worsening the live defect. **(c)** Spend the fixes on deletion rather than addition — highest effort, best outcome, and the only option that does not trade one finding for another. **(d)** Accept as-is and let the gate fail, treating the failure as the signal to prune | **No** — but it shapes how every `FIX NOW` in this round is written, so answer before execution starts |
+| Q-2 | Re-run the Grok half (`P-1`), and if so when? | **(a)** Re-run now against `EXTERNAL-REVIEW-5-PROMPT-GROK.md` before any fix lands — the brief is written and current, and the validator/ledger/corpus are the only part of this repository never externally audited. **(b)** Re-run after the round-5 fixes land, so it audits the repaired state — but the brief's pinned range would need rewriting. **(c)** Fold it into round 6. Cost of not doing it: `CNV-R5-7` stays open and that half never enters "ground already walked" | **No** for the prose fixes; **yes** for closing round 5 |
+| Q-3 | Two reviewers, one brief, and the free-finding count fell to 3 of 22. Does the split-audit design survive? | **(a)** Keep the split and add a mechanical guard — reviewer-suffixed report paths generated with the brief (`P-2`), and a cover-note/brief pairing check. **(b)** Abandon the split; give both reviewers the same full-scope brief and accept that agreement is never corroboration. **(c)** Keep the split but serialize the runs, removing the collision class entirely at the cost of wall-clock | **No** |
+
+## R5.12 — `FIX NOW` queue
+
+Nineteen items. **Not executed** — this ledger records rulings; fixes are a separate explicit act.
+
+1. `codex-1` + `grok-3` + `A-2` — add a "Supporting files" block naming every reference and when to open it, inside both `<invariants>` regions, operational files first
+2. `codex-2` — reconcile `second-opinion.md:46-47` with `:27-33`
+3. `codex-3` — add `U-N` to invariant 3's enumeration
+4. `codex-4` — scope invariant 1 to completed rounds
+5. `codex-5` + `grok-2` — three `FIX LATER` sites to the `:420` wording
+6. `codex-6` — `or` → `and` in the adjudication rationale
+7. `codex-7` — README/HOW doubt-certification wording
+8. `codex-8` — scope §10's three unconditional bullets
+9. `codex-9` + `grok-1` — replace the settings snippet with a working composition
+10. `codex-10` + `grok-5` — rewrite the prompt rationale's lever 1
+11. `codex-11` + `grok-6` — move the same-family hedge into the emitted block or drop the claim
+12. `codex-12` — qualify `HOW-IT-WORKS.md:48-49`
+13. `codex-13` — soften the "you see it before it happens" promise
+14. `grok-4` — add the continue sentence to the cover-note no-filesystem variant
+15. `grok-7` — replace both why-file headers with accurate ones
+16. `A-1` — state the whole-skill-drop compaction case in both invariant blocks
+17. `A-3` — validator check that invariant `(§N)` back-references match their sections
+18. `P-2` — generate reviewer-suffixed report paths at brief time
+19. `P-4` — whitespace-normalize the validator's claim searches
+
+## R5.13 — Round 5 status: OPEN
+
+Every numbered finding carries both axes. Open obligations: `Q-1`–`Q-3` unanswered; `CNV-R5-1`
+awaiting the residual-doubts hand-off; `CNV-R5-7` open until the Grok half is actually run; the
+nineteen `FIX NOW` items queued and unexecuted.
+
+**Nothing in this round establishes that the work is complete, correct, or ready to ship.** It
+establishes that 22 findings were raised across two reports, 21 were confirmed in whole or part, one
+was split into a confirmed half and an owner question, and that the round's independence design
+failed in a way that cost it most of its evidentiary value.
+
+**What the next brief inherits.** The two skills and their references are now heavily walked ground.
+`scripts/validate.py`, `REVIEW-ADJUDICATION.md` and `calibration/**` are **not** — no reviewer has
+ever audited them, and `CNV-R5-7` says so explicitly. A round-6 brief that treats them as covered
+would be wrong.
+
+## R5.14 — Owner authorization, and the locked decisions from this round
+
+**The owner's words, verbatim, 2026-08-22:** *"I'll follow your recommendations. Go"* — in reply to
+the §R5.12 offer to execute the `FIX NOW` queue as a separate act. That is the explicit
+authorization §8 requires, and this session executed on it. **What "my recommendations" resolved to
+is written out below rather than assumed**, because the acceptance was general and the questions
+were not.
+
+| # | Locked decision | How it was resolved |
+|---|---|---|
+| Q-1 | **(c) — spend the fixes on deletion.** Every fix in the queue is written to be net line-neutral or negative on `review-adjudication/SKILL.md`, which had one line of headroom against the validator gate | The recommended option, and the only one that does not pay the gate by worsening `A-2`. Binding on *how* every other fix is written |
+| Q-2 | **(a) — re-run the Grok half now**, against the existing `EXTERNAL-REVIEW-5-PROMPT-GROK.md`, before the fixes change the pinned range | Recommended. **This session cannot execute it** — it needs a Grok session the owner starts. Prepared, not done: see §R5.16 |
+| Q-3 | **(a) — keep the split, add mechanical guards.** Reviewer-suffixed report paths generated with the brief, and a cover-note/brief pairing check | Recommended. Queue items 18 and 19 are its execution |
+
+**Scope of the authorization, stated so a later reader can audit it:** it covers the nineteen
+`FIX NOW` items in §R5.12 and nothing else. It does not cover the `CNV` items, which are checks
+rather than fixes; it does not close round 5; and it is not a ship judgement, which this ledger does
+not make.
+
+## R5.15 — Execution: what landed, and what it verifiably did
+
+Executed 2026-08-22 by this session under the §R5.14 authorization. **All nineteen queued items
+landed.** Every change is prose or validator logic; no behaviour of any shipped program changed,
+because the repository ships no program but `scripts/validate.py`.
+
+**Q-1(c) was binding and was met.** `review-adjudication/SKILL.md` went **499 → 497** `split("\n")`
+lines against a gate of `>= 500`, while absorbing four fixes. The headroom was bought by compressing
+the `<why_this_is_hard>` block — duplicated background whose full version is in the reference — and
+spent on operational rules. `adversarial-review-prompt/SKILL.md` went 485 → 493, still 7 under.
+
+| # | Item | What landed |
+|---|---|---|
+| 1 | `codex-1` `grok-3` `A-2` | A **"The references, and when to open each"** index added to *both* `<invariants>` blocks — adjudication `:31`, prompt `:27`, both far above the cut. Each names every reference and the step that needs it. Both indexes end with the precedence rule that fixes `A-2`: the skill overrides the reference wherever they differ |
+| 2 | `codex-2` | `second-opinion.md:46-47` now reads that excluding `Write`/`Edit` stops *those two tools* and **does not stop the verifier writing, because the list above keeps `Bash` and `Bash` writes** — consistent with `:27-33` nine lines above |
+| 3 | `codex-3` | Invariant 3 now enumerates "could-not-verify, process, prior-review-disagreement, **and re-opened upheld claims (`U-N`)**" |
+| 4 | `codex-4` | Invariant 1 retitled **"current round filled in place, completed rounds append-only"**; §7's proof changed from "the file only grew" to "the *completed* prefix is untouched", which is what the rule always meant and what is actually provable |
+| 5 | `codex-5` `grok-2` | All three sites to the `:420` wording — `references/why-this-is-hard.md`, `HOW-IT-WORKS.md:417`, `README.md:88`. Whitespace-normalized sweep of live prose returns clean |
+| 6 | `codex-6` | The rationale now reads "execution evidence **and** a second opinion that was not handed the report — **both, not either**" |
+| 7 | `codex-7` | `README.md:47-51` and `HOW-IT-WORKS.md` both now say the *list* stays out, overlap is normal and declared, and **independence is the adjudicator's ruling, not the author's**. The "tells you which ones really were kept out" sentence is replaced with the search-and-report obligation and the "no line found — unverified" wording |
+| 8 | `codex-8` | §10's three unconditional bullets are now branched on "reviewer with a filesystem" / "without one", matching the continue bullet that was already scoped |
+| 9 | `codex-9` `grok-1` | The `deny: ["Edit(**)"]` + narrow-allow snippet is **removed**. In its place: a plain statement that an allowlist is not expressible with these rules, the docs' own sentence quoted, a snippet that denies the paths worth protecting, and a pointer to the sandbox for a real boundary. This also disposes of `CNV-R5-3` — the replacement is plain `json` with no comments, so JSONC legality no longer matters |
+| 10 | `codex-10` `grok-5` | Lever 1 no longer states the architecture claim. It now says what may be stated is *how the work was authored*, and that whether architecture difference is among the payoffs depends on both identities — **"take it from `prompt-template.md`'s four branches, which are the authority"** |
+| 11 | `codex-11` `grok-6` | The same-family branch now hands the reviewer the uncertainty instead of the assertion: *"Whether same-family reviewers share an author's blind spots has not been measured … treat it as an open risk rather than a finding."* The author-facing paragraph was reworded to describe the two retired phrasings without reproducing them — see the note below |
+| 12 | `codex-12` | `HOW-IT-WORKS.md:48` keeps "everything is a file on disk" and adds the one real exception, naming the residual-doubts hand-off and what its loss costs |
+| 13 | `codex-13` | The "you see it before it happens" guarantee is gone. The README now states that `allowed-tools` **grants and does not restrict**, and that `acceptEdits`, auto/bypass, or a matching allow rule will let those writes through unseen |
+| 14 | `grok-4` | The cover-note no-filesystem variant carries the continue instruction, **with the reason it is duplicated there**: §10 sits below the cut and this variant does not |
+| 15 | `grok-7` | Both why-file headers replaced. Neither claims to contain no instructions; both now declare themselves **subordinate — "where they differ, this file is the stale one"** |
+| 16 | `A-1` | Both `<invariants>` blocks now state the 25,000-token shared budget, that an older skill can be dropped **entirely**, and the instruction to re-invoke after a compaction. The cut figures were also moved off the disputed estimates onto conservative round numbers (~195 adjudication, ~205 prompt) |
+| 17 | `A-3` | New validator check `check_invariant_backrefs` — every `§N` cited in an `<invariants>` block must name a section that exists. Faithfulness of a summary is not mechanically checkable; a dangling pointer is, and it is the cheap half of the same defect |
+| 18 | `P-2` `Q-3(a)` | The cover-note template's several-reviewers rule now covers **"or one range split across briefs"**, makes reviewer-suffixed paths non-optional when runs may overlap in time, and requires each cover note to name the brief it belongs to and the reviewer it is for — so a mis-paste is visible in the first line rather than after the run |
+| 19 | `P-4` | New validator check `check_retired_wordings` — a table of retired rule wordings matched against **whitespace-normalized** live prose, so a rule that wraps across a line break is still caught. Scoped to `skills/**`, `README.md`, `HOW-IT-WORKS.md`; the ledger, the external reports and `examples/` legitimately quote retired wording as history |
+
+**The new check earned its place immediately, on this session's own work.** `check_retired_wordings`
+failed the first run: the rewritten history paragraph in `prompt-template.md` quoted both retired
+same-family phrasings verbatim — inside the file that *is* the emit authority, which is exactly the
+`X-2` shape. The paragraph now describes the two versions instead of reproducing them, and carries
+a line saying the validator fails the build if either is restored. **A fix for a defect reintroduced
+that defect one file away, and the mechanical check caught it where four rounds of reading had
+not.** That is the strongest evidence in this round for `B-3`'s claim about what the validator buys.
+
+**Validator state after execution:** `All 12 checks pass (5 warning(s))`. The three table-pipe
+warnings are pre-existing and unrepairable in closed rounds. **Two `install` warnings are new and
+correct:** both `skills/` directories now differ from the installed copies at `~/.claude/skills/`,
+which is the version actually executed at runtime. Syncing them is outside this repository and
+outside the §R5.14 authorization; it is `Q-4` below.
+
+**`grok-9`(b) is disposed of by Q-1(c) rather than left open.** The gate margin was the concern; the
+margin improved from one line to three, in the direction the finding wanted, without raising the
+limit. It is not `ACCEPTED AS-IS` — nothing was accepted, the pressure was reduced.
+
+## R5.16 — Prepared but not executed: the Grok re-run (`Q-2`(a), `P-1`)
+
+The owner's `Q-2` answer was to re-run the Grok half now. **This session cannot do it** — it needs
+a Grok session the owner starts. What is ready:
+
+- **The brief** `EXTERNAL-REVIEW-5-PROMPT-GROK.md` exists, is unread by any reviewer, and pins
+  `0d65b51..d411d1e`. **It is now stale in one respect:** the fixes above moved the working tree
+  past `d411d1e`, so a re-run against that pin audits the pre-fix state. That is still the right
+  target for the validator, the ledger and the corpus — none of which this round's fixes touched
+  except `scripts/validate.py`, which gained two checks. **The brief should be re-pinned to the
+  post-fix commit and its `scripts/validate.py` claims updated to name twelve checks, not ten.**
+- **The cover note** `EXTERNAL-REVIEW-5-COVER-NOTE-GROK.md` exists and is correct. It is the file
+  that was not pasted. Per item 18 it should now also name its brief in the first line.
+- **The collision cannot recur** as it did: the report path in that note is
+  `EXTERNAL-REVIEW-5-GROK.md`, which is now occupied by the recovered report. A re-run must be given
+  a fresh path — `EXTERNAL-REVIEW-6-GROK.md` — under invariant 6's take-the-next-free-name rule.
+
+## R5.17 — Round 5 status: OPEN
+
+**Changed since §R5.13.** All nineteen `FIX NOW` items are executed and backfilled; `Q-1` and `Q-3`
+are answered and executed; `CNV-R5-3` is disposed of by item 9. What remains open:
+
+- **`P-1` / `grok-8` / `CNV-R5-7` — the Grok half is still unaudited.** `Q-2`(a) is answered but not
+  executed, and §R5.16 says what a re-run now needs. **This is the one thing blocking closure.**
+- **`CNV-R5-1`** — the residual-doubts hand-off has not arrived, so no finding in this round is
+  scored as independent corroboration.
+- **`CNV-R5-2`, `-4`, `-5`, `-6`** — open `VERIFY` items, all non-blocking, each naming its check.
+- **`Q-4`, new:** the installed skills at `~/.claude/skills/` are now behind this repository, so the
+  version the owner actually runs does not contain any of these nineteen fixes. Sync them, or
+  decide deliberately not to. Outside the §R5.14 authorization, so not done.
+
+**Nothing here establishes that the work is complete, correct, or ready to ship.** It establishes
+that 22 findings were adjudicated, 21 confirmed in whole or part, nineteen fixes executed and
+verified, and that the round's own independence design failed in a way §R5.16 is meant to stop
+recurring.
+
+## R5.18 — `CNV-R5-1` closed: the author's residual doubts, ruled
+
+The hand-off was supplied by the owner 2026-08-22 and is quoted into the record below. **Five
+doubts. Presence claims accepted; every absence claim re-verified by this session**, per §5 — an
+author cannot certify absence in a document they wrote, and only absence has ever failed here.
+
+**Verification method.** Each doubt's own identifiers were used as queries against all four files
+(both briefs, both cover notes), **whitespace-normalized before matching** — the `P-4` lesson, since
+a line-oriented search already produced one wrong result this round.
+
+| Doubt | Author's claim | This session's search | Ruling |
+|---|---|---|---|
+| D1 — the restructure relocated more than `X-1` | present in the Codex brief; absent from the Grok brief | `relocated` CODEX:60,211 + CN-CODEX:15 · `moved into a reference file unchanged` CODEX:59,112,115 · `re-read on the way out` CODEX:61,183 · **`actually an instruction` CODEX:116** · `four reference files` **NO LINE FOUND** | **PRESENT — confirmed.** The author's "no line found" for the *specific* framing (which four went unchecked) is also confirmed |
+| D2 — nobody has run either skill since `Write` was dropped | present in the Codex brief | `run one since` CODEX:8,43,46 · `still work end to end` CODEX:42,63,160 · `permission stop` CODEX:170,180 | **PRESENT — confirmed** |
+| D3 — the digest silently ignores uncommitted corpus edits | present in the **Grok** brief only | `silently miss` GROK:127 · `uncommitted` GROK:128 · `stated cost` GROK:128,129,277 | **PRESENT in the Grok brief — confirmed. But see below: that brief reached no reviewer** |
+| D4 — the cut lines are a back-computed rate, not a measurement | present in the Codex brief | `measured ~3.1` CODEX:127,190 · `back-computed` CODEX:128 · `tokenize these files` CODEX:128,243 | **PRESENT — confirmed** |
+| D5 — the validator's ten checks are the ten that were hand-run | present in the **Grok** brief only | `right ten` GROK:106,119,161 · `happened to hand-run` GROK:85,119,157 · `eleventh check` GROK:121 | **PRESENT in the Grok brief — confirmed. Same caveat as D3** |
+
+**The hand-off is accurate on every claim it could check, and wrong on one it could not.** Its
+closing note states that round 5 was a split audit with non-overlapping claim lists, and advises
+that agreement between the two reports is therefore *worth more* than round 4's. **That is false in
+fact and the advice must be rejected** — `P-1` establishes that the Codex cover note was pasted
+into the Grok session, so both reviewers worked the Codex brief. The authoring session could not
+have known this; it wrote the hand-off before the runs. It is recorded here because it is the
+cleanest demonstration in this ledger of why §5 makes the leakage ruling the adjudicator's and not
+the hand-off's: **the author was honest, careful, and wrong, and only the adjudicator had the
+evidence.**
+
+**Two consequences follow, and they run in opposite directions.**
+
+1. **D3 and D5 were never delivered to anyone.** They live only in `EXTERNAL-REVIEW-5-PROMPT-GROK.md`,
+   which no reviewer read. They seeded nothing in round 5 and remain **unspent**. Both are now live
+   in round 6 — brief claims 14 and 13 restate them — so a round-6 finding landing on either is a
+   directed echo, not a discovery. **The round-6 adjudicator must know this.**
+2. **D1, D2 and D4 seeded *both* reviewers, not just Codex.** The hand-off scoped them to the Codex
+   brief, which was correct as written and wrong in effect, because both sessions read that brief.
+
+**One finding is downgraded.** `grok-7` (the why-files' false "nothing here is an instruction"
+header) was scored **free** in §R5.3. Codex brief `:116` asks *"Is there anything in a reference
+file that is actually an instruction, and so is now outside the file the agent reads?"* — which is
+D1's sub-question, in the brief Grok actually read. Grok's own unseeded-pass note conceded the
+seeded half and claimed only the *disclaimer* as extra, which is the more honest reading and the
+one adopted here.
+
+**Revised round-5 tally, superseding the count in §R5.3:** **19 echoes · 1 partial (`grok-7`) ·
+2 free (`grok-8`, and the `529/587` half of `grok-9`).** The prediction recorded when the doubts
+were requested — that they could only reduce the free count, never raise it — held exactly.
+
+**`CNV-R5-1` is closed.** No finding in round 5 is scored as independent corroboration on the
+strength of a doubt, and the two remaining free findings are free on this session's own ruling
+rather than the author's.
+
+# Round 6 — the unaudited half: validator, ledger, calibration instrument — adjudicated 2026-08-22
+
+**Reports found:** the `*EXTERNAL*` census returns nine report-family files (excluding `*PROMPT*` and
+`*COVER-NOTE*`). `EXTERNAL-REVIEW.md`, `-2`, `-3`, `-4`, `-4-GROK` — *adjudicated in rounds 1–4*.
+`EXTERNAL-REVIEW-5-GROK-VOID.md` — *not adjudicated as a round; its two live findings were taken into
+§R4.14 as `X-1`/`X-2`*. `EXTERNAL-REVIEW-5-CODEX.md`, `EXTERNAL-REVIEW-5-GROK.md` — *adjudicated in
+round 5*. **`EXTERNAL-REVIEW-6-GROK.md` — adjudicated here, and it is the only report this round
+rules on.**
+
+**Review:** `EXTERNAL-REVIEW-6-GROK.md`. Envelope honoured — it wrote only its report and mutated
+only under `/tmp`; nothing else in the repository is modified attributable to it, and it left no
+`__pycache__` in the corpus.
+
+**Reviewer identity — established, not inferred from the report.** xAI Grok 4.6, Grok Build TUI, run
+headless as `grok --prompt-file … --model grok-4.6 --reasoning-effort high --permission-mode
+acceptEdits`. Taken from the operator hand-off `ROUND-6-HANDOFF.md` and the round-4/round-5 ledger
+headers. The report's own identity line at `:2` is consistent with that and was **not** the source.
+
+**Brief:** `EXTERNAL-REVIEW-6-PROMPT-GROK.md`. **Cover note:** `EXTERNAL-REVIEW-6-COVER-NOTE-GROK.md`.
+
+**Adjudicated:** 2026-08-22, by this session.
+
+**Report state: complete.** Coverage line at `:10`, strict closing rank with no ties, a
+`## Mutation results` table, an unseeded-pass section, a claims-examined list, a could-not-verify
+list, and a disagreements section — every section the brief's §9 structure requires.
+
+**Reviewer isolation:** **clean, and better than any prior round.** No parallel reviewer. The run was
+rooted at a disposable copy at `/private/tmp/r6/audit`, not this working tree. No other round-6
+report existed for it to read. `ROUND-6-HANDOFF.md` §3 — the residual-doubts list — was written
+while the run was in flight and lives only in this repository, which that session could not reach;
+it therefore leaked nothing. What it *could* read was the whole repository as of `c62ca24`,
+including every prior ledger round, which is by design and is why §5 of the brief exists.
+
+**Reviewer calibration: PASS**, run 2026-08-22, expires 2026-09-21, corpus digest `775e1cc8c43f`,
+from `.adversarial-review/calibration/grok-4.6-high.md`. **Recomputed with the record's own command,
+unmodified:**
+
+```
+$ git ls-files -z calibration/cases calibration/CALIBRATION-PROMPT.md calibration/ANSWER-KEY.md \
+    | sort -z | xargs -0 shasum | shasum | cut -c1-12
+775e1cc8c43f
+```
+
+**Matches.** Identity key is complete this round for the first time — family, product, version *and*
+effort are all operator-established rather than asserted. The record's own caveat still applies and
+is carried forward: this model read `calibration/ANSWER-KEY.md` in a prior session, so the PASS is
+sound for detection capability and discounted where the question is priming.
+
+**Workload gap.** The record was earned on **6 cases, 17 files, 315 lines total; per case 40–63 lines
+across 2–3 files.** This review covered **`scripts/validate.py` 354 lines, `REVIEW-ADJUDICATION.md`
+4,101 lines, `BACKLOG.md` 123, `calibration/README.md` 163, `calibration/record-template.md` 81, the
+answer key and six case directories, two filed records and six run reports (500 lines)** — on the
+order of **5,000 lines, roughly sixteen times** the size the pass was earned on. That bounds what its
+*silence* closes and nothing else; its findings are ruled at the usual standard.
+
+**Author's residual doubts: on disk this round, which is not normal.** `ROUND-6-HANDOFF.md` §3,
+pre-registered by the brief's author before the run. Per-doubt leakage ruled in §R6.3. No hand-off
+had to be requested from the owner.
+
+**Independence — read this before weighing anything below.** **The brief was written by the previous
+adjudicator, not by `adversarial-review-prompt`.** All 20 load-bearing claims were chosen by the
+session that had just written the code under audit, and three of them are defects that session found
+in its own work (claims 2, 7 and 19). **The echo discount is therefore near-total on the directed
+list.** Round 6's independent evidence is its unseeded pass (`g6-11`, `g6-14`), the inversion inside
+`g6-2`, the PyYAML half of `g6-13`, and the mutation table — which is measurement rather than
+argument, and which this session re-ran from scratch rather than reading.
+
+**Upheld claims:** 20 listed · **20 sampled** · **6 re-opened** as `U6-1`…`U6-6`.
+
+**Findings in: 15 · Rows out: 15 · +1 process (`g6-15`, numbered inside the ranked list — not added again), +6 CNV, +5 prior-review disagreements ruled, +6 re-opened upheld claims, +7 adjudicator findings, +5 corrections to earlier rounds**
+
+*Header note, and it is a defect in this skill's own grammar — see `A6-7`.* The reviewer numbered its
+process finding **inside** the ranked list as finding 15, so it is one of the fifteen numbered rows
+and is **not** added again to the total; the `+1 process` is a classification, not an extra count.
+And the skill's header formula has **no slot at all** for adjudicator-raised findings, which is why
+`+7 adjudicator findings` had to be invented here, exactly as round 5 had to leave `A-1`…`A-3` and
+`C-5`/`C-6` out of its own header.
+
+## R6.1 — Situation in one paragraph
+
+Rounds 1–5 audited the two skills' prose. `scripts/validate.py`, `REVIEW-ADJUDICATION.md` and
+`calibration/**` had never been read by any external reviewer — a round-5 brief for exactly this half
+was written and, through the cover-note mis-paste recorded at `P-1`, never reached one. Round 6 is
+the execution of that brief. It came back with 15 findings (4 high, 8 medium, 3 low), 51 mutation
+probes against a copy of the repository, and 20 of 20 claims engaged. **This session re-ran the
+mutation work from scratch rather than reading the reviewer's table**, and every finding below is
+ruled on evidence produced here.
+
+## R6.2 — Re-verification performed before accepting anything
+
+All work in a disposable copy at the session scratchpad; the repository was never mutated. Baseline
+on the copy reproduced the reviewer's exactly: `All 12 checks pass (5 warning(s))`, exit 0.
+
+**Expectations were written before any check ran** and are on file in the session scratchpad. They
+were correct on mechanism for all fifteen findings, and wrong in two places that changed a ruling:
+`g6-5`'s claim about the three live warnings (I recorded it as uncertain and had to compute all
+three, not the one the reviewer showed), and `g6-10` (I expected a clean confirm; the X-series
+comparison turned out not to hold — see the row).
+
+**RV-1 — `g6-1`, does `check_counts` count anything.** Dropped the round-5 `grok-9` ruling row and
+left the header at 22/22:
+
+```
+=== g6-1a-fixed drop the round-5 grok-9 ruling row (line 3876), header stays 22/22 === exit=0
+    All 12 checks pass (5 warning(s))
+```
+
+Then, harder than the reviewer went — dropped **five** consecutive ruling rows, header untouched:
+
+```
+dropping: | grok-1 | README permission snippet denies every write, inc
+dropping: | grok-2 | `FIX LATER` defect repaired in one site, left liv
+dropping: | grok-3 | Restructure put history above the cut and operati
+dropping: | grok-4 | No-filesystem **cover-note** variant omits the co
+dropping: | grok-5 | A third copy of the unconditional architecture cl
+=== g6-1c drop FIVE round-5 ruling rows, header stays 22/22 === exit=0
+    All 12 checks pass (5 warning(s))
+```
+
+Complement, to establish the check is not dead:
+
+```
+=== g6-1b header 22 vs 21 (complement) === exit=1
+    ERROR counts: REVIEW-ADJUDICATION.md states 22 findings in but 21 rows out
+```
+
+**RV-2 — `g6-2`, what the digest actually does.** In a copy, Python `corpus_digest()` and the
+template's shell command side by side:
+
+```
+=== 1. clean ===                                          py 775e1cc8c43f   sh 775e1cc8c43f
+=== 2. UNCOMMITTED edit of a TRACKED corpus file ===       py cc228dfe98a3   sh cc228dfe98a3
+=== 3. restore ===                                        py 775e1cc8c43f   sh 775e1cc8c43f
+=== 4. UNTRACKED new case file under calibration/cases/ == py 775e1cc8c43f   sh 775e1cc8c43f
+=== 5. UNCOMMITTED edit of a tracked CASE file ===         py 7d358e86ee05   sh 7d358e86ee05
+```
+
+`cc228dfe98a3` reproduces the reviewer's figure exactly. Against that, the operator-facing text:
+
+- `calibration/record-template.md:38-39` — *"a case edited but not committed does not change the digest"*
+- `calibration/README.md:135` — *"an uncommitted corpus edit will not register"*
+
+Both are false for a tracked file and true only for a never-added one. Case 5 is the literal
+counter-example to the template's own sentence.
+
+**RV-3 — `g6-3`, what the backref check can and cannot see.**
+
+```
+=== g6-3a backref (SS7)->(SS3), section exists === exit=0   All 12 checks pass
+=== g6-3b backref (SS99) dangling         === exit=1   ERROR backref: ... cite §99, which has no section
+=== g6-3c remove entire <invariants> block === exit=0   All 12 checks pass
+```
+
+**RV-4 — `g6-4`, whether a stale record fails the run.**
+
+```
+=== g6-4 calibration digest deadbeefdead === exit=0
+    All 12 checks pass (6 warning(s))
+```
+
+And structurally, not just empirically:
+
+```
+$ sed -n '226,245p' scripts/validate.py | grep -c 'err('
+0
+```
+
+`check_calibration_digests` contains **no `err()` call on any path.** It cannot fail.
+
+**RV-5 — `g6-5`, and the three live warnings, computed for all three rather than one.**
+
+```
+:422   raw|=10  escaped=4  unescaped=6  cells=5   header :420 pipes=6 cells=5   -> renders correctly
+:1465  raw|=9   escaped=4  unescaped=5  cells=4   header :1463 pipes=5 cells=4  -> renders correctly
+:1473  raw|=6   escaped=1  unescaped=5  cells=4   header :1463 pipes=5 cells=4  -> renders correctly
+```
+
+All three carry `\|` — the correct GFM escape — inside code spans. The reviewer showed the arithmetic
+for `:422` only; the other two hold. Then the current-round behaviour, valid work against real defect:
+
+```
+=== g6-5a VALID GFM escaped pipe in a current-round row === exit=1
+    ERROR table: ...:4156 has 1 unescaped pipe(s) inside inline code
+=== g6-5b genuinely UNescaped pipe in a current-round row === exit=1
+    ERROR table: ...:4156 has 1 unescaped pipe(s) inside inline code
+```
+
+**Identical message for correct work and for the defect.** This ledger section is written under that
+constraint: no pipe of any kind appears inside inline code in the round-6 rows, because both spellings
+fail the build.
+
+**RV-6 — `g6-6`, closed-round invisibility.**
+
+```
+=== g6-6a verdict-without-disposition planted in the closed round-4 prefix === exit=0
+=== g6-6c illegal CONFIRMED + forbidden-disposition planted in closed round-3 === exit=0
+=== g6-6d round-2 header count vandalised to "Rows out: 99" === exit=0
+```
+
+All three silent. And the prefix-integrity claim, verified independently with git rather than by
+`head | diff`:
+
+```
+$ git show 2565c08:REVIEW-ADJUDICATION.md | wc -l
+    3623
+$ head -c 299772 REVIEW-ADJUDICATION.md | cmp - <(git show 2565c08:REVIEW-ADJUDICATION.md)
+(silent)
+```
+
+The first 299,772 bytes of the working-tree ledger are byte-identical to the committed blob. That is
+true, and nothing mechanical establishes it — the proof is a human command, which is the finding.
+
+**RV-7 — `g6-7`, what the retired-wordings check catches.** Seven probes against a copy:
+
+```
+verbatim phrase in README.md .................... exit=1  ERROR retired  (CAUGHT)
+same phrase wrapped across a line break ......... exit=1  ERROR retired  (CAUGHT — the P-4 fix works)
+same phrase with *emphasis* inside it ........... exit=0  All 12 checks pass  (SILENT)
+same phrase with inline-code markup inside it ... exit=0  All 12 checks pass  (SILENT)
+same rule restated in different words ........... exit=0  All 12 checks pass  (SILENT)
+verbatim phrase in BACKLOG.md ................... exit=0  All 12 checks pass  (SILENT — outside the glob)
+verbatim phrase in calibration/README.md ........ exit=0  All 12 checks pass  (SILENT — outside the glob)
+```
+
+**RV-8 — `g6-8`, whether shipped-program behaviour changed.** The two functions at `HEAD`:
+
+```
+$ git show 2565c08:scripts/validate.py | grep -cE 'def check_retired_wordings|def check_invariant_backrefs'
+0
+$ git show 2565c08:scripts/validate.py | grep -c '^def check_'
+10
+$ grep -c '^def check_' scripts/validate.py
+12
+```
+
+Then both validators on **one identical tree** carrying a retired wording:
+
+```
+--- OLD validator (2565c08) --- exit=0   All 10 checks pass (5 warning(s))
+--- NEW validator (round 5) --- exit=1   ERROR retired: README.md still carries a retired wording
+```
+
+**RV-9 — `g6-12`, the row-shape model, all three directions.**
+
+```
+unbolded CONFIRMED, no disposition, current round .......... exit=0  (SILENT — false negative)
+bolded   CONFIRMED, no disposition, current round .......... exit=1  ERROR two-axes  (control)
+non-ruling row citing **CONFIRMED** in its notes ........... exit=1  ERROR two-axes  (FALSE POSITIVE)
+legal FIX NOW row whose notes name the forbidden pairing ... exit=1  ERROR disposition (FALSE POSITIVE)
+```
+
+**RV-10 — `g6-13`, the count and the skip.**
+
+```
+$ python3 scripts/validate.py --list | wc -l
+      13
+$ python3 scripts/validate.py | tail -1
+All 12 checks pass (5 warning(s))
+$ PYTHONPATH=<dir with a yaml.py that raises ImportError> python3 scripts/validate.py
+WARN  frontmatter: PyYAML not installed - skipped
+All 12 checks pass (6 warning(s))          exit=0
+```
+
+And the load-bearing half, which the reviewer asserted and did not demonstrate — a real `Write` grant
+planted in `allowed-tools` as a proper YAML list item:
+
+```
+--- WITH PyYAML present --- exit=1
+ERROR permissions: skills/review-adjudication/SKILL.md pre-approves write-capable tool(s) ['Write']
+--- WITH PyYAML absent  --- exit=0
+All 12 checks pass (6 warning(s))
+```
+
+The security boundary the check exists for is silently unenforced whenever PyYAML is missing, and the
+run still certifies itself.
+
+**RV-11 — `g6-11`, the free finding, from primary sources.**
+
+```
+$ ls skills/adversarial-review-prompt/references/
+cover-note-template.md   prompt-template.md   why-this-is-hard.md
+$ grep -rn 'example-audit-prompt' skills/
+skills/adversarial-review-prompt/SKILL.md:30   `example-audit-prompt.md` for a worked brief
+skills/adversarial-review-prompt/SKILL.md:256  may be present at `references/example-audit-prompt.md` (named, deliberately not linked —
+```
+
+Line 30 is inside the invariants block, above the stated ~205 cut, and names the file flatly. Line
+256 is below the cut and carries the qualifier that makes it harmless. **What this session added that
+the report did not:** the same filename was round 3's `R3-F10`, whose fix was *"de-link the filename
+to plain text, keeping the prose"* — accepted because *"`SKILL.md:220-224` handles absence
+explicitly, so no instruction fails"* (`REVIEW-ADJUDICATION.md:2198`). Round 5's `A-2` measurement
+table at `:3764` **itself lists** `example-audit-prompt.md :251` as below the cut. Round 5's fix then
+hoisted that name above the cut **without** the optionality prose that was the entire basis of
+`R3-F10`'s partial refutation. This is a regression of a closed finding's rationale, created by the
+remedy for `A-2`.
+
+**RV-12 — `g6-14`, the free finding, three sites read.** `:3928` still carries
+`COULD NOT DETERMINE` / `VERIFY — write a commented settings file and start Claude Code.`
+Queue item 9 at `:4037` says *"This also disposes of `CNV-R5-3` — the replacement is plain `json`
+with no comments"*. `§R5.17` at `:4087` repeats it. And the underlying fact checks out:
+
+```
+$ grep -n 'jsonc' README.md
+(no output)
+```
+
+The question really is moot; the row still says it is open.
+
+**RV-13 — the reviewer's numbers.** Every reproducible figure reproduces **exactly**:
+
+| Reviewer's figure | Reproduced here |
+|---|---|
+| ledger prefix 3623 lines, exact byte prefix of HEAD | yes, `cmp` silent over 299,772 bytes |
+| corpus digest `775e1cc8c43f`, and `cc228dfe98a3` after an answer-key edit | yes, both, Python and shell agreeing |
+| 19 tracked paths in the digest | yes |
+| `review-adjudication/SKILL.md` 497 split-lines / 496 `wc -l` | yes |
+| six calibration run reports total 500 lines | yes |
+| round-5 table: 22 rows, 13 Codex + 9 Grok | yes |
+| `D-1`…`D-8` eight, `U-1`…`U-4` four, `A-1`…`A-3` three | yes |
+| `--list` 13 lines, run says 12 | yes |
+| baseline `All 12 checks pass (5 warning(s))` | yes |
+| `git diff --stat 2565c08..c62ca24` = 13 files, +1144, −95 | **reconciles exactly** — see below |
+
+The diff figure needs one step, and the step is itself a result. The working tree gives 13 files and
+−95 deletions immediately, but **+1196** insertions. The 52-line surplus is precisely `§R5.18`, which
+is 52 lines and was appended to this ledger **after** `c62ca24` was snapshotted (4153 − 4101 = 52).
+`1196 − 52 = 1144`. **So the reviewer never saw `§R5.18`**, and its silence about `CNV-R5-1`, about
+the revised round-5 echo tally, and about the D3/D5 delivery failure closes nothing. Verified that
+`§R5.18` does not mention `CNV-R5-3`, so `g6-14` is unaffected by it.
+
+A reviewer whose every checkable figure reproduces to the digit has earned weight on the figures that
+cannot be rechecked here — the 51-probe count and the second-location digest reproduction under
+`/tmp`. Those are accepted as reported.
+
+**RV-14 — two items the reviewer left in its mutation table and gave no numbered finding.** Both are
+real and are ruled below as `A6-3` and `A6-4`:
+
+```
+=== valid titled markdown link  ](why-this-is-hard.md "background") === exit=1
+    ERROR links: ... -> references/why-this-is-hard.md "background" does not resolve
+=== allowed-tools written as a YAML string including Write        === exit=0
+    All 12 checks pass (5 warning(s))
+```
+
+The second is silent **with PyYAML present** — a strictly worse gap than `g6-13`'s.
+
+**RV-15 — the live illegal pairings nobody has seen.** Ran the current round's three strict checks
+over the **closed** prefix, which the shipping validator never does:
+
+```
+DISP  | R3-P3 | An unscoped review buys independence and sells coverage ...
+DISP  | R3-P4 | Three of the reviewer's citations do not resolve as given ...
+AXES  | **Verdict** | **CONFIRMED** — by execution, both digests reproduced above. |
+
+If strict checks ran over the CLOSED prefix today: 1 two-axes hit, 2 disposition hits
+```
+
+Cell by cell, `:2383` and `:2384` are verdict `**CONFIRMED**` with the forbidden disposition in the
+disposition column — **two live illegal pairings sitting in round 3, invisible to the validator.**
+`:2595` is a two-cell vertical detail block whose disposition is on its own row at `:2597`; that one
+is a genuine false positive of the row-shape model. See `A6-6`, which this session raises and which
+changes how `g6-6`, `g6-10` and `g6-12` read.
+
+**RV-16 — `g6-15`, the envelope.** Diffed the permission axes of brief and cover note. Report path,
+write scope, repository read scope and `/tmp` mutation all agree exactly. `EXTERNAL-REVIEW-6-PROMPT-GROK.md:236`
+carries a **Network** row granting web search; the cover note has no network statement of any kind.
+
+**RV-17 — working state.** `git status` at the end of this session shows the same eleven modified and
+six untracked files it showed at the start, plus this ledger's round-6 append and this round's
+untracked artifacts. No file under `skills/`, `scripts/`, `calibration/` or `.adversarial-review/` was
+written. Every mutation ran in the session scratchpad.
+
+## R6.3 — Echo audit: what this report is worth
+
+**The brief was written by the previous adjudicator**, so the directed list is not an independent
+instrument. Each finding was probed against the brief and the cover note using **that finding's own
+identifiers**, not a paraphrase. Query and result below; `no line found` means the identifier appears
+nowhere in either document.
+
+| Finding | Query that hit, or `no line found` | Score |
+|---|---|---|
+| `g6-1` | `check_counts` BRIEF:146 · `count-in equals count-out` BRIEF:146, which then says *"It compares two numbers the author wrote in the same header. Does it check anything about reality?"* | **echo** |
+| `g6-2` | `silently miss` BRIEF:159 · `ls-files` BRIEF:158 · and round-5 doubt `D3` restated as claim 14 | **partial** — see note |
+| `g6-3` | `check_invariant_backrefs` BRIEF:134 · `ever fail on this repository` BRIEF:135 · `opened a new path` BRIEF:207 | **echo** |
+| `g6-4` | `twelve checks fail` BRIEF:113 · `silent check` BRIEF:115 · round-5 doubt `D5` restated as claim 13 | **echo** |
+| `g6-5` | `check_table_pipes` BRIEF:148 · `escaped pipe` BRIEF:122,148,150 · `three warnings` BRIEF:150 | **echo** |
+| `g6-6` | `last_round` BRIEF:142 · `permanently invisible` BRIEF:144 · `closed rounds are immutable` BRIEF:143 | **echo** |
+| `g6-7` | `check_retired_wordings` BRIEF:118,124,130 · `emphasis marker` BRIEF:127 · `restated in different words` BRIEF:128 · hand-off doubt 2 | **echo** |
+| `g6-8` | `no behaviour changed` BRIEF:186 · `gained two checks` BRIEF:187 — the brief asks the question in those words | **echo** |
+| `g6-9` | `9/9` BRIEF:53,113,219 and **COVER:30** · `break-test` COVER:30,32, which states the defect outright | **echo** |
+| `g6-10` | `P-3` BRIEF:172,173 · `withdraw` BRIEF:172,173,174 · the X-series comparison is set up at BRIEF:174-176 | **echo** |
+| `g6-11` | `example-audit-prompt` **no line found** · `Supporting files` **no line found** · `index` **no line found** | **FREE** |
+| `g6-12` | `is_ruling_row` BRIEF:140 · `misclassif` BRIEF:141 · `bolded verdict` BRIEF:141 | **echo** |
+| `g6-13` | `thirteen` BRIEF:137 (13-vs-12 half) · `PyYAML` **no line found** · `frontmatter` **no line found** | **partial** |
+| `g6-14` | `CNV-R5-3` **no line found** · `jsonc` **no line found** | **FREE** |
+| `g6-15` | `contradict` BRIEF:290, COVER:57 — directed to *look* for a contradiction · `Network` BRIEF:236 only, `web search` BRIEF:236 only — the axis itself is not named as suspect | **partial** |
+
+**Tally: 10 echoes · 3 partial · 2 free, of 15.**
+
+**Why `g6-2` is partial rather than a pure echo, and it matters.** Brief claim 14 and round-5 doubt
+`D3` both assert that the digest *"silently ignores uncommitted corpus edits"*. **That premise is
+false**, and RV-2 shows it: an uncommitted edit of a tracked file moves the digest. The reviewer was
+pointed at the site and returned the **inverse** of what it was told to expect — that the
+operator-facing documentation, not the code, is the thing that is wrong. A reviewer that contradicts
+its brief's own premise on a directed claim has done something an echo cannot do. Scored partial for
+that reason, and it is the most valuable of the three partials.
+
+**Why `g6-13` is partial.** The 13-versus-12 half is stated in the brief in those words. The half that
+carries the consequence — that a skipped frontmatter check is counted as a passing check, so a `Write`
+grant goes unenforced — appears nowhere in either document. That half is free.
+
+**Per-doubt ruling on `ROUND-6-HANDOFF.md` §3**, required by §5. The hand-off is the author's, and an
+author cannot certify absence in a document they wrote, so every absence claim was re-searched here:
+
+| Doubt | Where it landed | Ruling |
+|---|---|---|
+| §3.1 — the invariant-1 rewrite is the sharpest exposure | brief claim 19, BRIEF:177-182, verbatim including *"the sharpest question in this brief"* | **PRESENT — confirmed.** Fully directed. `U6-1` re-verifies it from primary sources rather than from the reviewer |
+| §3.2 — `check_retired_wordings` buys less than `§R5.15` claims | brief claim 4, BRIEF:124-129, naming emphasis, footnote, inline code and restatement | **PRESENT — confirmed.** `g6-7` is an echo of it |
+| §3.3 — the why-block compression was not diffed clause by clause | brief claim 20, BRIEF:183-187 | **PRESENT — confirmed.** The reviewer's clearing is inherited as `U6-6` |
+| §3.4 — the reference index pushed content past the cut | resolved before hand-off; not in the brief | **not spent** |
+| §3.5 / §3.6 — round-5 free-count doubt, and `A-1` making the cut-line exercise moot | `A-1` appears at BRIEF nowhere as a claim | **absent — confirmed by search.** Neither seeded anything |
+
+**Round-5 doubts `D3` and `D5` are now brief claims 14 and 13**, ruled at `§R5.18`. A round-6 finding
+landing on the digest's blindness to uncommitted edits, or on *"the checks are the ones that were
+hand-run rather than the right ones"*, is a **directed echo, not a discovery**. `g6-4` is scored as an
+echo on exactly that basis. `g6-2` escapes it only by inverting the premise.
+
+**What the report's weight actually rests on.** Two free findings, one inverted premise, one free
+half, a mutation table this session reproduced independently, and a figure-reproduction record with
+no misses. That is a good report. It is not corroboration of the ten echoes, and none of the ten is
+scored as such — every one of them was re-established here from primary sources.
+
+## R6.4 — Adjudication
+
+Fifteen numbered findings in, fifteen rows out. No merges. Impact in the second column is the
+reviewer's; the verdict and disposition are this session's, on the evidence in §R6.2.
+
+| ID | Finding | Impact | Verdict | Disposition |
+|---|---|---|---|---|
+| g6-1 | `check_counts` compares two numbers the author wrote and never counts rows | high | **CONFIRMED** — RV-1, and worse than reported: five ruling rows can be deleted from the current round with the header untouched and the run still prints its success line. The check is real on its own two fields (complement caught) and blind to the invariant it is named for | **FIX NOW** — count the ruling rows in the current round and compare against the stated rows-out. Roughly six lines, reusing `is_ruling_row` and `table_rows`. Sequence after `g6-12`, whose row-shape defect would make the new count wrong in both directions **✔ executed 2026-08-22** — queue 2 — `check_counts` now counts the current round's numbered finding rows via `count_finding_rows`. Break-tested: dropping one row and dropping five both fail; the header complement still fails |
+| g6-2 | The digest's documented semantics are the opposite of what it does for tracked-file edits | high | **CONFIRMED** — RV-2. Clean `775e1cc8c43f`; after an uncommitted edit of a tracked answer key `cc228dfe98a3`; after an uncommitted edit of a tracked case file `7d358e86ee05`; restore returns the clean value; an untracked new case file moves nothing. Python and shell agree at every step, which also settles claim 12 | **FIX NOW** — rewrite the two operator sentences to describe what the command does: a tracked corpus file edited in the working tree **does** move the digest; only never-added files are invisible. `calibration/record-template.md:38-39` and `calibration/README.md:135`. Prose only, no record is expired by it **✔ executed 2026-08-22** — queue 14 — `record-template.md:38-41` and `calibration/README.md:134-137` now say that a tracked case edited in the working tree **does** move the digest and only a never-added file is invisible |
+| g6-3 | A-3 is marked as executed with a check that cannot detect the defect A-3 named | high | **CONFIRMED** — RV-3. A back-reference redirected to a real but wrong section passes; a `SKILL.md` with no invariants block at all passes; a dangling section number is caught. Queue item 17 asked for re-reading a summary against its section, and existence is a different predicate. The reviewer is also right that this is the shape round 4 already named at `X-1` | **FIX NOW**, two parts, and the second is the honest one. (a) make the backref check error when a `SKILL.md` has no invariants block — three lines, closes the emptiest hole. (b) **record in this round that `A-3` is not closed.** Faithfulness of a summary to its section is not mechanically checkable and round 5 said so; what is wrong is the executed marker, not the absence of a magic check **✔ executed 2026-08-22** — queue 12 + 20 — the backref check now errors when a `SKILL.md` has no invariants block (break-tested). `A-3` is recorded reopened at `C6-2`; summary faithfulness stays unmechanized and is stated as a bound |
+| g6-4 | A stale calibration record does not fail the validator | high | **CONFIRMED** — RV-4, twice over. The planted `deadbeefdead` digest exits 0 under the success line, and structurally the function contains zero `err()` calls on any path, so it cannot fail by construction. `B-3` discloses that *install* is a warning by design and says nothing about this one | **FIX NOW** — promote digest mismatch and a missing digest row from warning to error. Two words. Note the knock-on: `B-3`'s claim that each check was mutated *to confirm it fails* cannot have been true of this check, which is a second defect inside `g6-9` **✔ executed 2026-08-22** — queue 4 — digest mismatch and a missing digest row are `err()` now, not `warn()`. Break-tested: both fail the run, exit 1 |
+| g6-5 | `check_table_pipes` fails correct GFM, and the three live warnings are that false positive | medium | **CONFIRMED** — RV-5, and established for all three live warnings rather than the one the reviewer computed. Every one of `:422`, `:1465`, `:1473` carries backslash-escaped pipes inside code spans and splits into exactly the header's cell count. In the current round, correct work and the real defect produce a byte-identical error message | **FIX NOW** — ignore a pipe preceded by a backslash before counting. One line. Until it lands, a correct current-round row containing a shell pipeline in a code span cannot be written, which constrained the prose of this very section **✔ executed 2026-08-22** — queue 5 — the pipe counter skips a backslash-escaped pipe. Break-tested both ways: valid `\|` passes, a genuinely unescaped pipe still fails. The three live warnings are gone |
+| g6-6 | `last_round` scoping makes two-axes, disposition, and count defects in closed rounds permanently invisible | medium | **CONFIRMED** — RV-6. Verdict-without-disposition, an illegal pairing, and a vandalised round-2 header all pass silently when planted before the last round heading. The immutability argument is sound as a reason not to *fail the build* on unrepairable history; it is not a reason to *not look*. `A6-6` shows this is not hypothetical — there are two live violations in round 3 today | **FIX NOW** — run the strict checks over the whole file and report closed-round violations as warnings rather than not at all. Measured cost on today's ledger is three lines of output, of which two are real. Sequence after `g6-12` **✔ executed 2026-08-22** — queue 3 — the strict ledger checks run over the whole file; closed-round violations warn. Break-tested: planted defects in closed rounds are now visible and still exit 0. Live output is the two round-3 rows |
+| g6-7 | `check_retired_wordings` is silent on emphasis, inline code, and restatement — the failure it was built for | medium | **CONFIRMED** — RV-7, seven probes. Verbatim caught; wrapped across a line break caught, which is the `P-4` fix working exactly as claimed. Emphasis, inline code, restatement, `BACKLOG.md` and `calibration/README.md` all silent | **FIX NOW**, split by what is achievable. (a) strip emphasis markers and backticks before matching — cheap, closes the markup half. (b) add `BACKLOG.md` and `calibration/**` to the live glob — one line, and they are operator prose that a reader will act on. (c) **stop claiming the restatement case is covered.** It is not mechanically closable and the claim is the defect **✔ executed 2026-08-22** — queue 10 + 11 + 16 — emphasis and code markup are stripped before matching, and `BACKLOG.md` plus `calibration/*.md` joined the live glob. All break-tested. The restatement bound is stated in `B-3` rather than claimed closed |
+| g6-8 | Round 5's execution account says no shipped-program behaviour changed, while adding two failing checks to the only shipped program | medium | **CONFIRMED** — RV-8, by execution rather than by reading. On one identical tree the pre-round-5 validator exits 0 with its ten-check success line and the post-round-5 validator exits 1. The sentence is not merely loose: it names `scripts/validate.py` as the only shipped program in the same clause, which forecloses the charitable reading | **FIX NOW** — a correction row in this round recording that the sentence is false, with RV-8 as the evidence. `§R5.15` itself is not edited; round 5's account stays as written and this supersedes it **✔ executed 2026-08-22** — queue 21 — recorded at `C6-1`. `§R5.15` is not edited |
+| g6-9 | `BACKLOG.md` B-3 still asserts ten checks and 9/9 break-tests after two untested checks were added | medium | **CONFIRMED** — read against the registry, which now holds 13 names over 12 functions. **Plus a defect the report did not reach:** `B-3` says each of the ten was *"mutated to confirm it fails when its invariant is broken"* and that the *tenth* is a warning by design. The calibration-digest check is inside `B-3`'s enumerated ten and has no `err()` path at all, so at least two of the ten cannot fail, and 9/9 cannot describe what was done | **FIX NOW** — replace `B-3`'s status paragraph with the measured state: 13 registry names, 12 functions, and this round's mutation results in place of the 9/9 sentence. `B-3` is the discharge record; leaving it overstating coverage is how the next brief inherits a false floor **✔ executed 2026-08-22** — queue 15 — `B-3`'s status paragraph replaced by the measured state (13 names / 12 checks) and the 9/9 sentence replaced by this round's mutation record |
+| g6-10 | P-3 was withdrawn as a row because the matrix forbids a true-but-not-a-defect pairing, unlike round 4's X-series | medium | **CONFIRMED (partial).** The matrix gap is real and `A6-6` shows it has now bitten three separate rounds three different ways. *Unestablished:* that round 4's X-series was an available alternative. `X-1` and `X-2` were **defects** with a legal pairing available; `P-3` was a true non-defect with none. The precedent solves the bookkeeping half and not the blocking half, so the two are not opposite answers to one question | **FIX NOW** — **owner ruled 2026-08-22, option (c); specification at §R6.15.** A new *verdict* term is added rather than a new disposition, because the assumption that every claim alleges a defect lives on the verdict axis. Queue items 23–25 **✔ executed 2026-08-22** — queue 23–25 — owner ruled option (c); `TRUE, NOT A DEFECT` shipped in the skill, the template and the validator. Break-tested legal with the no-fix disposition and still failing without one |
+| g6-11 | The new invariants index names `example-audit-prompt.md`, which does not exist, and no check notices | medium *(free)* | **CONFIRMED** — RV-11, from primary sources, and **strengthened**. Three files in `references/`, no example. The index line above the cut names it flatly; the qualifier that makes it harmless is at `:256`, below the cut. **This is a regression of `R3-F10`**, whose fix was accepted precisely because the optionality prose handled absence — and round 5's `A-2` remedy hoisted the bare name above the cut without it. `check_links` misses it because the index uses a bare filename rather than link syntax | **FIX NOW** — carry the qualifier into the index line, so the surviving prefix reads as a name that ships absent by default rather than as a file to open. One clause, and it preserves what the index was added to do. Shipping the file, or dropping the name, are the two alternatives and both cost more **✔ executed 2026-08-22** — queue 13 — the index line now reads **where it exists — it ships absent by default, so skip it without comment**, so the qualifier survives the cut with the name |
+| g6-12 | Substring matching on the forbidden disposition and on bolded verdicts misclassifies non-ruling table rows | medium | **CONFIRMED** — RV-9, all three directions reproduced: an unbolded verdict with no disposition is silent; a non-ruling row that quotes a bolded verdict in its notes errors; a legally-paired row whose notes discuss the forbidden pairing errors. `A6-6` adds a **live** false positive of the same mechanism at `:2595`, a vertical detail block whose disposition sits on its own row | **FIX NOW** — resolve the verdict and disposition from their **columns** rather than by scanning the whole line, and skip two-cell detail blocks. This is the prerequisite for `g6-1` and `g6-6`; landing those first would multiply the misclassification across the whole file **✔ executed 2026-08-22** — queue 1 — both axes read from their own columns; two-cell detail blocks skipped; an unbolded verdict in the verdict column is now caught. All three directions break-tested, plus a `row_cells` fix so escaped pipes no longer shift columns |
+| g6-13 | `--list` prints 13, success prints 12, and a skipped frontmatter check still counts as a passing check | low | **CONFIRMED** — RV-10, including the half the reviewer asserted without demonstrating. With PyYAML unimportable, a genuine `Write` grant in `allowed-tools` — the write-capable-tool boundary this validator exists to hold — passes silently and the run prints its success line and exits 0. Reviewer-rated low; the security half of it is not low | **FIX NOW** — a check that cannot run must not be counted as passed. Either error on missing PyYAML or drop the skipped function from the ran set so the count tells the truth, and reconcile the registry listing with the run **✔ executed 2026-08-22** — queue 9 — a skipped check is excluded from the pass count and named in the output; `--list` states 13 names over 12 checks. Verified with PyYAML hidden and a `Write` grant planted |
+| g6-14 | `CNV-R5-3` remains an open verify row after §R5.17 says it was disposed | low *(free)* | **CONFIRMED** — RV-12, three sites read, and the underlying fact holds: no `jsonc` fence survives in `README.md`, so the question really is moot. The row at `:3928` still records it as open. Both axes are filled, so the axes check is content; the counts check does not look at auxiliary blocks at all | **FIX NOW** — a superseding row in this round recording `CNV-R5-3` as disposed, citing queue item 9. Round 5's table is not edited **✔ executed 2026-08-22** — queue 22 — recorded at `C6-3`. Round 5's table is not edited |
+| g6-15 | This brief and its cover note do not agree on the network/web-search permission | low *(process)* | **CONFIRMED (partial)** — RV-16. Against invariant 3's literal requirement that every permission agree, this fails: the brief carries a network row, the cover note carries no network statement. *Unestablished as consequential:* the cover note routes the reviewer to the brief on disk in its own text, so the brief governed, and the reviewer reports it did not use the grant. Omission, not collision, and the reviewer ranked it last for that reason | **FIX NOW** — add a network line to the cover-note template's envelope block so the axis cannot be silently dropped. Cheap, and it lands in the file that produced the omission rather than in this one brief **✔ executed 2026-08-22** — queue 18 — the cover-note template's write block now carries a network line either way, and a paragraph requires walking the brief's permission table row by row |
+
+## R6.5 — Process findings
+
+The reviewer raised one process finding and numbered it inside the ranked list, so it is `g6-15`
+above and is not duplicated here. Nothing in the report directs this session to run, skip, read or
+write anything; there is no instruction-shaped content to rule on.
+
+**One process observation this session raises, about this round rather than the report.** The brief
+was authored by the previous adjudicator rather than by `adversarial-review-prompt`. That is recorded
+in the header, disclosed by the brief's own §0 and by the cover note, and is the reason the echo
+discount in §R6.3 is near-total. It is not a defect in the reviewer's work and gets no finding ID; it
+is the single largest limit on what this round establishes, and the next brief must not be written
+the same way.
+
+## R6.6 — Adjudicator findings, from re-verification rather than from the report
+
+Seven. Each carries both axes. None is in the report's numbered set and none is counted in the
+findings-in total.
+
+| # | Finding | Verdict | Disposition |
+|---|---|---|---|
+| A6-1 | **This adjudication ran under the pre-round-5 skill.** `~/.claude/skills/review-adjudication/SKILL.md` is byte-identical to the `2565c08` blob, so the invariants block governing this session is the **old** one — including the unscoped append rule that round 5 rewrote. `Q-4` predicted the exposure; this is it, observed live rather than reasoned about | **CONFIRMED** — `git show 2565c08:skills/review-adjudication/SKILL.md` compared byte-for-byte against the installed copy, silent | **PENDING OWNER** — `Q-4` is explicitly outside this round's scope per the owner. Blocks nothing here; recorded so the next session knows which text was in force |
+| A6-2 | The calibration record's exposure caveat points the reader at `BACKLOG.md` `B-1` for the private-replacement remedy. `B-1` is the corpus-drift gate; **private replacement traps are `B-2`** | **CONFIRMED** — `BACKLOG.md:9` and `:38` read directly. The reviewer noticed this under claim 17 and chose not to rank it | **FIX NOW** — one character in `.adversarial-review/calibration/grok-4.6-high.md`. A wrong pointer in a filed record is the kind of thing that survives for rounds **✔ executed 2026-08-22** — queue 17 — the record now points at `B-2` |
+| A6-3 | A **valid titled markdown link** — link syntax with a quoted title, which is legal CommonMark — is reported as unresolvable by `check_links`. A false positive on correct work, contract item 2 | **CONFIRMED** — RV-14. The capture group runs to the closing parenthesis and swallows the quoted title into the path | **FIX NOW** — strip a trailing quoted title before resolving. The reviewer left this in its mutation table with no numbered finding, which is why it is here rather than in `§R6.4` **✔ executed 2026-08-22** — queue 6 — a quoted title is no longer swallowed into the path. Break-tested both ways |
+| A6-4 | `allowed-tools` written as a **YAML string** rather than a list defeats the write-capable-tool check completely, **with PyYAML present**. The membership test runs against a set of characters | **CONFIRMED** — RV-14, exit 0 with a `Write` grant in place. Latent in this repository, which uses lists, and it is the security boundary the validator exists to hold | **FIX NOW** — coerce a string value to a list before the membership test. Strictly worse than `g6-13`'s PyYAML path because it needs no missing dependency **✔ executed 2026-08-22** — queue 7 — a string-valued `allowed-tools` is coerced to a list before the membership test. Break-tested with `Write` granted as a string and as a list |
+| A6-5 | **Record expiry is not checked at all.** `check_calibration_digests` reads only the digest row; nothing in the validator parses the expiry date. Both filed records expire 2026-09-21 and nothing will notice when they do | **CONFIRMED** — no case-insensitive match for expiry anywhere in `scripts/validate.py`. Mechanically checkable and unchecked, which is precisely the class the brief's §8 says *is* a finding | **FIX NOW** — compare the expiry row against today and warn or error past it. Names a specific unchecked invariant rather than restating the known form-not-truth bound **✔ executed 2026-08-22** — queue 8 — expiry is parsed and compared against today; past-window records error. Break-tested at one day past and one day short |
+| A6-6 | **Two live illegal pairings sit in round 3 today, and the validator cannot see them.** `:2383` and `:2384` each carry a confirmed verdict with the forbidden disposition in the disposition column. A third hit at `:2595` is a genuine false positive — a two-cell vertical detail block whose disposition is on its own row | **CONFIRMED** — RV-15, cell by cell. **This changes three findings.** It makes `g6-6` concrete rather than hypothetical; it shows the `g6-10` matrix gap has produced three different answers in three rounds — round 3 used the forbidden pairing, round 4 opened a separate series, round 5 withdrew the ID — and it gives `g6-12` a live false positive rather than a planted one | **FIX NOW** for the mechanism, via `g6-6` and `g6-12`. The two round-3 rows themselves are **history and are not edited**; they are recorded here as superseded observations, not repaired **✔ executed 2026-08-22** — queue 3 + 24 — the two round-3 rows are left exactly as written and now surface as the two closed-round warnings §R6.15 predicted; the template records that a vocabulary change does not reach back |
+| A6-7 | **The skill's own header grammar has no slot for adjudicator-raised findings.** Round 5 left `A-1`…`A-3` and `C-5`/`C-6` out of its header because there is nowhere to put them; this round had to invent a `+7 adjudicator findings` field for the same reason | **CONFIRMED** — the header formula in `skills/review-adjudication/SKILL.md` §7 names numbered findings, process, CNV and re-opened upheld claims, and stops. The reviewer reached this under claim 18 and did not raise it | **FIX NOW** — add adjudicator-raised findings to the header formula in §7 and to the ledger template. Small, and it removes a recurring pressure to leave real ruled rows out of the count **✔ executed 2026-08-22** — queue 19 + 25 — invariant 3 and §7's header formula gained the `A-N` slot, and both header formulas in the ledger template with it |
+
+## R6.7 — Re-opened upheld claims
+
+**20 listed by the reviewer · 20 sampled · 6 re-opened.** The rest were upheld on evidence this
+session reproduced in §R6.2 and are inherited without a separate entry.
+
+| # | Claim | Verdict | Disposition |
+|---|---|---|---|
+| U6-1 | **Claim 19 — the invariant-1 rewrite was a genuine correction, not a rule widened in order to violate it.** Re-opened because a clearing verdict on a directed claim, exonerating the session that commissioned the audit, on the question that session named as its own sharpest exposure, is where an echo does the most damage | **CONFIRMED, and established independently of the reviewer.** Read `git show 2565c08:skills/review-adjudication/SKILL.md` **before** the rewritten text. Three separate pre-existing sections already said what the rewrite says: §7 line 12, *"Completed rounds append only"*; step 1's round rule, *"A closed round is history… **A round not closed is the current round — fill it in place**"*; and step 2, *"Rows exist first; verdicts fill in."* The **old** invariant, requiring a diff to show additions and no deletions, was flatly unsatisfiable in combination with step 2 — filling a cell in an existing row is a modified line. The rewrite corrects an over-broad summary toward sections that already governed. *Inherited unchanged from the reviewer:* that a single snapshot commit cannot establish the intra-session order of skeleton versus backfill | **VERIFY** — the ordering question only. Non-blocking, and probably unanswerable from git at all. The substantive ruling needs nothing further |
+| U6-2 | **Claim 1 — all twelve checks fail when their invariant is broken.** Re-opened because it is the claim the whole round turns on | **REFUTED**, and by this session's own harness rather than the reviewer's table. `check_counts` is silent on a dropped row; `check_calibration_digests` cannot fail at all; `check_retired_wordings` is silent on markup and restatement; `check_invariant_backrefs` is silent on a wrong-but-existing target and on a missing block. Four of twelve do not enforce their named invariant | **FIX NOW** — carried by `g6-1`, `g6-4`, `g6-7`, `g6-3`. No separate action |
+| U6-3 | **Claim 3 — no check fires on correct work.** Re-opened because a false positive is contract item 2 and is cheaper to miss than a silent gate | **REFUTED.** Valid GFM escaped pipes error (`g6-5`); valid titled links error (`A6-3`); a legally-paired row that discusses the forbidden pairing errors (`g6-12`). Confirmed clean on the unusual-but-valid inputs the brief named: guillemets inside code, CRLF, and a round with zero findings | **FIX NOW** — carried by `g6-5`, `g6-12`, `A6-3` |
+| U6-4 | **Claim 12 — `corpus_digest` reimplements the template command faithfully.** Re-opened because the reviewer tested it on one tree, and a digest that agrees only in the clean case is worth little | **CONFIRMED, and on a wider basis than the report's.** RV-2 ran both implementations across five tree states — clean, tracked answer-key edit, restore, untracked addition, tracked case edit — and they agreed at every step, including on both mutated digests. *Carried forward unchanged:* portability to a different operating system's checksum default is untested | **VERIFY** — `CNV-R6-2`. Non-blocking |
+| U6-5 | **Claim 17 — the calibration record accurately describes the six runs.** Re-opened because it is the reviewer auditing its own record | **CONFIRMED on everything checkable here** — the six reports total 500 lines, matching the record's workload row; both filed records pin the current digest. *One inaccuracy, promoted:* the private-replacement pointer names the wrong backlog item, ruled at `A6-2`. The answer-key exposure caveat is correctly scoped and, on re-reading, if anything understates rather than overstates | **FIX NOW** — via `A6-2` |
+| U6-6 | **Claim 20 — nothing unique was lost in the why-block compression.** Re-opened because it is hand-off doubt §3.3, and the reviewer's clearing is the only check that has ever been run on it | **COULD NOT DETERMINE.** The line counts reproduce exactly (497 split-lines, 496 by `wc`), and the reference file does carry the four forces. But the reviewer's clearing rests on *"no unique operational rule was found only in the deleted lines"* — a search, reported as a result, with no clause-by-clause diff shown. This session did not perform that diff either. It is the one place where a reviewer's negative finding is being accepted on the reviewer's word | **VERIFY** — `CNV-R6-6`. Diff the deleted lines against `references/why-this-is-hard.md` clause by clause. Non-blocking, cheap, and nobody has done it yet |
+
+## R6.8 — Corrections to earlier rounds
+
+| # | Correction | Verdict | Disposition |
+|---|---|---|---|
+| C6-1 | **`§R5.15`'s *"no behaviour of any shipped program changed"* is false.** Superseded by `g6-8`, on execution evidence: the same tree exits 0 under the pre-round-5 validator and 1 under the post-round-5 one. `§R5.15` stays as written; this row is the record | **CONFIRMED** | **FIX NOW** — carried by `g6-8` |
+| C6-2 | **`§R5.15`'s treatment of queue item 17 as closing `A-3` does not hold.** What shipped is an existence check on the section number; `A-3` was about a summary being unfaithful to a section that exists. `A-3` is **reopened** | **CONFIRMED** | **FIX NOW** — carried by `g6-3`(b) |
+| C6-3 | **`CNV-R5-3` is disposed, superseding the open row at `:3928`.** Queue item 9 removed the commented-settings snippet and the `jsonc` fence; no `jsonc` fence survives in `README.md`. The round-5 table row is history and is not edited | **CONFIRMED** | **FIX NOW** — carried by `g6-14` |
+| C6-4 | **`BACKLOG.md` `B-3`'s *"9/9 mutations were caught"* cannot describe what was performed.** At least two of the ten checks it enumerates cannot fail: `check_calibration_digests` has no error path at all, and `check_counts` is silent on the invariant it is named for | **CONFIRMED** | **FIX NOW** — carried by `g6-9` |
+| C6-5 | **Round 3 used the verdict-plus-forbidden-disposition pairing twice, at `:2383` and `:2384`, and it is still there.** Round 5 withdrew `P-3` rather than write the same pairing. Both rows are history and are not edited; recorded so the inconsistency is on the books rather than inferred | **CONFIRMED** | **FIX NOW** — **owner ruled 2026-08-22**, §R6.15. Both round-3 rows stay as written; queue item 24 records why, and §R6.15 documents the two warnings item 3 will raise on them so no later session repairs history |
+
+## R6.9 — Could not verify
+
+The reviewer's six, each ruled. None blocks execution.
+
+| # | Gap | Verdict | Disposition |
+|---|---|---|---|
+| CNV-R6-1 | Whether a footnote-broken retired phrase is caught — predicted silent, not separately mutated | **COULD NOT DETERMINE** — this session did not mutate it either. The prediction is sound: RV-7 shows the same mechanism is silent for emphasis and inline code, and a footnote marker is the same insertion | **VERIFY** — one probe, and `g6-7`(a)'s fix should close it. Non-blocking |
+| CNV-R6-2 | Linux `sha1sum` versus macOS `shasum` on the template command | **COULD NOT DETERMINE** — one operating system available. The Python path is portable by construction; the shell command is the one records name | **VERIFY** — run the template command on a Linux checkout. Non-blocking, and worth doing before anyone else files a record |
+| CNV-R6-3 | Whether a compacted session errors, skips, or invents the missing example file | **COULD NOT DETERMINE** — needs a real compaction, which nothing here can force. Also `CNV-R5-6` | **VERIFY** — non-blocking. `g6-11`'s fix removes the question rather than answering it, which is the cheaper route |
+| CNV-R6-4 | The intra-session order of round-5 skeleton versus executed-marker backfill | **COULD NOT DETERMINE** — a single snapshot commit cannot show it, and this session confirms that independently. Also `U6-1` | **VERIFY** — probably unanswerable from git. Non-blocking; the substantive ruling at `U6-1` does not depend on it |
+| CNV-R6-5 | Record expiry enforcement | **CONFIRMED as absent** rather than undetermined — RV, no expiry parsing exists anywhere in the validator | **FIX NOW** — promoted out of the could-not-verify list and ruled at `A6-5`. A gap the reviewer listed as unverified is verified here |
+| CNV-R6-6 | Whether the YAML-string `allowed-tools` form appears in any installed copy at `~/.claude/skills/` | **CONFIRMED as not present** — the installed copies are byte-identical to the `2565c08` blobs, which use lists. But `A6-1` shows those copies are stale, so this is a fact about an old version | **VERIFY** — recheck after `Q-4` is resolved. Non-blocking. The underlying check defect is ruled at `A6-4` regardless |
+
+**One CNV of this session's own**, not from the report: `U6-6` — the clause-by-clause diff of the
+deleted why-block lines has still not been performed by anyone.
+
+## R6.10 — Disagreements with prior rounds, ruled
+
+| # | Disagreement | Ruling |
+|---|---|---|
+| D6-1 | *A-3's executed marker is not a close* | **UPHELD** — `g6-3`, `C6-2`. The reviewer's comparison to the round-4 one-site-close shape is apt |
+| D6-2 | *`B-3`'s 9/9 is testimony about a narrower mutation set than the invariants* | **UPHELD, and extended** — `g6-9`, `C6-4`. Not merely narrower: at least two of the enumerated checks cannot fail at all |
+| D6-3 | *Round 4's X-series and round 5's P-3 are opposite answers to one question* | **UPHELD IN PART** — `g6-10`. The inconsistency is real and `A6-6` makes it a three-way one. The specific framing is rejected: the X-series items were defects with a legal pairing available, so that precedent does not solve what blocked `P-3` |
+| D6-4 | *`§R5.15`'s "the mechanical check caught it where four rounds of reading had not" is not evidence the validator earns its place* | **UPHELD.** The reviewer confirmed the check fires on those phrases and declined to accept the historical run it did not observe. That is the correct standard, and this session did not re-perform that run either. What `g6-7` establishes is the bound: the check greps three literal phrases and is silent on the class it was bought for |
+| D6-5 | *`§R5.17` is ahead of the `§R5.9` table it claims to have closed* | **UPHELD** — `g6-14`, `C6-3` |
+
+The reviewer records no disagreement with round 5's ruling that this half was unaudited. That ruling
+stands, and this round is its discharge.
+
+## R6.11 — Owner decisions required
+
+**One question was open. It is now answered — see §R6.15 for the specification the queue executes against.**
+
+**Q6-1 — the verdict/disposition matrix has no way to record "true, and there is nothing to fix."
+ANSWERED 2026-08-22: option (c), implemented on the verdict axis. §R6.15.**
+It has now come up three times, and been answered three different ways: round 3 wrote the forbidden
+pairing twice and it is still on the books at `:2383` and `:2384`; round 4 opened a separate `X-`
+series for out-of-count items, which had legal pairings anyway; round 5 withdrew `P-3`'s ID so the
+validator would not reject it. Both live round-3 rows are invisible to the validator today because of
+`g6-6`, and fixing `g6-6` will surface them.
+
+- **(a) Widen the matrix** — permit the no-fix disposition under a confirmed verdict when the row is
+  explicitly a non-defect observation, and say so in the skill, the template and the validator.
+  *Cost:* the disposition stops being a reliable signal that a real defect was waived, which is the
+  reason it was constrained. *Benefit:* true observations stay on the books with both axes and appear
+  in a census.
+- **(b) Keep the matrix strict** — rule that a true non-defect does not belong in a ruling table at
+  all, and record such observations in prose only. *Cost:* they are invisible to any later census,
+  which is exactly what round 5 flagged when it withdrew `P-3`. *Benefit:* the disposition vocabulary
+  keeps its meaning.
+- **(c) Add a distinct disposition** for a recorded non-defect, separate from both. *Cost:* a third
+  term to teach, and every existing ledger predates it. *Benefit:* neither of the above trade-offs.
+
+**Not blocking, and not this round's to close:** `Q-4`, the stale installed skills. `A6-1` records
+that this adjudication itself ran under the pre-round-5 text.
+
+## R6.12 — `FIX NOW` queue
+
+**Nothing below is executed.** The owner decides what runs. Ordering is load-bearing where noted.
+
+| # | Source | Change |
+|---|---|---|
+| 1 | `g6-12`, `U6-3` | Resolve verdict and disposition from their table **columns** rather than by scanning the line, and skip two-cell detail blocks. **Lands after item 23 and before items 2 and 3** — see §R6.15 |
+| 2 | `g6-1`, `U6-2` | `check_counts` counts the current round's ruling rows and compares against the stated rows-out |
+| 3 | `g6-6`, `A6-6` | Run the strict ledger checks over the whole file; closed-round violations are warnings. Expect three lines of output on today's ledger, two of them real |
+| 4 | `g6-4`, `U6-2` | Digest mismatch and a missing digest row become errors |
+| 5 | `g6-5`, `U6-3` | Ignore a backslash-escaped pipe before counting |
+| 6 | `A6-3`, `U6-3` | Strip a trailing quoted title before resolving a markdown link |
+| 7 | `A6-4` | Coerce a string-valued `allowed-tools` to a list before the write-capable membership test |
+| 8 | `A6-5`, `CNV-R6-5` | Check record expiry against today |
+| 9 | `g6-13` | A check that could not run is not counted as passed; reconcile the registry listing with the run |
+| 10 | `g6-7`(a) | Strip emphasis markers and backticks before matching retired wordings |
+| 11 | `g6-7`(b) | Add `BACKLOG.md` and `calibration/**` to the retired-wordings live glob |
+| 12 | `g6-3`(a) | Error when a `SKILL.md` has no invariants block |
+| 13 | `g6-11` | Carry the ships-absent qualifier into the invariants index line |
+| 14 | `g6-2` | Correct the two operator sentences about what an uncommitted corpus edit does |
+| 15 | `g6-9`, `C6-4` | Replace `B-3`'s status paragraph with the measured state and this round's mutation results |
+| 16 | `g6-7`(c), `D6-4` | State the bound: the retired-wordings check does not cover restatement, and cannot |
+| 17 | `A6-2`, `U6-5` | Fix the backlog pointer in the calibration record |
+| 18 | `g6-15` | Add a network line to the cover-note template's envelope block |
+| 19 | `A6-7` | Add adjudicator-raised findings to the header formula in §7 and to the ledger template |
+| 20 | `g6-3`(b), `C6-2` | Record `A-3` as reopened rather than closed |
+| 21 | `g6-8`, `C6-1` | Record that the no-behaviour-changed sentence is false |
+| 22 | `g6-14`, `C6-3` | Record `CNV-R5-3` as disposed |
+
+Items 20–22 are ledger corrections and are already written as `C6-1`, `C6-2`, `C6-3`; they are listed
+so the queue is a complete account of what this round changes.
+
+## R6.13 — Round 6 status: OPEN
+
+**Superseded in part by §R6.16.** This section was written before the owner authorized execution;
+what it recorded as queued has since landed. Left as written, per invariant 1.
+
+- **`Q6-1` — ANSWERED**, 2026-08-22, option (c). Specification at §R6.15. It was the only
+  blocking question; nothing in this round now blocks on the owner. `g6-10` and `C6-5` are
+  backfilled to `FIX NOW` against that ruling.
+- **All 25 `FIX NOW` items** are queued and unexecuted. No fix was applied by this session, and the
+  owner's ruling on `Q6-1` authorized a design, not an execution. **— superseded: the owner
+  authorized execution separately (§R6.16) and all 25 landed.**
+- **`U6-1`'s ordering question, `CNV-R6-1` through `-4`, `-6`, and `U6-6`** — open verify items, all
+  non-blocking, each naming its check.
+- **`Q-4` carried forward from round 5** — the installed skills are stale, and `A6-1` shows this
+  adjudication ran under the stale text. Outside this round's authorization.
+
+**What this round closes from round 5.** `P-1` / `grok-8` / `CNV-R5-7` — the unaudited half has now
+been audited and adjudicated. Round 5's own status section is not edited; this is the record that
+its blocking item has been discharged, and round 5's remaining verify items are unaffected.
+
+**Nothing here establishes that the work is complete, correct, or ready to ship.** It establishes that
+15 findings were adjudicated, 13 confirmed outright and 2 confirmed in part, that 7 further findings
+were raised by this session's own re-verification, that 6 upheld claims were re-opened with 2 of them
+refuted, and that 22 changes are queued and none applied.
+
+## R6.14 — Append proof for this round
+
+Round 6 was written by appending to the end of the existing file. The current round was assembled in
+the session scratchpad and concatenated once, so the diff carries no deletions at all.
+
+```
+$ wc -c < <copy of the ledger as it stood before this round>
+  361927
+$ head -c 361927 REVIEW-ADJUDICATION.md | cmp - <that copy>
+(silent)
+$ git diff --numstat -- REVIEW-ADJUDICATION.md
+1145    0    REVIEW-ADJUDICATION.md
+```
+
+And the **completed** prefix specifically — the invariant as round 5 rewrote it asks for this rather
+than for the file merely growing:
+
+```
+$ head -c 299772 REVIEW-ADJUDICATION.md | cmp - <(git show 2565c08:REVIEW-ADJUDICATION.md)
+(silent)
+```
+
+The first 299,772 bytes — rounds 1 through 4 and the committed part of round 5 — are byte-identical to
+the last commit. Rounds 1 through 5 were not edited by this session in any respect.
+
+**Closure check, run against the finished file:**
+
+```
+numbered finding rows g6-*: 15
+  g6-       15  ['g6-1' … 'g6-15']
+  A6-        7   U6-  6   C6-  5   CNV-R6-  6   D6-  5
+rows with an empty verdict or disposition cell: none
+all g6 rows carry both axes: OK
+```
+
+**Validator, on the finished ledger:** `All 12 checks pass (5 warning(s))`, exit 0. Read that with
+`g6-1` in mind — the counts check confirmed nothing about the fifteen rows above. The row count was
+established by the script quoted here, not by the validator.
+
+**Second opinion:** none was spawned. The escalation rule requires one for a refuted verdict on a
+finding the reviewer rated high or critical; there are no refuted verdicts on any of the four high
+findings — all four are confirmed. The two refutations in this ledger, `U6-2` and `U6-3`, run
+**against** the work rather than in its favour and rest on execution evidence reproduced above. This
+session's environment also restricts subagent use to explicit request. `U6-1`, the one place where an
+independent check would have mattered most, was settled instead from a primary source — the text of
+the pre-rewrite commit — which any later reader can re-run in one command.
+
+## R6.15 — `Q6-1` answered: a verdict for a true non-defect
+
+**The owner's words, verbatim, 2026-08-22.** Asked which of three options to take on the matrix gap:
+
+> "i'm leaning into invent a new category for them, what do you think?"
+
+and, after this session recommended option (c) implemented on the verdict axis rather than the
+disposition axis, with a gate and a boundary rule:
+
+> "yes and i'll follow your suggestions on everything"
+
+**Ruling: option (c).** Recorded here as the decision the queue executes against. It authorizes a
+design; it does not authorize execution, and nothing in this round is executed.
+
+### Why the verdict axis and not the disposition axis
+
+The disposition axis was never the problem. "Nothing happens" already has a word, and a second word
+for a different flavour of nothing would split every future census in two.
+
+The defect is in the verdict axis, which asks *"is the reviewer's claim true?"* and then offers
+`CONFIRMED`, defined as *"the defect is real."* That silently assumes every claim alleges a defect.
+For a process observation, a fact about the reviewer rather than the work, or an observation that the
+design **worked**, the assumption is false and no honest cell exists. `P-3` is the worked example:
+its content was that both reviewers disclosed the collision unprompted, which is evidence *for* the
+brief's design, and forcing it through a defect-shaped verdict is what produced the illegal pairing
+that led to the ID being withdrawn.
+
+### The change
+
+**One new verdict term:**
+
+| | |
+|---|---|
+| `TRUE, NOT A DEFECT` | The claim is true, and it does not allege that anything in this repository is wrong. Gated — see below. |
+
+**One change to disposition legality.** `NO ACTION` becomes legal under `REFUTED`,
+`SETTLED ALREADY`, **or** `TRUE, NOT A DEFECT`. No new disposition is added.
+
+### The gate, and why there is one
+
+Any new category is a candidate dismissal hatch — "not really a defect" joining "pre-existing",
+"out of scope" and "scaffold only". A verdict-level term resists that far better than a
+disposition-level one would, and **that is the argument for putting it there**: to claim it you must
+assert that the claim *itself* alleges nothing is wrong, and a later reader can check that against
+the report's own words. A disposition-level escape — "it is real, but there is nothing to do" — is
+pure assertion with nothing to check it against.
+
+So the term is gated, at the same weight as `FIX LATER`'s backlog artifact:
+
+**A `TRUE, NOT A DEFECT` verdict must carry, in its own cell, the claim's Consequence quoted
+verbatim from the report, and one clause naming what would have to be true for it to be a defect in
+this repository and stating that it is not.** Where the report states no consequence, the row says
+`no consequence stated` — and that absence is itself worth seeing, because a claim with no stated
+consequence is one nobody has yet shown to matter in either direction.
+
+### The boundary rule, which is the part that must hold
+
+**If the claim asserts that anything in this repository is wrong, the verdict is never
+`TRUE, NOT A DEFECT`** — whatever the scope, whatever the fix costs, however far outside this phase
+it falls. A real defect outside scope remains `CONFIRMED` with disposition `FIX LATER` and its
+backlog artifact. The new term is not an out-of-scope route and must not be usable as one.
+
+The test is one question: **does the claim say something here is broken?** Applied to the three
+historical cases this gap produced, it does not amnesty all of them, which is the sign it is drawn
+at about the right place:
+
+| Case | Under the new rule |
+|---|---|
+| `P-3` (round 5) — both reviewers disclosed the collision unprompted | **Qualifies.** Nothing is alleged broken; it is evidence the design worked |
+| `R3-P4` (`:2384`) — three of the reviewer's citations do not resolve | **Qualifies.** A defect in the *report*, a weight fact about the reviewer, not a claim about this repository |
+| `R3-P3` (`:2383`) — an unscoped review buys independence and sells coverage | **Does not qualify.** It names a real limitation of a deliberately chosen method. That is `SETTLED ALREADY` with the decision cited, or `ACCEPTED AS-IS` with the owner's words |
+
+### What this does not do to history
+
+Rounds 1 through 5 predate the term and are **not edited**. The two rows at `:2383` and `:2384` stay
+exactly as written, in the shape the matrix forced on them at the time. A census run across all
+rounds will still find them, and that is correct — they are a true record of what was done under the
+rules then in force.
+
+**This matters for queue item 3.** When the strict checks are widened to the whole file, those two
+rows will warn. **The expected output is documented here so that nobody later "repairs" them:** two
+disposition warnings at `:2383` and `:2384`, plus one false positive at `:2595` which item 1 removes.
+Three lines, of which two are real and permanent history.
+
+### Sequencing, which is load-bearing
+
+Adding a verdict term changes the validator's verdict set, which changes what counts as a ruling row,
+which is exactly what queue item 1 rewrites. Landing them in the wrong order widens the scope to
+closed rounds while the parser is still substring-matching the whole line.
+
+**Order: item 23 (define the term) → item 1 (column-anchored parsing) → items 2 and 3.**
+
+### Queue items added
+
+| # | Source | Change |
+|---|---|---|
+| 23 | `Q6-1`, `g6-10` | Add `TRUE, NOT A DEFECT` to the verdict table in `skills/review-adjudication/SKILL.md` §6 and to the ledger template, with the gate and the boundary rule stated in full. Add it to the validator's verdict set and to the permitted-verdict regex for `NO ACTION`. **Lands before item 1** |
+| 24 | `Q6-1`, `A6-6` | Record in the skill that the term arrived in round 6, that earlier rounds predate it, and that the two round-3 rows are history rather than defects to repair — with the expected warning output from item 3 named |
+| 25 | `Q6-1`, `A6-7` | While §6 and the template are open for item 23, land `A6-7` in the same pass: the header formula gains a slot for adjudicator-raised findings |
+
+Items 24 and 25 are grouped with 23 because they touch the same two files in the same paragraph
+region; splitting them would mean opening §6 and the template three times.
+
+### What is still not solved
+
+The term records a true non-defect. It does not tell you whether a *later* reader will agree the
+claim alleged nothing broken, and the gate's quote is the only thing standing between an honest use
+and a motivated one. That is a smaller exposure than the two it replaces, and it is not zero. The
+first round to use the term should be read with that in mind.
+
+## R6.16 — Execution: what landed, and what it verifiably does
+
+**The owner's authorization, verbatim, 2026-08-22**, given after the `FIX NOW` queue and the
+`Q6-1` specification were both on disk and offered as a separate act:
+
+> "ok go"
+
+Executed by this session, 2026-08-22. **All 25 queued items landed.** Every row in §R6.4, §R6.6 and
+§R6.8 is backfilled with what it received.
+
+### What changed, by file
+
+| File | Change |
+|---|---|
+| `scripts/validate.py` | 10 of the queue's items. Column-anchored row parsing, row counting, whole-file scope, digest and expiry as errors, escaped pipes, titled links, string-valued `allowed-tools`, missing invariants block, markup-normalized retired wordings with a widened glob, and an honest pass count |
+| `skills/review-adjudication/SKILL.md` | The `TRUE, NOT A DEFECT` verdict with its gate and boundary rule; `NO ACTION` legality; the `A-N` slot in invariant 3 and in §7's header formula |
+| `skills/review-adjudication/references/ledger-template.md` | The new verdict in the row grammar, both header formulas, and the rule that a vocabulary change does not reach back into closed rounds |
+| `skills/adversarial-review-prompt/SKILL.md` | The invariants index carries the ships-absent qualifier with the filename |
+| `skills/adversarial-review-prompt/references/cover-note-template.md` | A network line in the write block, and the requirement to walk the brief's permission table row by row |
+| `BACKLOG.md` | `B-3`'s status paragraph replaced by the measured state; the false 9/9 claim replaced by this round's mutation record; the restatement bound stated |
+| `calibration/record-template.md`, `calibration/README.md` | Both operator sentences now describe what the digest does |
+| `.adversarial-review/calibration/grok-4.6-high.md` | The private-replacement remedy points at `B-2` |
+
+**Line gates held without being touched.** `review-adjudication/SKILL.md` is **497 → 497** and
+`adversarial-review-prompt/SKILL.md` **493 → 494**; both remain three and six lines clear of the
+500-line gate. The one line the new verdict row spent was reclaimed by rewrapping the bare-ACCEPTED
+paragraph from three lines to two — **verified clause by clause**, all six of its clauses present
+after: never write it, it reads as "the finding is real", it also reads as "we accept the risk and
+are shipping it", those are opposite dispositions from one word, past ledgers use the first sense,
+new rows use both axes. **The gate was not raised.** Raising a threshold to fit the work is the
+anti-pattern this repository keeps finding, and `grok-9` is the row that says so.
+
+### Two defects in this session's own fixes, found by running them
+
+Recorded because the queue would otherwise read as if the work went in cleanly, and it did not.
+
+1. **`row_cells` split on escaped pipes.** The first version of queue item 1 split the row on every
+   `|`, so any row containing `\|` had its columns shifted and both axes were read from the wrong
+   cells. It surfaced as round 2 counting 7 rows against a stated 9. **Same defect class as `g6-5`,
+   reintroduced one function away** — which is the `X-2` shape this ledger has now recorded three
+   times. Fixed by splitting on unescaped pipes only.
+2. **The row count was wrong on every closed round.** Auxiliary IDs are bolded in round 4 and carry
+   a round prefix in round 3, so the filter matched neither and counted 57 rows where 27 were
+   stated. Fixed by normalizing the ID cell — and then **scoped away from closed rounds entirely**,
+   because round 4 filed one numbered finding under a `P-` ID and no rule can derive that. The
+   convention-free half, header against header, still runs on every round. This is a stated bound,
+   not a silent one: the row count is a current-round check.
+
+Both were caught by running the check against real history rather than against a planted mutation,
+which is the argument for doing both.
+
+### Mutation results after the fixes — 29 probes, every check broken deliberately
+
+**18 of 18 must-fail cases caught.** Each breaks the invariant the check is named for:
+
+```
+counts: drop one ruling row, header untouched              CAUGHT
+counts: drop five ruling rows, header untouched            CAUGHT
+two-axes: unbolded verdict, no disposition                 CAUGHT
+disposition: CONFIRMED + the forbidden pairing             CAUGHT
+disposition: bare ACCEPTED                                 CAUGHT
+table: unescaped pipe in a code span, current round        CAUGHT
+calibration: digest mismatch                               CAUGHT
+calibration: record past its expiry                        CAUGHT
+permissions: Write granted via a YAML string               CAUGHT
+permissions: Write granted via a YAML list                 CAUGHT
+retired: phrase broken by *emphasis*                       CAUGHT
+retired: phrase in BACKLOG.md                              CAUGHT
+retired: phrase in calibration/README.md                   CAUGHT
+backref: no <invariants> block at all                      CAUGHT
+backref: dangling section number                           CAUGHT
+links: genuinely broken relative link                      CAUGHT
+length: SKILL.md pushed to 500 lines                       CAUGHT
+placeholder: unresolved guillemet in a SKILL.md            CAUGHT
+```
+
+**11 of 11 must-pass cases clean.** Each is correct or unusual-but-valid work that the pre-fix
+validator either failed or would have failed:
+
+```
+table: backslash-escaped pipe in a code span               CLEAN   (was an ERROR)
+links: valid titled markdown link                          CLEAN   (was an ERROR)
+two-axes: non-ruling row quoting a verdict in its notes    CLEAN   (was an ERROR)
+disposition: FIX NOW row whose notes name the pairing      CLEAN   (was an ERROR)
+NEW verdict: TRUE, NOT A DEFECT with the no-fix pairing    CLEAN   (had no legal spelling)
+vertical detail block, axes on their own rows              CLEAN   (was an ERROR)
+retired wording quoted in the ledger as history            CLEAN
+placeholder: guillemets inside inline code                 CLEAN
+CRLF line endings in a SKILL.md                            CLEAN
+closed-round defect planted: warns, exit 0                 CLEAN   (was invisible)
+closed-round header vandalised: warns, exit 0              CLEAN   (was invisible)
+```
+
+**Four of the eleven were ERRORs before this round** — correct work that failed the build. That is
+contract item 2, and it is now measured rather than asserted.
+
+### Validator state after execution
+
+```
+$ python3 scripts/validate.py
+WARN  disposition: REVIEW-ADJUDICATION.md:2383 ... (closed round - append-only history, not repairable)
+WARN  disposition: REVIEW-ADJUDICATION.md:2384 ... (closed round - append-only history, not repairable)
+WARN  install: skills/adversarial-review-prompt differs from the installed copy ...
+WARN  install: skills/review-adjudication differs from the installed copy ...
+12 of 12 checks pass (4 warning(s))          exit 0
+```
+
+**Read the four warnings deliberately.** The two `:2383` / `:2384` lines are **exactly what §R6.15
+predicted before the fix was written** — the round-3 rows that used the forbidden pairing, now
+visible for the first time and correctly not repaired. The three table-pipe warnings that stood
+here for five rounds are **gone**, because they were never defects. The two install warnings are
+`Q-4` and are outside this round.
+
+### What did not change, and is not claimed to have
+
+- **Summary faithfulness is still not mechanically checkable.** Queue item 12 closed the emptiest
+  hole — a `SKILL.md` with no invariants block at all — and nothing checks that a `(§N)` summary
+  describes its section. `A-3` is **reopened**, not closed, at `C6-2`.
+- **A retired rule restated in different words is still silent**, and `B-3` now says so instead of
+  claiming otherwise.
+- **The row count does not run on closed rounds**, for the reason given above.
+- **`shipped-program behaviour changed this round.`** The validator errors on tracked-file digests,
+  expired records, string-valued grants and markup-broken retired phrasings that the previous state
+  accepted, and it stops erroring on four kinds of correct work. Saying otherwise would be the
+  `g6-8` defect committed a second time, in the round that ruled on it.
+
+## R6.17 — Round 6 status after execution: OPEN
+
+**Changed since §R6.13.** All 25 `FIX NOW` items are executed and backfilled; `Q6-1` is answered
+and implemented. What remains open:
+
+- **`U6-6` / `CNV-R6-6`** — the clause-by-clause diff of round 5's deleted why-block lines. Still
+  performed by nobody. The one place in this ledger where a reviewer's negative finding is accepted
+  on the reviewer's word. **Non-blocking.**
+- **`CNV-R6-1` to `-4`** — open verify items, all non-blocking, each naming its check: the
+  footnote-broken phrase (queue item 10's markup stripping should close it, unverified), Linux
+  `sha1sum` against macOS `shasum`, real compaction behaviour, and round 5's intra-session ordering.
+- **`A-3`, reopened at `C6-2`** — summary faithfulness is not mechanically checkable and is not
+  claimed to be. It is an open finding again, not a closed one.
+- **`A6-1` / `Q-4`** — the installed skills at `~/.claude/skills/` are further behind this
+  repository than they were this morning. **This round's twenty-five fixes are not in the version
+  that executes at runtime**, and neither are round 5's nineteen. Outside this round's scope, and
+  larger than it was.
+- **The two round-3 rows at `:2383` and `:2384`** — permanent history, now visible as warnings.
+  Not to be repaired. `A6-6`, and the rule is in the ledger template.
+
+**What round 6 closed from round 5.** `P-1` / `grok-8` / `CNV-R5-7` — the unaudited half is audited,
+adjudicated, and its findings executed. Round 5's own sections are not edited.
+
+**Nothing here establishes that the work is complete, correct, or ready to ship.** It establishes
+that 15 findings were adjudicated and 15 confirmed in whole or part, that 7 further findings came
+from this session's re-verification, that 6 upheld claims were re-opened and 2 refuted, that 25
+changes were authorized and executed, and that every check now in the validator was broken
+deliberately — 18 must-fail caught, 11 must-pass clean — rather than asserted to work.
+
+## R6.18 — `CNV-R6-1` and `U6-6` / `CNV-R6-6` settled
+
+Two open verify items closed by execution after §R6.17 was written. One went the way §R6.16
+predicted; one did not, and §R6.16's prediction is corrected here rather than edited there.
+
+### `CNV-R6-1` — a footnote-broken retired phrase is still silent. **Correction to §R6.16.**
+
+§R6.16 recorded this as *"queue item 10's markup stripping should close it, unverified."* **It does
+not.** Tested both forms in a copy:
+
+```
+"must exist before the ledger[^1] is written."            12 of 12 checks pass   exit 0   SILENT
+"must exist before the *ledger*[^2] is written."          12 of 12 checks pass   exit 0   SILENT
+```
+
+Item 10 strips `*`, `_` and backticks. A footnote marker is a bracketed token, not an emphasis
+character, so the phrase still does not match. **Verdict: CONFIRMED as an open gap** — the same
+class as `g6-7`, in the one spelling item 10 did not cover.
+
+**Disposition: FIX LATER.** Not queued here, because this round's authorization was the 25 items
+and this is a twenty-sixth. Backlog artifact: `BACKLOG.md` `B-4`, created before this row received
+its disposition, carrying the finding's Location, Mechanism and Consequence.
+
+The honest framing: the retired-wordings check now catches verbatim, line-wrapped, emphasized and
+code-spanned forms, and misses footnote-broken and restated ones. That is a wider net than it had
+and it is still a net, not a proof. `B-3` says so.
+
+### `U6-6` / `CNV-R6-6` — the clause-by-clause diff, finally performed
+
+Nobody had done this. Round 5 compressed the `<why_this_is_hard>` block from 19 lines to 13 and
+asserted the full text survived in `references/why-this-is-hard.md`; round 6's reviewer cleared it
+on a reported search; this session accepted neither and diffed the block.
+
+**Exactly three clauses were dropped from `SKILL.md`:**
+
+| Dropped clause | Survives in `references/why-this-is-hard.md`? |
+|---|---|
+| `"scaffold only"` — one of the four dismissal phrasings | **Yes**, `:13`, verbatim in the full list |
+| *"a refutation typically arrives as a paragraph of reading"* | **Yes**, `:20`, with the asymmetry sentence intact |
+| *"and implementing those is real damage"* | **Yes**, `:31`, in the settled-decisions force |
+
+Nothing else was lost: all four forces, the Location · Mechanism · Trigger · Consequence · Status
+list, the self-review clause, and the step-3 gating survive in the compressed block itself.
+
+**Verdict: CONFIRMED — round 5's claim holds, and the reviewer's clearing was correct.** It is now
+established by comparison rather than by anyone's search.
+
+**One thing the diff shows that neither round 5 nor the reviewer said.** All three surviving clauses
+live **only** in the reference — and `A-2` established that reference files sit below the compaction
+cut. A compacted session therefore loses all three. That is acceptable under `A-2`'s own rule, which
+permits motivation below the cut and requires operational rules above it, and all three are
+motivation. **Recorded so the next round does not re-derive it**, and so that if any of the three is
+ever reclassified as operational, the cut position is already known to be the constraint.
+
+**Disposition: NO ACTION.** Both `U6-6` and `CNV-R6-6` are settled; nothing is owed.
+
+## R6.19 — `B-4` and `Q-4` executed; and what cannot be fixed
+
+Authorized by the owner 2026-08-22 — *"ok let's fix everything"* — after §R6.18 listed what was
+still open. Two items landed. The rest of that list is recorded below as unfixable, with the reason,
+because a to-do list that quietly drops its hard half is the defect this ledger exists to prevent.
+
+### `B-4` — the footnote gap, closed
+
+`check_retired_wordings` now strips markdown footnote markers alongside emphasis characters and
+backticks before matching. Break-tested against a clean copy:
+
+```
+retired phrase broken by a footnote marker        exit 1   ERROR retired   CAUGHT
+footnote marker AND emphasis together             exit 1   ERROR retired   CAUGHT
+verbatim phrase (control)                         exit 1   ERROR retired   CAUGHT
+genuinely broken markdown link still caught       exit 1   ERROR links     CAUGHT
+clean tree                                        exit 0                   CLEAN
+```
+
+**The extended check immediately caught this session's own `B-4` backlog entry**, which quoted the
+retired phrasings as evidence — inside `BACKLOG.md`, which queue item 11 had just added to the live
+glob. The entry now describes the phrasings instead of reproducing them and points at
+`scripts/validate.py` for the text.
+
+**That is worth stating carefully, because §R5.15 overstated the same event and `D6-4` ruled against
+it.** What happened is that a grep for three literal strings found three literal strings, in a file
+whose glob had been widened minutes earlier by the same session. It is evidence the widened glob
+works. It is **not** evidence the check catches the class it was built for — `g6-7` establishes that
+it does not, and `B-3` now says so. The honest reading is the narrow one.
+
+### `Q-4` — the installed skills, closed
+
+The copies at `~/.claude/skills/` now match this repository exactly.
+
+```
+$ diff -rq skills/adversarial-review-prompt ~/.claude/skills/adversarial-review-prompt   (silent)
+$ diff -rq skills/review-adjudication       ~/.claude/skills/review-adjudication         (silent)
+$ python3 scripts/validate.py
+... 12 of 12 checks pass (2 warning(s))    exit 0
+```
+
+**The two install warnings are gone**; the two that remain are the permanent round-3 history rows at
+`:2383` and `:2384`. Before syncing, every installed file was verified byte-identical to the
+`2565c08` blobs — so nothing local was overwritten — and the whole tree was backed up.
+
+**One thing found while doing it, and it is not this round's to resolve.** `~/.claude/skills/` is
+itself a git repository, with **its own history and no remote** — `HEAD` is `68b2579`, a commit that
+does not exist in this project — and it was **already dirty before this session touched it**,
+carrying deletions of review artifacts that once lived there. The sync wrote ten files and deleted
+nothing; both trees had identical file lists beforehand. **Nothing was committed in that
+repository.** Whether it should exist as a separate history at all is an open question for the
+owner, recorded as `Q6-2`. It is the reason `Q-4` kept recurring: there are two histories for one
+set of files and only one of them is reviewed.
+
+### What cannot be fixed, and why — stated rather than left off the list
+
+| Item | Why it stays open |
+|---|---|
+| `A-3` — summary faithfulness | Whether a `(§N)` summary *describes* its section is not mechanically decidable. Queue item 12 closed the emptiest hole; the rest is a reading task. **Reopened at `C6-2`, and it stays reopened.** |
+| Retired rules restated in other words | Same class. The check greps literal phrasings; a paraphrase is not one. `B-3` states the bound instead of claiming coverage |
+| `CNV-R6-2` — Linux `sha1sum` vs macOS `shasum` | One operating system available here. Needs a Linux checkout, and should be run before anyone files a record on one |
+| `CNV-R6-3` / `CNV-R5-6` — compaction behaviour | Requires a real auto-compaction, which nothing here can force |
+| `CNV-R6-4` — round-5 intra-session ordering | A single snapshot commit cannot show the order of writes within the session that made it |
+| `CNV-R5-2` — where 5,000 tokens land | No public Anthropic tokenizer; installs are out of envelope |
+| `CNV-R5-4` — headless behaviour after dropping `Write` | Needs a live headless session driven against these skills; not attempted |
+| `CNV-R5-5` — origin of the `529/587` figures | Not `wc -l` of any committed `SKILL.md` in this history; almost certainly a lost working-tree state |
+| **Independent review of this round's 27 changes** | **Not fixable by this session at all — see below** |
+
+### The one that matters most, and this session cannot close it
+
+**This session wrote 27 changes to the validator and the skills, then certified them with the
+validator it had just rewritten, then wrote this ledger saying they worked.**
+
+That is the exact conflict the round-6 cover note told the reviewer to attack in round 5's work, one
+round later, with this session's hands. The 29-probe break-test suite in §R6.16 is real evidence and
+it caught two defects in this session's own fixes — but **it is this session testing its own
+harness**, which is precisely what `B-3`'s discredited *"9/9 mutations were caught"* was.
+
+**Nothing in §R6.16, §R6.18 or §R6.19 should be read as independently verified.** It is the party
+under review reporting on its own work, at the best standard that party could reach alone.
+
+The remedy is a round 7 against `scripts/validate.py` as it now stands, and three things must be
+true of it, each a failure of this round:
+
+1. **The brief must be generated by `adversarial-review-prompt`, not written by the adjudicator.**
+   Round 6's echo rate was 10 of 15 because the adjudicator chose the questions.
+2. **`ROUND-6-HANDOFF.md` must be excluded from the reviewer's read scope.** Its own header says so;
+   it carries the residual-doubts list.
+3. **The target is the newest and least-reviewed code in the repository**, cleared by the party that
+   wrote it.
+
+Recorded as `Q6-3`. It is not a defect with a fix; it is the reason the next round exists.
