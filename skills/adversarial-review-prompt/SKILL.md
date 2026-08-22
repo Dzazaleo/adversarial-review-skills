@@ -50,12 +50,34 @@ Everything in this skill exists to defeat that. Three levers do most of the work
 
 ## 1. Fix the target and the reviewer
 
-Resolve from `$ARGUMENTS` (ask only if genuinely ambiguous):
+Resolve from `$ARGUMENTS` (ask only if genuinely ambiguous). **The reviewer is the one exception
+to that parenthesis: it is a required input, and you never infer it.**
 
 - **Target** — a phase, directory, file set, PR, diff range, or a plan/design doc. Get an
   exact file list with line counts; a reviewer needs to know the size of the job.
-- **Reviewer** — which model/CLI receives this. Adjust only the mechanics (how it runs
-  commands, what it can access), never the adversarial framing. Name its **model family**, and
+- **Reviewer** — which model/CLI receives this. **If `$ARGUMENTS` does not name it, ask, before
+  anything else in this section.** The answer decides three things at once: which calibration
+  record gets looked up, what file access the envelope may assume, and whether the same-family
+  warning fires. None of the three can be resolved without it.
+
+  **A habit is not an answer.** What this project used last time, what its history suggests,
+  what is installed on the machine, what the surrounding documentation was written around, and
+  what most users of this skill run are all inference. Each produces a confident wrong answer
+  exactly as readily as a right one, and none of them is evidence about the session the user is
+  actually about to open.
+
+  **What a wrong guess costs, precisely.** The calibration lookup below is keyed on the
+  reviewer's identity. Name the wrong model and the lookup returns a different model's record —
+  very possibly a `PASS` — and the hand-off then reports *this* reviewer as calibrated when it
+  has never been tested on anything. That is a false all-clear at the one point this whole
+  scheme exists to protect, and nothing downstream catches it: the ledger faithfully records
+  what the lookup returned, and a record that was read for the wrong reviewer looks identical to
+  one read for the right one. Note the asymmetry and let it decide you. A **missing** record is
+  a normal state that costs one honest sentence at hand-off. A **wrong** record is an error no
+  later step can see. One question removes the second risk entirely.
+
+  Once you have been told: adjust only the mechanics (how it runs commands, what it can
+  access), never the adversarial framing. Name its **model family**, and
   say at hand-off when that family is the one that wrote the work. The whole return on this
   exercise is the architecture difference (lever 1) — a same-family reviewer buys much less of
   it, and a great many review tools are thin layers over a small pool of base models, so the
@@ -88,8 +110,15 @@ Resolve from `$ARGUMENTS` (ask only if genuinely ambiguous):
 - **Write access** — beyond its own report file, which is always authorized (§6), read-only
   unless the user passed `--writes` or asked for mutation testing in words. This decides which
   write boundary the prompt's envelope gets (§7 below); never grant more on your own initiative.
-- **Delivery route** — chat box or terminal. Default to the chat box: the cover note (§8) is
-  what the user pastes, and the brief stays on disk for the reviewer to open.
+- **Delivery route** — chat box or terminal. This follows from the reviewer you were told about,
+  never from a default. Where the reviewer runs with filesystem access, the cover note (§8) is
+  what the user pastes and the brief stays on disk for the reviewer to open. Where it is a
+  browser chat window with no filesystem — which a great many are — a brief "on disk" names a
+  file the reviewer cannot reach, and the instruction to write its report to a file is inert:
+  the brief has to travel inline in what the user pastes, and the report comes back as text the
+  user saves. Getting this wrong does not fail loudly. It produces a chat-window summary in
+  place of a report file, which is the one artifact §10 tells the user not to trust. Where the
+  reviewer's access is not obvious from what you were told, ask that too.
 
 ## 2. Read the actual work — never write the prompt from memory or from a summary
 

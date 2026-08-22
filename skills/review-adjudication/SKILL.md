@@ -75,6 +75,20 @@ From `$ARGUMENTS`, resolve:
   you are ruling on. If no brief exists — a pasted chat review, a report from another tool — the
   evidence standard is this skill's own, in both directions: Location · Mechanism · Trigger ·
   Consequence · Status.
+- **Who the reviewer was** — model family, product and version, and reasoning effort. **Establish
+  this; never infer it**, and resolve it before the calibration record below, which is keyed on
+  it and cannot be looked up without it. Take it from `$ARGUMENTS`, or from the brief the report
+  answers, or from a prior round's ledger header where one exists. Failing all three, **ask**.
+
+  Do not read it off the report itself. Prose style, formatting habits, the phrase "As an AI
+  language model", a tool name in a citation and a section layout that resembles some other
+  reviewer's are not identification — they are the reviewer's output, which is the thing under
+  adjudication, and several products are thin layers over a shared base model besides. Guessing
+  here fails the same way it fails in the prompt skill and one step later: a wrong identity
+  loads a different model's calibration record, and a `PASS` read for the wrong reviewer is
+  written into the ledger header as this reviewer's, where nothing downstream can tell it from
+  a correct one. An identity you could not establish is recorded as unknown, and unknown is
+  treated exactly as no record — one honest sentence, and no false credit.
 - **The reviewer's calibration record** — `.adversarial-review/calibration/<reviewer-id>.md` under
   the project root. The record is keyed on what the reviewer actually is — model family, product
   *and version*, reasoning effort, and its own self-report where it gave one. The filename is

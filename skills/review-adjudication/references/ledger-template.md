@@ -19,8 +19,11 @@ Text in `«guillemets»` is an instruction to you and must not survive into the 
 **Reports found:** «every `*EXTERNAL*` report file the step-1 census discovered, each marked
 `adjudicated in this ledger` / `adjudicated in round N` / `not adjudicated — <why, and where its
 findings go instead>`»
-**Review:** `«NN-EXTERNAL-REVIEW.md»` («reviewer model/version», «date», «envelope honoured? say so
-or say what it wrote beyond its report»)
+**Review:** `«NN-EXTERNAL-REVIEW.md»` («reviewer model family, product and version, and reasoning
+effort», «date», «envelope honoured? say so or say what it wrote beyond its report»)
+**Reviewer identity established from:** «the user told me / the brief at `«path»` / round N's ledger
+header» / «could not establish — recorded as unknown». Never inferred from the report's own prose;
+an unknown identity is treated exactly as no calibration record below
 **Brief:** `«NN-EXTERNAL-REVIEW-PROMPT.md»`
 **Adjudicated:** «date», by «this planning/execution session»
 **Report state:** «complete / partial — no coverage line, stops at «where» / inconclusive — not a
@@ -31,7 +34,8 @@ to see" where that is the case»
 **Reviewer calibration:** «PASS, run «date», expires «date», corpus digest «12-char» — recomputed
 and «matches» / «differs, so stale» / «not checkable, no corpus here» — from
 `.adversarial-review/calibration/«reviewer-id».md`» / «none on file» / «stale — run «date», expired
-«date»» / «FAIL». «Where it is anything but PASS, add: findings adjudicated normally; upheld claims
+«date»» / «FAIL» / «not looked up — reviewer identity unknown, so no record could be keyed; treated
+as none on file». «Where it is anything but PASS, add: findings adjudicated normally; upheld claims
 recorded as CNV, not coverage»
 **Workload gap:** «the size the pass was earned on, from the record's Workload row, beside the size
 of the work this review covered — both in numbers. State them; do not characterise the gap»
