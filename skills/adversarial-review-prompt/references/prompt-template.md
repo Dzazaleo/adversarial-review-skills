@@ -263,6 +263,14 @@ Then the write boundary in prose — one of:
 «For a plan or design target there is nothing to run: the Execute row is "nothing," and the
 sentence reduces to "Read, write your report to «path», modify nothing else."»
 
+«For a reviewer with no filesystem access there is no report file to authorize and nothing it
+could write even if there were. The **Write** row becomes "Nothing — you have no filesystem
+here; your report is the message you return, see §10", and the **Execute** row becomes
+"nothing". Do not leave a write path in the table that the reviewer cannot use: it is the one
+row that decides whether the run produces an artifact at all, and naming an unreachable file
+there is how a reviewer concludes the brief was written for someone else. §10 carries the
+matching deliverable variant.»
+
 «Keep the report authorization and the do-not-modify rule in the same sentence. Split across
 two paragraphs they read as a contradiction, and the reviewer resolves contradictions
 conservatively — by not writing the file, which is the one output that matters.»
@@ -326,6 +334,29 @@ section, before the skeleton, and state it as a mechanic rather than a preferenc
 «If several reviewers receive this same brief, give each a distinct path —
 `NN-EXTERNAL-REVIEW-<reviewer>.md` — and say the file is theirs alone, so the second run
 cannot overwrite the first.»
+
+**Variant — reviewer with no filesystem access.** A plain web chat cannot create the file, so
+the paragraph above is not merely unhelpful there, it is an instruction the reviewer must
+ignore in order to proceed — and a brief whose first mechanic is impossible teaches the reviewer
+that this brief's instructions are approximate. Replace it, do not append to it:
+
+> **Deliver your report as one continuous message in this chat**, written as a single document
+> rather than a conversational reply. Do not spread it across several turns, and do not stop to
+> ask whether to continue — if length forces a break, end the message at a section boundary and
+> resume from exactly there. Findings arrive in discovery order, so compose the body as you
+> work and finish with a closing pass that re-orders them into the strict rank the skeleton
+> below demands and fills in the coverage line.
+
+Everything else in §10 stands unchanged — the skeleton, the ranking, the coverage line, and
+`Do not ask the reviewer for a verdict`. Drop only the summary-in-chat instruction, which
+exists to stop the report being duplicated alongside the file and has nothing to duplicate here.
+
+The permissions block (§8b) needs the matching change: with no report file to authorize, the
+envelope is read-only throughout, and it should say so rather than naming a write path the
+reviewer cannot use. The user saves the returned message to `«path/to/NN-EXTERNAL-REVIEW.md»`
+themselves — say so in the hand-off, not in the brief, because it is their step and not the
+reviewer's. `references/cover-note-template.md` carries the matching variant for how the brief
+reaches the reviewer at all; the two are used together or not at all.
 
 **Do not ask the reviewer for a verdict.** Whether the work ships, or is marked complete, is
 the owner's call and not the reviewer's — and a model that commits to YES or NO early will

@@ -114,9 +114,11 @@ to that parenthesis: it is a required input, and you never infer it.**
   never from a default. Where the reviewer runs with filesystem access, the cover note (§8) is
   what the user pastes and the brief stays on disk for the reviewer to open. Where it is a
   browser chat window with no filesystem — which a great many are — a brief "on disk" names a
-  file the reviewer cannot reach, and the instruction to write its report to a file is inert:
-  the brief has to travel inline in what the user pastes, and the report comes back as text the
-  user saves. Getting this wrong does not fail loudly. It produces a chat-window summary in
+  file the reviewer cannot reach and the instruction to write its report to a file is inert.
+  That case does not get a cover note at all: follow the **"Reviewer has no filesystem access"**
+  variant in `references/cover-note-template.md`, which routes the brief to the reviewer as an
+  attachment where the chat accepts uploads and has the user save the returned report
+  themselves. Getting this wrong does not fail loudly. It produces a chat-window summary in
   place of a report file, which is the one artifact §10 tells the user not to trust. Where the
   reviewer's access is not obvious from what you were told, ask that too.
 
