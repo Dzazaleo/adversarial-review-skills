@@ -1810,3 +1810,671 @@ than after, so nothing further will expire it.
 
 Nothing in this round establishes that the work is complete, correct, or finished. It establishes
 what nine findings were, what was done about each, and what is still open.
+
+---
+
+# Round 3 — unscoped product and implementation audit, adjudicated 2026-08-22
+
+**Reports found:** the step-1 census globbed the whole tree for `*EXTERNAL*` report families
+excluding `*PROMPT*`, `*COVER-NOTE*`, `*ADJUDICATION*`, `*RESPONSE*`. It returned three:
+`EXTERNAL-REVIEW.md` — *adjudicated in round 1*; `EXTERNAL-REVIEW-2.md` — *adjudicated in round 2*;
+`EXTERNAL-REVIEW-3.md` — *adjudicated in this round*. `examples/**` returned nothing under the
+census pattern this round; its prior-round reports remain dispositioned in
+`examples/audit-of-review-adjudication/REVIEW-ADJUDICATION.md` and are read here only as settled
+ground.
+
+**Review:** `EXTERNAL-REVIEW-3.md` (OpenAI Codex, served alias `gpt-5.6-sol`, reasoning effort
+`high` — **identity supplied by the user when asked, not inferred and not read off the report**;
+2026-08-22).
+
+**Delivery — and what it costs.** The report was returned in the reviewer's chat and never written
+to a file. `EXTERNAL-REVIEW-3.md` is the operator's transcription, materialized to disk by this
+session before adjudication began, as step 7 requires. **Transcription fidelity is therefore not an
+established fact**, and it is not one this session can establish: the only copy of the original is
+in a chat window this session cannot read. Ruled as `R3-P2`. Nothing in this round rests on a
+disputed word, so the exposure is bounded, but it is real and it is recorded rather than assumed
+away.
+
+**Brief:** **none.** The operator's instruction was *"I'm not pointing you at anything particular"*
+— no pinned range, no scoped paths, no load-bearing claims list, no declared envelope. Per step 1,
+the evidence standard applied in both directions is this skill's own: Location · Mechanism ·
+Trigger · Consequence · Status. Two consequences follow and are carried in the rulings rather than
+noted and forgotten: there is **no claims list to score coverage against**, and there is **no echo
+audit possible** — §R3.4.
+
+**Reviewer calibration: on file, and stale — counts as missing.**
+`.adversarial-review/calibration/gpt-5.6-sol-high.md` exists and records a PASS, and its identity
+fields match the reviewer named above on all four keys. It is nonetheless **expired by digest**:
+round 2 moved the instrument (`F5` edited the fixed brief, `da2a8d36e0ba` → `775e1cc8c43f`) and
+`R2.12` recorded the record as stale by design pending a re-run that has not happened. A different
+digest is a different measurement, so **this reviewer is uncalibrated for this round**. Its
+findings are adjudicated normally and at the usual standard; **its silence closes nothing**, and
+its seven-item "What is especially good" list is recorded in §R3.6 as unverified-except-where-
+sampled rather than as coverage.
+
+**Workload gap, in numbers, not adjectives.** The record's `Workload` row says the PASS was earned
+on **6 cases, 14 files, ~400 lines**. This review covered **the whole repository — 30 tracked
+markdown and source files, ~5,900 lines**, unscoped. Both numbers are stated; the reader judges.
+The gap bounds what the reviewer's silence is entitled to close, which is already nothing here.
+
+**Report completeness:** **complete as prose, structurally partial.** It carries a ranked
+highest-priority list, a secondary list, an endorsement list, and a closing statement of what it
+ran and what it left unchanged. It carries **no declared could-not-verify section** and **no
+coverage line** — neither was asked of it, there being no brief. Not truncated.
+
+**Adjudicated:** 2026-08-22, by a session that did not write the work under review.
+
+**Findings in: 11 · Rows out: 11 · +4 process, +2 CNV, +1 prior-review disagreement ruled**
+
+**How 11 rows come out of a report that numbered 5.** The report numbers five findings under
+"Highest-priority findings" and then lists six more as bullets under "Other worthwhile
+improvements". Every one of those six states a defect with a location and a consequence, and the
+last of them states an endorsement. They are findings in everything but typography, and burying
+six real claims because the reviewer used bullets instead of digits is exactly the drop this skill
+exists to prevent. All eleven get rows: `R3-F1`–`R3-F5` are the reviewer's numbers 1–5 in its
+order; `R3-F6`–`R3-F11` are the six bullets in the order they appear. No findings merged.
+
+## R3.1 — Situation in one paragraph
+
+The repository is two Claude skills for running and adjudicating cross-model reviews, plus a
+calibration corpus and the accumulated history of two prior review rounds. The operator handed
+OpenAI Codex no brief and no target — only "take a look at it" — and Codex chose its own frame: a
+product and implementation audit across skill design, instruction quality, workflow safety,
+scripts and tests, portability and maintainability. It returned five ranked findings, six
+secondary ones, seven endorsements, and a closing architectural recommendation. Its central claim
+is that this project encodes its safety guarantees in prose while the harness offers mechanisms
+that would actually enforce them, and that two of its stated guarantees — a bounded write envelope
+and a blind second opinion — are not delivered by the means the skills use. That claim is correct
+in both instances. Nothing in this ledger says whether the work should ship.
+
+## R3.2 — Re-verification performed before accepting anything
+
+Every command was run read-only against the repository or inside the session scratchpad at
+`/private/tmp/claude-501/.../scratchpad/r3`. Nothing in the repository was written, edited or
+reverted. Expectations are stated **before** each command, as the template requires.
+
+### RV-1 — Is `allowed-tools` a grant or a restriction? (primary source)
+
+*Expectation before running:* the reviewer says grant-not-allowlist and turn-scoped expiry, and
+cites `/docs/en/slash-commands`. I expected the claim to be right and the citation to be wrong,
+because skill frontmatter is documented on the skills page.
+
+```
+$ WebFetch https://code.claude.com/docs/en/skills → grep -n 'allowed-tools'
+```
+
+Two passages settle it verbatim:
+
+> `allowed-tools` | No | **Tools Claude can use without asking permission during the turn that
+> invokes this skill. The grant clears when you send your next message.**
+
+> The `allowed-tools` field grants permission for the listed tools during the turn that invokes the
+> skill… **It does not restrict which tools are available: every tool remains callable**, and your
+> permission settings still govern tools that are not listed.
+
+And the docs volunteer this project's exact exposure, unprompted:
+
+> **A skill can grant itself broad tool access, so review the `allowed-tools` of skills checked
+> into a repository before you run Claude Code there.**
+
+**Both halves of the reviewer's claim are correct.** The citation is not: the material is at
+`/docs/en/skills`, not `/docs/en/slash-commands` (ruled as `R3-P4`).
+
+**What the reviewer missed, and it improves its own fix.** The same table documents
+`disallowed-tools`: *"Tools removed from Claude's available pool while this skill is active."*
+That is a real in-frontmatter restriction — the mechanism the reviewer says does not exist in
+frontmatter and for which it proposes a plugin with a `PreToolUse` hook. The hook remains the only
+*path-aware* enforcement, so the reviewer's recommendation is not wrong; it is incomplete, and the
+cheaper 80% is one frontmatter line. Like `allowed-tools`, the restriction clears on the next
+message.
+
+### RV-2 — Does the grant restrict this very session? (execution)
+
+*Expectation before running:* if `allowed-tools` were an allowlist, this session — running
+`review-adjudication`, whose installed frontmatter grants `Read, Write, Edit, Grep, Glob, Bash` —
+could not have called any tool outside that list.
+
+```
+$ sed -n '1,15p' ~/.claude/skills/review-adjudication/SKILL.md
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Grep
+  - Glob
+  - Bash
+```
+
+This session has already successfully called **`AskUserQuestion`** (to establish reviewer
+identity), **`Skill`** (to invoke this skill), **`ToolSearch`** and **`WebFetch`** (RV-1). None is
+in the list. **The grant did not restrict anything.** This is first-hand execution evidence for
+`R3-F1`, obtained without spending a subagent, and it is stronger than the documentation because
+it is this machine, this version, this skill.
+
+### RV-3 — The 500-line and 5,000-token claims (primary source)
+
+*Expectation before running:* both figures are real; the compaction number is the one that decides
+the finding.
+
+> **Keep `SKILL.md` under 500 lines.** Move detailed reference material to separate files.
+
+> When the conversation is summarized to free context, Claude Code re-attaches the most recent
+> invocation of each skill after the summary, **keeping the first 5,000 tokens of each**.
+> Re-attached skills share a combined budget of 25,000 tokens… **older skills can be dropped
+> entirely** after compaction if you have invoked many in one session.
+
+Both figures **reproduce exactly**. The docs also supply a mitigation the reviewer did not
+mention: *"If the skill is large or you invoked several others after it, re-invoke it after
+compaction to restore the full content."* That bounds the finding — it is recoverable by an
+operator who knows — without closing it, since nothing tells the operator to.
+
+### RV-4 — Where does the cut actually land?
+
+*Expectation before running:* at ~1.33 tokens/word the 5,000-token boundary sits near 3,750 words;
+markdown tables and code fences push tokens-per-word higher, so the true cut is earlier. The
+reviewer estimated "around line 300".
+
+```
+$ awk '{w+=NF; ...}' skills/adversarial-review-prompt/SKILL.md
+  ~3300 words at line 283 · ~3750 words at line 313 · ~4200 words at line 351
+  total words 5583, lines 463
+$ awk '{w+=NF; ...}' skills/review-adjudication/SKILL.md
+  ~3300 words at line 273 · ~3750 words at line 311 · ~4200 words at line 344
+  total words 6472, lines 523
+```
+
+The cut lands in the band **273–313** in both files. "Around line 300" is a good estimate. What
+sits past it:
+
+| Skill | Sections beyond the band | The reviewer named |
+|---|---|---|
+| `adversarial-review-prompt` | §7 operating envelope (`:300`), §8 cover note (`:337`), §9 doubt cross-check (`:386`), §10 hand-off (`:428`) | envelope, cover note, doubt checking, hand-off — **exact** |
+| `review-adjudication` | echo/upheld-claim rules (`:336-380`), the three escalation rules (`:392-428`), §6 verdict matrix (`:430`), §7 write boundary and ledger rules (`:469`), §8 hand-off (`:493`) | echo analysis, subagent escalation, verdict matrix, write boundary, ledger and hand-off — **exact** |
+
+Every safety, write-boundary and closure rule in both skills is on the far side of the cut. The
+reviewer's characterisation — "precisely the rules most expensive to lose" — is accurate and not
+rhetorical.
+
+### RV-5 — The installed skills are not the skills in this repository
+
+*Expectation before running:* none. This was not a check the reviewer asked for; it surfaced while
+resolving which copy its line citations addressed.
+
+```
+$ diff -q ~/.claude/skills/*/SKILL.md skills/*/SKILL.md
+Files ~/.claude/skills/adversarial-review-prompt/SKILL.md and skills/... differ
+Files ~/.claude/skills/review-adjudication/SKILL.md and skills/... differ
+$ wc -l -w ~/.claude/skills/*/SKILL.md
+     382    4370 ~/.claude/skills/adversarial-review-prompt/SKILL.md
+     284    3109 ~/.claude/skills/review-adjudication/SKILL.md
+```
+
+Against the repository's 463/5,583 and 523/6,472, **the installed copies are two commits behind** —
+they predate `454378e` (reviewer identity required) and `fe9bbac`. The installed `review-adjudication`
+contains **no reviewer-identity requirement and no calibration-record lookup at all**; this session
+ran that copy and performed both steps only because it had read the repository first. Ruled as
+`R3-P1`. Two things follow for this round's rulings: the reviewer audited the **repository**, which
+is the correct target for a distributable product, and its line citations resolve against it; and
+the installed copies, both under 500 lines, are **less exposed to `R3-F2` than the product is** —
+which is a fact about this machine, not a mitigation.
+
+### RV-6 — Do residual doubts reach a fresh adjudicator?
+
+*Expectation before running:* the prompt skill will name a storage location for the doubts, and the
+adjudication skill's step 1 input list will name a way to obtain them. I expected to find the
+second and refute the finding.
+
+```
+$ grep -n -i 'doubt\|scratchpad' skills/adversarial-review-prompt/SKILL.md
+:425  Keep the doubts and the queries in the session scratchpad, never beside the brief — there
+      they are one `ls` away from the reviewer.
+:445  [§10 hand-off] Your 3–5 residual doubts, kept out of both the prompt and the cover note…
+$ grep -n -i 'doubt' skills/review-adjudication/SKILL.md
+:337-358   [all hits, without exception, inside step 5]
+```
+
+**The second half is absent.** Every `doubt` occurrence in `review-adjudication` sits inside step
+5's re-verification rules; **step 1, "Fix the inputs", never names the doubts as an input**, and
+nothing anywhere tells the adjudicator to ask the user for the hand-off. Meanwhile `SKILL.md:339`
+requires: *"Whether a doubt was kept out of the brief is your ruling to make, not the hand-off's"*,
+and `:344-348` requires a per-doubt search with recorded queries. So the skill **mandates a ruling
+on an input it never arranges to receive**, while `README.md:152-153` tells the operator *"nothing
+later depends on keeping this session open"* and `:425` puts the only copy in a session-local
+scratchpad. The finding is confirmed by construction, and **this round is the demonstration**: no
+doubts were available to this session, and none could have been.
+
+### RV-7 — Is the blind subagent read-isolated?
+
+*Expectation before running:* round 2's `F4` fix landed a tool-allowlist mechanism; I expected to
+find read isolation addressed alongside it and to rule this a duplicate.
+
+```
+$ grep -n -i 'read-only\|read isolation\|sanitiz\|temporary copy\|cannot read\|blind' \
+    skills/review-adjudication/SKILL.md
+:236  Genuine blindness exists in exactly one place in this skill — the subagent in step 5's
+      escalation, which never sees the report — and that is the only place the word is used for it.
+:411  does not inherit this skill — it never sees the rule at §7 that keeps this workflow read-only,
+:418  existing agent type already defined read-only, or define one; do not select the default…
+```
+
+The enforcement at `:414-418` is **"a tool allowlist that excludes `Write`, `Edit` and
+`NotebookEdit`"** — a *write* restriction, described as "read-only" in the sense of *not writing*.
+Nothing restricts reading. The subagent is spawned into the working directory where
+`EXTERNAL-REVIEW-3.md` sits beside the code, and it retains `Read`, `Glob` and `Bash`. **The
+assertion at `:236` is unqualified and is not delivered by the mechanism at `:414`.**
+
+The sharpest evidence is internal. Seventy lines above the escalation, the same skill applies
+exactly this reasoning to reviewers and gets it right:
+
+> `:366-371` — *"Ours all land in one directory, so by default it could: the brief, the earlier
+> report and this ledger sit one `ls` away from a reviewer rooted there… for a second opinion it is
+> contamination that looks exactly like independent agreement."*
+
+The skill states the mechanism, applies it to reviewers, and then asserts blindness for a subagent
+in the same directory under the same conditions. **`CONFIRMED`, and this is not a duplicate of
+round-2 `F4`** — see `R3-D1`.
+
+### RV-8 — The unconditional architecture sentence
+
+*Expectation before running:* the template's surrounding prose gates several sentences on
+verification; I expected the architecture sentence to be gated too.
+
+```
+$ grep -rn 'different architecture' skills/
+skills/adversarial-review-prompt/SKILL.md:35: …with a different architecture notices different things…
+skills/adversarial-review-prompt/references/prompt-template.md:38: …You have a different
+      architecture and different training. **You will notice different things…**
+```
+
+The template gates exactly one sentence in that block — *"the provenance sentence is a factual
+claim: verify it before keeping it"* (`:26-29`) — and that gate is on *"Every line… written by one
+model"*, not on the architecture sentence. The architecture sentence is emitted **unconditionally**.
+Meanwhile the repository's own skill, at `:82`, already knows better: *"a same-family reviewer buys
+much less of it, and a great many review tools are thin layers over a small pool of base models, so
+the product's name tells you nothing about whose eyes you are actually getting."* **The skill
+diagnoses the exact error its template commits.** Reviewer cited `:31`; the sentence is at `:38`
+(`R3-P4`).
+
+### RV-9 — The optional broken link
+
+*Expectation before running:* an absent optional file, handled by prose.
+
+```
+$ ls skills/adversarial-review-prompt/references/
+cover-note-template.md    prompt-template.md
+$ sed -n '218,224p' skills/adversarial-review-prompt/SKILL.md
+A full worked example — the one this skill was distilled from — may be present at
+[references/example-audit-prompt.md](references/example-audit-prompt.md); it is optional,
+so skip it without comment if absent.
+```
+
+The link **is** unresolvable, in the repository and in the installed copy. The prose handles
+absence explicitly, so no instruction fails and no reader is misled. What survives is narrower than
+"broken link": a link-checker false positive shipped in a distributed artifact. `CONFIRMED
+(partial)`.
+
+### RV-10 — The vocabulary mismatch
+
+*Expectation before running:* one stray term.
+
+```
+$ grep -rn 'COULD NOT VERIFY' --include='*.md' .
+calibration/README.md:151:  `COULD NOT VERIFY` entry unless the adjudicator re-established the claim itself.
+```
+
+Exactly one occurrence, in backticks, in the position where the ledger's verdict vocabulary
+belongs. The vocabulary is `COULD NOT DETERMINE` in all 14 defining occurrences across `SKILL.md`,
+`ledger-template.md`, `README.md` and `HOW-IT-WORKS.md`. `CONFIRMED`. Reviewer cited `:150`; it is
+`:151` (`R3-P4`).
+
+### RV-11 — Naming and the overwrite guard
+
+*Expectation before running:* the reviewer claims two things; I expected the naming half to be
+weaker than stated.
+
+```
+$ grep -n -i 'overwrit\|already exists\|collision\|clobber' skills/*/SKILL.md
+skills/adversarial-review-prompt/SKILL.md:397   [unrelated — a doubt-search collision]
+skills/review-adjudication/SKILL.md:122         [unrelated — round detection]
+```
+
+**No overwrite guard exists in either skill.** `adversarial-review-prompt` §6 writes the brief and
+§8 the cover note with no instruction to check for an existing file, so a second run over the same
+phase silently destroys the first brief — and briefs are the evidence base the echo audit and the
+"ground already walked" section both read.
+
+The naming half is weaker than the reviewer states. Round suffixes *are* specified
+(`ledger-template.md:206` — `«NN-EXTERNAL-REVIEW-«N».md»`), and a per-reviewer collision rule
+already exists (`cover-note-template.md:87` — `NN-EXTERNAL-REVIEW-<reviewer>.md`, *"so the second
+run cannot overwrite the first"*). What is genuinely missing is a **single algorithm reconciling
+`NN` (phase number) with round `N`** — the two conventions are documented in different files and
+never composed. `CONFIRMED (partial)`: the overwrite guard is absent as claimed; the naming
+convention is under-composed rather than inconsistent.
+
+### RV-12 — Test inventory, and the reviewer's own figure
+
+*Expectation before running:* two fixture suites, 8 tests, no skill-level validator.
+
+```
+$ find . -name 'test_*' -o -name 'Makefile' -o -name '*.yml' -o -name 'conftest.py' -o -name '*.sh'
+./calibration/cases/trap-unfalsifiable-test/test_checksum.py
+./calibration/cases/clean-wordcount/test_wordcount.py
+$ cd "$SCRATCH/r3" && python3 -m pytest -q cases/clean-wordcount cases/trap-unfalsifiable-test
+........                                                                 [100%]
+8 passed in 0.01s
+```
+
+`8 passed` **reproduces exactly**. No validator for the skills exists, and no build, CI, task-runner
+or lint artifact of any kind is present. Run against a scratchpad copy so the repository's own
+`__pycache__` state was not disturbed.
+
+### RV-13 — Hygiene
+
+```
+$ git status --short
+?? EXTERNAL-REVIEW-3.md
+?? calibration/cases/clean-wordcount/__pycache__/
+?? calibration/cases/trap-unfalsifiable-test/__pycache__/
+```
+
+The two `__pycache__` directories were **already untracked at session start** and are unchanged —
+RV-12 ran in the scratchpad precisely so they would be. The only file this session added inside the
+repository is `EXTERNAL-REVIEW-3.md`, the materialized transcript, which step 7 permits. No tracked
+file is modified.
+
+## R3.3 — Adjudication
+
+| # | Finding (reviewer's impact) | Class | Verdict | Disposition |
+|---|---|---|---|---|
+| R3-F1 | The `allowed-tools` frontmatter is dangerously misunderstood *(highest, pos. 1)* | machine-checkable | **CONFIRMED** — RV-1, RV-2. Both halves documented verbatim (*"It does not restrict which tools are available"*; *"The grant clears when you send your next message"*) **and** executed first-hand: this session called `AskUserQuestion`, `Skill`, `ToolSearch` and `WebFetch`, none of them granted. The prose write envelope is advisory over an unrestricted `Bash` pre-approval in a publicly distributed skill — the exact case the docs warn about | **PENDING OWNER — proposed: FIX NOW.** Q1: how far to narrow. The defect is settled; the friction trade-off is the owner's. **Correction to the reviewer's fix:** `disallowed-tools` exists in frontmatter and is a real restriction — cheaper than the proposed plugin hook for everything except path-aware rules. **✔ executed 2026-08-22** — Q1(b) applied to both skills: `adversarial-review-prompt` `Read, Write, Grep, Glob, Bash` → `Read, Write, Grep, Glob`; `review-adjudication` `Read, Write, Edit, Grep, Glob, Bash, Agent` → `Read, Write, Grep, Glob`. `Bash`, `Edit` and `Agent` now fall through to normal permission handling. Both frontmatters re-parse; no grant retains any of the three. **Beyond the letter of Q1(b), and flagged rather than buried:** the decision named `Bash` and `Edit`, and `Agent` was dropped too — the enumerated keeps were `Read`/`Grep`/`Glob`/`Write`, and a subagent spawn is the broadest capability that was in the list. One line to restore if that reads as overreach |
+| R3-F2 | Compaction can remove the most important half of each skill *(highest, pos. 2)* | machine-checkable | **CONFIRMED** — RV-3, RV-4. Both figures reproduce from primary source; the cut lands at lines 273–313 and every safety, write-boundary and closure rule in both skills is past it. Reviewer's section list is exact for both files. *Bounded, not closed:* re-invoking after compaction restores full content, and nothing tells the operator that | **PENDING OWNER — proposed: FIX NOW (minimal).** Q2: minimal hoist vs full restructure. Minimal = move the write boundary, the escalation rules and the closure rules above line ~270 in both files; full = the reviewer's checklist-plus-references rewrite. **✔ executed 2026-08-22** — Q2(a), implemented as an `<invariants>` block immediately after `</objective>` in both skills (`adversarial-review-prompt:22-45`, `review-adjudication:26-50`): the load-bearing rules in condensed form, each pointing at the section that states it in full, and each block saying why it exists. Both sit far above the recomputed cut band (288–322 and 265–302). **The honest cost, recorded rather than buried:** the files got *longer* — 463→497 and 523→572 lines — so `review-adjudication` is now further past the documented 500-line guidance and more of its tail falls past the cut than before. The invariants survive compaction; the tail is more exposed than it was. Only the Q2(b) restructure, still unauthorized, actually shortens them |
+| R3-F3 | Residual doubts do not survive the documented fresh-session workflow *(highest, pos. 3)* | machine-checkable | **CONFIRMED** — RV-6. `review-adjudication` mandates a per-doubt ruling (`:339`, `:344-348`) while step 1 never lists the doubts as an input and nothing instructs the adjudicator to ask for them; the only copy is session-local (`:425`) and `README.md:152-153` says the session need not be kept. **This round is the demonstration** — no doubts reached this session | **FIX NOW** — minimal fix, one bullet in step 1: *the author's residual-doubt hand-off, where one exists — ask the user for it; where it is unavailable, record that and score no doubt as independent corroboration.* That closes the input gap without inventing a storage scheme. **The storage scheme is Q3**. **✔ executed 2026-08-22** — `review-adjudication/SKILL.md` step 1 gains a bullet ahead of **The round**: the author's residual doubts are a named input, obtained by asking the user to paste the §10 hand-off verbatim. Where unavailable — no authoring session, or the operator no longer has the message — record that and **score no finding as independent corroboration on that basis**, with an explicit prohibition on reading absence-of-the-list as evidence the doubts stayed out of the brief. Absence of the check and a passed check must never read the same in a ledger |
+| R3-F4 | The "blind" subagent is write-restricted, but not read-isolated *(highest, pos. 4)* | machine-checkable | **CONFIRMED** — RV-7. The enforcement at `:414-418` excludes `Write`/`Edit`/`NotebookEdit` only; the subagent keeps `Read`, `Glob`, `Bash` and is spawned into the directory holding the report. The unqualified claim at `:236` is not delivered. **Internal contradiction:** `:366-371` applies precisely this "one `ls` away" reasoning to reviewers and gets it right. **Not a duplicate of round-2 `F4`** — see `R3-D1` | **FIX NOW** — the minimal fix is the move this project already made for the calibration isolation recipe under round-1 `F12`: **be exact about what this buys.** Qualify `:236`, and state in the escalation that the allowlist buys non-modification, not blindness, and that real blindness needs a sanitized copy. **Whether an unisolated check may still discharge the mandatory second opinion is Q4**. **✔ executed 2026-08-22** — two edits. (a) the blindness claim is narrowed from "never sees the report" to "is never *handed* the report", followed by the statement that this is not the same as being unable to read it: the subagent is spawned into the report's own directory keeping `Read`, `Glob` and `Bash` — the identical one-`ls`-away exposure the skill already names for reviewers. (b) the escalation gains **What the allowlist does not buy**: the sanitized copy is named as what real blindness would take, and where one is not built the ledger must record beside the verdict that the verifier could have read the report — **Q4(b) executed in the same edit**. Ends: "Never write 'blind' for a check that was merely uninformed" |
+| R3-F5 | Same-family reviews receive a knowingly false framing sentence *(highest, pos. 5)* | machine-checkable | **CONFIRMED** — RV-8. `prompt-template.md:38` emits *"You have a different architecture and different training"* unconditionally; the template's one verification gate (`:26-29`) covers the provenance sentence only. `SKILL.md:82` already states the correct position, so the skill contradicts its own template. The reviewer's three-branch fix (known-different / same-family / unknown lineage) matches `SKILL.md:80-86` exactly | **FIX NOW** — make the sentence conditional on the three branches, sourced from the reviewer identity §1 now requires. Cheap, and the site is one the identity change already touched. **✔ executed 2026-08-22** — `prompt-template.md`: the unconditional sentence is replaced by the placeholder «independence sentence — one of the three branches below»; the gate paragraph above the quote now names **two** factual claims to settle rather than one; and three branches follow the quote with drafted wording each — known-different family (name both), same family ("your context is fresh… but you do not bring a different architecture, so the blind spots you share with its author are the ones most likely to survive this review"), unknown lineage (claim nothing). Closes by stating the cost of the false version: it tells the reviewer its disagreement is evidence of a difference that may not exist |
+| R3-F6 | No executable invariant checks for the skills themselves *(other)* | machine-checkable | **CONFIRMED** — RV-12. Two fixture suites, 8 tests, no validator, no CI, no task runner. *Partly settled ground:* the corpus-drift half is `BACKLOG.md` `B-1`, already `FIX LATER` from round 1. **New and not covered by `B-1`:** skill-level checks — frontmatter YAML, unresolved `«»`, verdict/disposition legality, count-in = count-out, permission agreement, artifact collision, report/brief pairing | **FIX LATER** — `BACKLOG.md` `B-3`, verified present with Location, Mechanism and Consequence copied from the report. **Ordering slip, recorded rather than smoothed:** step 6 requires the artifact to exist *before* the ledger is written; here the ledger row was written first and `B-3` followed minutes later in the same session. The artifact exists and is complete, and no hand-off occurred in between, so nothing was deferred into a gap — but the sequence was wrong and the rule is there because that gap is exactly where deferrals get lost. Scoped to the *new* half; `B-1` keeps the corpus half |
+| R3-F7 | Artifact naming and collision rules are undefined *(other)* | machine-checkable | **CONFIRMED (partial)** — RV-11. *Established:* **no overwrite guard exists in either skill**; a second run over the same phase silently destroys the prior brief, which is the evidence base the echo audit reads. *Corrected:* round suffixes are specified (`ledger-template.md:206`) and a per-reviewer collision rule exists (`cover-note-template.md:87`) — the defect is that `NN` and round `N` are never composed by one algorithm, not that the conventions are absent | **FIX NOW** — the guard half only, and it is one clause: `adversarial-review-prompt` §6 and §8 refuse to overwrite an existing brief or cover note, and say what to write instead. Cheap, and both sites are already being edited for `R3-F5`. **✔ executed 2026-08-22** — §6 gains **Never overwrite an existing brief or cover note**: check the path first, take the next free name (`-2`/`-3` for a later round over the same target, `-<reviewer>` for a second reviewer in one round), and say in the hand-off which name was used and what occupied the first — with the reason stated, that the echo audit is scored *against* the spent brief and the next brief's "ground already walked" is read out of it. §8 puts the cover note under the same rule and requires its suffix to match its brief's. *Not executed, per the row:* the `NN`-versus-round-`N` reconciliation, ruled the weaker half |
+| R3-F8 | `COULD NOT VERIFY` used where the vocabulary is `COULD NOT DETERMINE` *(other)* | machine-checkable | **CONFIRMED** — RV-10. Exactly one occurrence, `calibration/README.md:151`, in backticks, in verdict position, against 14 defining occurrences of the correct term | **FIX NOW** — one word. **✔ executed 2026-08-22** — `calibration/README.md:151` now reads `COULD NOT DETERMINE`. A repository-wide grep for `COULD NOT VERIFY` returns nothing outside the review reports and this ledger, both of which are history and are not edited |
+| R3-F9 | The browser-chat delivery instruction cannot be followed as written *(other)* | machine-checkable | **CONFIRMED (partial)** — `prompt-template.md:343-348` says *"Do not spread it across several turns"* and then *"if length forces a break, end the message at a section boundary and resume from exactly there"*, which requires a user turn the brief never mentions. *Corrected:* it is under-specified rather than impossible — the operator supplies the continuation in practice. The tension is sharpened by the passage 3 lines above it, which warns that *"a brief whose first mechanic is impossible teaches the reviewer that this brief's instructions are approximate"* | **FIX NOW** — one clause telling the reviewer the operator will prompt continuation, so the instruction is completable. **✔ executed 2026-08-22** — the chat-delivery block now reads: do not spread across turns *by choice*, and where an output limit forces a break, end at a section boundary, name the section, and stop — **the operator will send one word to continue, and you resume from exactly there**. Adds the half that was missing altogether: a following line telling the brief's author to say this in the hand-off, because the instruction needs the *operator* — "an operator who reads that stop as the end will file a truncated report as a complete one" |
+| R3-F10 | Broken optional link to `references/example-audit-prompt.md` *(other)* | machine-checkable | **CONFIRMED (partial)** — RV-9. The link is unresolvable in both the repository and the installed copy. *Refuted:* the implied defect. `SKILL.md:220-224` handles absence explicitly (*"it is optional, so skip it without comment if absent"*), so no instruction fails | **FIX NOW** — de-link the filename to plain text, keeping the prose. Trivial, and it stops the false positive recurring in every reviewer's link check. **✔ executed 2026-08-22** — the markdown link is gone; the filename is named in backticks as "`references/example-audit-prompt.md` (named, deliberately not linked — it ships absent by default)", with the optionality prose unchanged. A relative-link check over `skills/**` now returns clean |
+| R3-F11 | Keep the public-corpus limitation prominent *(other)* | not a defect | **SETTLED ALREADY** — citation as step 3 requires: `HOW-IT-WORKS.md:738` — *"**The calibration corpus is public, which is a real weakness.**"* — and `BACKLOG.md` `B-2`, whose Consequence line reads *"PASS can mean memorization."* The reviewer attributes it to `BACKLOG.md`; `B-2` does carry it. No new evidence is presented, so step 3's reopening rule does not fire | **NO ACTION** — the item is an endorsement of existing documentation, not a request. Recorded so a later reader does not mistake the absence of a row for a dropped finding |
+
+## R3.4 — Echo audit: not possible this round, and why that is not neutral
+
+Round 2 scored 1 of 9 findings fully independent. **This round cannot run that audit at all**:
+the echo audit probes each finding against the brief and cover note that primed the reviewer, and
+**there is no brief.** No document primed this reviewer, so no finding can be an echo of one.
+
+That cuts in the project's favour and it should be said plainly, because it is the strongest
+evidentiary fact of this round: **all eleven findings are independent by construction.** Nothing
+in the operator's one-sentence instruction named `allowed-tools`, compaction, residual doubts,
+subagent isolation, or the architecture sentence. Compare round 2, where 6 of 9 were echoes of
+questions the brief had already asked.
+
+The reciprocal cost is equally plain and is ruled as `R3-P3`: with no brief there is **no
+load-bearing claims list**, so there is **no coverage to score** — this round establishes what
+eleven findings are and nothing whatever about what was examined and found sound. An unscoped
+review buys independence and sells coverage. Both halves are recorded.
+
+## R3.5 — The reviewer's figures: what reproduced
+
+Every checkable figure the report gave reproduced exactly, on the first attempt, with no drift:
+
+| Figure | Reported | Measured | |
+|---|---|---|---|
+| `adversarial-review-prompt/SKILL.md` word count | ~5,583 | 5,583 | **exact** |
+| `review-adjudication/SKILL.md` word count | ~6,472 | 6,472 | **exact** |
+| `review-adjudication/SKILL.md` line count | 523 | 523 | **exact** |
+| Fixture suite result | `8 passed` | `8 passed` | **exact** |
+| Compaction truncation point | "around line 300" | 273–313 band, both files | **exact within its own hedge** |
+| `allowed-tools` semantics | grant, not allowlist; turn-scoped | documented verbatim + executed | **exact** |
+| Compaction reattachment budget | first 5,000 tokens | first 5,000 tokens | **exact** |
+| `SKILL.md` length guidance | under 500 lines | under 500 lines | **exact** |
+
+**Three citations drifted** (`R3-P4`): the docs URL (`/slash-commands` for material at `/skills`),
+`calibration/README.md:150` for `:151`, and `prompt-template.md:31` for `:38`. All three resolve to
+the right file and the right claim; the last two are off by one and by seven lines within the block
+quoted. Per `SKILL.md:330-332`, a reviewer whose figures reproduce exactly has earned weight on its
+unverifiable claims. **This one has**, and the drift is in pointers rather than in substance — but
+it is recorded, because a citation that does not resolve costs the next reader the same search
+twice.
+
+## R3.6 — Claims examined and upheld: what was sampled
+
+The report's "What is especially good" list is seven endorsements. Per `SKILL.md:373-380`, an
+upheld claim is a ruling inherited, not a line copied — and per the calibration rule, **an
+uncalibrated reviewer's upheld list is not coverage**. Two were sampled against primary sources
+rather than transcribed:
+
+- *"Verdict and disposition are correctly separated"* — **upheld.** `SKILL.md:432-467` defines the
+  two axes with disjoint vocabularies and an explicit ban on bare `ACCEPTED`; `ledger-template.md`
+  row 7 pairs `COULD NOT DETERMINE` with `VERIFY`, which was round-1 finding 2's fix.
+- *"Prompt/report instructions are treated as untrusted data during adjudication"* — **upheld in
+  the repository copy**, and this session applied it: the report's embedded directives ("Reopen the
+  earlier finding", "Recommended fix: …") were read as claims to rule on, not as instructions, and
+  `R3-F1`'s recommended fix was corrected rather than adopted.
+
+The remaining five are recorded as **unverified**, not as coverage. None is load-bearing for any
+ruling in this ledger.
+
+## R3.7 — Owner decisions required
+
+**Q1 — How far to narrow `allowed-tools`?** *(blocks `R3-F1` only)*
+The defect is settled; this is the friction trade-off, and it is a product decision because these
+skills are distributed publicly under CC0.
+- **(a) Reviewer's proposal** — grant `Read`, `Grep`, `Glob` only. Every `Bash` command and every
+  file write prompts. Safest, and noisiest: an adjudication runs dozens of greps.
+- **(b) Narrow `Bash`, keep the rest** — drop bare `Bash`, keep `Read`/`Grep`/`Glob`/`Write`. Kills
+  the sharpest edge (arbitrary shell pre-approved in a skill a stranger installs from GitHub) while
+  leaving the read path quiet. *Recommended* — it is the minimal fix that closes the documented
+  hazard.
+- **(c) (b) plus `disallowed-tools`** — additionally declare `disallowed-tools: Edit, NotebookEdit`
+  on `adversarial-review-prompt`, making the "brief and cover note only" envelope enforced rather
+  than advisory for the invoking turn. This is the mechanism the reviewer missed.
+- **(d) Accept as-is** — available, and it needs your words quoted in the ledger.
+
+**Q2 — Minimal hoist or full restructure for compaction?** *(blocks `R3-F2` only)*
+- **(a) Minimal** — move the write boundary, the three escalation rules and the closure rules above
+  line ~270 in both files. Hours, low risk, closes the specific loss the finding names.
+  *Recommended* as the first step regardless of (b).
+- **(b) Full restructure** — the reviewer's architecture: each `SKILL.md` becomes a compact
+  operational checklist under 500 lines, with history and rationale moved to reference files. Days,
+  and it touches every line of a document two rounds of review have already shaped. High value, and
+  it is a rewrite, not a fix.
+
+**Q3 — How should residual doubts be made durable?** *(does not block; `R3-F3`'s input fix lands either way)*
+- **(a) Ask the user at adjudication time** — the queued minimal fix, nothing more. Zero new
+  machinery; depends on the operator having kept the chat.
+- **(b) Private author-notes artifact** — written outside the reviewer's readable root. Durable, and
+  it needs a location the reviewer provably cannot reach, which `R3-F4` shows this project has
+  previously assumed rather than established.
+- **(c) Commitment hash** — publish a hash of the doubts with the brief, disclose the text at
+  adjudication. Proves the doubts predated the review without anchoring the reviewer. Strongest,
+  and the most machinery for a 3–5 item list.
+
+**Q4 — May an unisolated second opinion discharge the mandatory blind check?** *(blocks nothing today — no high-impact `REFUTED` was issued this round)*
+- **(a) No** — a `REFUTED` on a reviewer-rated high finding in your own code requires a sanitized
+  copy; without it the verdict is `COULD NOT DETERMINE`. Honest, and it makes the escalation
+  expensive enough that it may simply stop being run.
+- **(b) Yes, with the exposure recorded** — the check still counts, and the ledger states beside the
+  verdict that the verifier could read the report. *Recommended*: it matches the existing rule for
+  an unrestricted verifier (`SKILL.md:425-427`), and it matches what this project did for the
+  calibration isolation recipe under round-1 `F12` — say exactly what the mechanism buys instead of
+  banning the weaker version.
+
+## R3.8 — Amendments queued
+
+`FIX NOW`, in the order they should land — the first three share two files, so batch them:
+
+1. **`R3-F5`** — `prompt-template.md:38`: three-branch conditional framing (known-different family
+   / same family / unknown lineage), sourced from the identity `SKILL.md:57-86` now requires.
+2. **`R3-F7`** — `adversarial-review-prompt/SKILL.md` §6 and §8: refuse to overwrite an existing
+   brief or cover note; say what to write instead.
+3. **`R3-F9`** — `prompt-template.md:343-348`: one clause saying the operator supplies the
+   continuation, so the instruction is completable.
+4. **`R3-F3`** — `review-adjudication/SKILL.md` step 1: add the residual-doubt hand-off as a named
+   input, with the "ask the user; where unavailable, score no doubt as independent" fallback.
+5. **`R3-F4`** — `review-adjudication/SKILL.md:236` and `:414-418`: qualify the blindness claim;
+   state that the allowlist buys non-modification, not blindness, and name the sanitized copy as
+   what real blindness would take.
+6. **`R3-F8`** — `calibration/README.md:151`: `COULD NOT VERIFY` → `COULD NOT DETERMINE`.
+7. **`R3-F10`** — `adversarial-review-prompt/SKILL.md:220`: de-link the filename, keep the prose.
+8. **`R3-P1`** — reinstall both skills to `~/.claude/skills/`, or record deliberately that the
+   repository is the product and the installed copy is a working checkout.
+
+Held pending owner: **`R3-F1`** (Q1), **`R3-F2`** (Q2).
+
+**`FIX LATER`, with its artifact:** `R3-F6` → `BACKLOG.md` `B-3` (`BACKLOG.md:63`), with
+Location, Mechanism and Consequence copied from the report. Written immediately *after* the ledger
+row rather than before it — the row records that ordering slip rather than smoothing it over.
+
+## R3.9 — Corrections and reopenings
+
+**`R3-D1` — the reviewer asks to reopen round-2 `F4`, and it is entitled to.**
+The report states: *"Reopen the earlier 'unbounded Write/Edit' finding: the recorded prose-only fix
+did not close the actual permission issue."* Round-2 `F4` (`REVIEW-ADJUDICATION.md:1468`) was ruled
+`CONFIRMED` / `FIX NOW` and executed on 2026-08-22.
+
+**Verdict: the reopening is upheld, and it does not supersede the round-2 row — it succeeds it.**
+Round-2 `F4` was about the **subagent's** tools, and its fix correctly landed a tool allowlist on
+the spawned agent. Its row even *notes in passing* that "the frontmatter grants `Write`, `Edit`,
+`Bash`, `Agent`" — but that observation was scenery for the subagent argument and **the skill's own
+self-grant was never dispositioned**. So:
+
+- The round-2 ruling was **correct as scoped** and stays as written. No superseding row is needed.
+- The **skill's own `allowed-tools` self-grant** was never adjudicated by anyone. It is new, it
+  arrives with primary-source evidence round 2 did not have (RV-1's three doc passages, RV-2's
+  execution), and under step 3's rule 2 it is therefore **not settled**. It is `R3-F1`.
+- **Read isolation** (`R3-F4`) is likewise new: round-2 `F4` asked whether the subagent could
+  *write*; round 3 asks whether it can *read the report*. Different mechanism, different failure,
+  and the round-2 fix does not touch it.
+
+**Did any round-2 fix open a new path to the failure it closed?** Asked explicitly, as the template
+requires. **One, and it is `R3-F4`.** Round-2 `F4`'s fix introduced the phrase "an agent type
+already defined read-only" at `:418`. In context "read-only" means *does not write* — but the word
+now sits 180 lines below the unqualified blindness claim at `:236`, and it reads as though isolation
+had been delivered. The fix did not create the read exposure; it created a second sentence a reader
+can mistake for its closure. That is why `R3-F4`'s minimal fix is a qualification and not a new
+mechanism.
+
+## R3.10 — What this round did not settle
+
+- **`R3-CNV-1` — the reviewer's one declared hedge.** On `R3-F4` it wrote: *"This is an inference
+  from Claude Code's documented subagent working-directory and tool behavior."* It did not spawn a
+  subagent and observe it read the report. **Verdict: `COULD NOT DETERMINE` on the empirical half**
+  — the documentary half is `CONFIRMED` at RV-7 and is what `R3-F4` rests on. **Disposition:
+  `VERIFY`** — spawn a read-only subagent in a directory containing a report file and ask it to
+  list what it can see. **Does not block:** the finding is carried by the internal contradiction at
+  `:236` vs `:366-371`, which is documentary and needs no execution.
+- **`R3-CNV-2` — the exact compaction cut, raised by this adjudication.** RV-4 locates it in a
+  273–313 *word-derived* band; the real boundary is tokenized, and no tokenizer was run.
+  **Verdict: `COULD NOT DETERMINE`. Disposition: `VERIFY`** — run the files through a tokenizer and
+  read off the line at 5,000 tokens. **Does not block:** every rule at issue sits past line 430 in
+  both files, far beyond any plausible boundary, so the finding does not turn on the exact line.
+- **Transcription fidelity** (`R3-P2`) is not establishable by this session and stays open.
+- **Reviewer coverage** is not merely unmeasured but unmeasurable this round (`R3-P3`), there being
+  no claims list.
+
+## R3.11 — Process findings
+
+| # | Finding | Raised by | Verdict | Disposition |
+|---|---|---|---|---|
+| R3-P1 | The installed skills are two commits behind the repository; the copy that ran this adjudication contains no reviewer-identity requirement and no calibration lookup | this adjudication (RV-5) | **CONFIRMED** — 382/4,370 and 284/3,109 against 463/5,583 and 523/6,472. The identity and calibration steps performed this round came from reading the repository, not from the skill in force | **FIX NOW** — queued at §R3.8 item 8. Reinstall, or record that the installed copy is a working checkout and the repository is the product. **✔ executed 2026-08-22** — `rsync -a --delete skills/<name>/ ~/.claude/skills/<name>/` for both skills; `diff -rq` confirms the installed trees are byte-identical to the repository. The reviewer-identity requirement and the calibration lookup are in force on this machine for the first time |
+| R3-P2 | The report was delivered in chat and exists on disk only as an operator transcription | this adjudication | **CONFIRMED** — the reviewer wrote no file; `EXTERNAL-REVIEW-3.md` was materialized by this session before adjudication, per step 7 | **ACCEPTED AS-IS — proposed, PENDING OWNER.** No fix is available retroactively. Forward: the cover note already instructs reviewers to write to a file; this round had no cover note because it had no brief |
+| R3-P3 | An unscoped review buys independence and sells coverage; this round can score neither an echo audit nor a coverage line | this adjudication | **CONFIRMED** — §R3.4. All 11 findings independent by construction; nothing established about what was examined and found sound | **NO ACTION** — this is a property of the method the operator chose, correctly recorded rather than fixed. It is the reason nothing from this round may enter a future brief's "ground already walked" as *cleared* — only the 11 findings themselves may |
+| R3-P4 | Three of the reviewer's citations do not resolve as given | this adjudication | **CONFIRMED** — docs URL `/slash-commands` for material at `/skills`; `calibration/README.md:150` for `:151`; `prompt-template.md:31` for `:38`. All resolve to the right file and claim; substance unaffected | **NO ACTION** — recorded as a weight fact, not a defect in this repository. It sits against a figure record that reproduced 8 of 8 exactly (§R3.5) |
+
+## R3.12 — Round 3 status: CLOSED 2026-08-22
+
+Eleven numbered rows, four process entries, two CNV entries and one prior-review disagreement all
+carry a verdict and a disposition. The three closure conditions stated when this section was first
+written have all been met, and each is struck through here rather than deleted, so the sequence
+stays legible:
+
+1. ~~**Q1 and Q2 are answered**~~ — **met**, §R3.13. Locked at (b) and (a); both rows' `PENDING
+   OWNER` discharged and both joined the execution queue.
+2. ~~**`R3-P2`'s proposed `ACCEPTED AS-IS` receives the owner's words**~~ — **met**, §R3.13, quoted
+   verbatim and complete.
+3. ~~**The eight `FIX NOW` items are executed and their rows backfilled**~~ — **met**, §R3.14. Ten
+   rather than eight, `R3-F1` and `R3-F2` having joined on Q1 and Q2. Every one carries its
+   execution reference.
+
+`R3-CNV-1` and `R3-CNV-2` remain open `VERIFY` items and are **explicitly non-blocking**; both name
+the check that would settle them.
+
+**What did not happen here, and is the next thing:** the calibration corpus still has not been
+re-run since round 2 moved the instrument, so `gpt-5.6-sol-high` remains stale and this reviewer
+remains uncalibrated for a third consecutive round. Its findings stood on their own evidence — 8 of
+8 figures reproduced — but its silence has now closed nothing three times running, and the
+"especially good" list in §R3.6 is five-sevenths unverified because of it.
+
+Nothing in this round establishes that the work is complete, correct, or finished.
+
+## R3.13 — Locked owner decisions from this round
+
+Recorded 2026-08-22. The owner's words, verbatim and complete:
+
+> *"i'll follow your recommendations. No need to do anything about what codex said, if it's better
+> to do anouther round brief just to ake sure the mofidications are worthy."*
+
+**What that settles.** The four owner questions in §R3.7 were each posed with a recommendation, and
+the message accepts them as a set. Each is therefore locked at its recommended option:
+
+| | Decision | Locked as |
+|---|---|---|
+| **Q1** | `allowed-tools` narrowing | **(b)** — drop bare `Bash` from both skills' grants; keep `Read`, `Grep`, `Glob`, and `Write` where the skill's deliverable requires it. `Bash` and `Edit` fall through to normal permission handling. Option (c)'s `disallowed-tools` line is *not* locked — it was offered as an extension to (b), and the acceptance names (b) |
+| **Q2** | Compaction remedy | **(a)** — minimal hoist. The write boundary, the three escalation rules and the closure rules move above line ~270 in both skills. The full restructure in (b) is **not** authorized and stays available |
+| **Q3** | Residual-doubt durability | **(a)** — the queued step-1 input fix only. No new storage scheme. (b) and (c) stay open as future work and are not backlogged, having no defect behind them once (a) lands |
+| **Q4** | Unisolated second opinion | **(b)** — it still discharges the mandatory check, and the ledger must record beside the verdict that the verifier could read the report |
+
+**`R3-P2` — disposition settled as `ACCEPTED AS-IS`.** The proposed disposition was accepted as part
+of the set above. Stated plainly, because this is the row where a general acceptance is doing
+specific work: **no fix is available retroactively** — the only copy of the original report is in a
+chat window, so transcription fidelity cannot now be established by anyone, and the risk accepted
+is that `EXTERNAL-REVIEW-3.md` may differ from what the reviewer wrote. Bounded by the fact that no
+ruling in this ledger turns on a disputed word. Forward, the cover note already instructs reviewers
+to write to a file; this round had no cover note because it had no brief.
+
+**What that does *not* settle: the eight `FIX NOW` items are still queued, not executed.** The
+message declines action on the report ("No need to do anything about what codex said") in the same
+breath as accepting the recommendations, and the skill requires an unambiguous, separate act before
+any fix lands. It has not been given, so nothing has been edited. §R3.12's closure conditions 1 and
+2 are now met; **condition 3 — execution and backfill — remains open**, and this round stays
+`OPEN`.
+
+**Execution authorized.** Asked whether to execute the queue before or after a round-4 brief, the
+owner chose *"Execute, then brief round 4"* — the 8 queued items land, each row is backfilled with
+what actually changed, and a round-4 patch-verification brief is then written against the pinned
+range. **`R3-F1` and `R3-F2` join the queue**, their `PENDING OWNER` having been discharged by Q1
+and Q2 above, bringing it to **10 items**. Execution and backfill follow in §R3.14.
+
+## R3.14 — Execution: what landed, and what it verifiably did
+
+Ten `FIX NOW` items executed 2026-08-22 in one session, against `fe9bbac`. Per-item detail is
+backfilled into each row in §R3.3; the checks below are the ones that apply across the batch.
+
+| Check | Expectation stated first | Result |
+|---|---|---|
+| Both frontmatters re-parse | valid YAML, four keys each | **pass** — `name`, `description`, `argument-hint`, `allowed-tools` on both |
+| No grant retains a broad capability | no `Bash`, `Edit` or `Agent` in either `allowed-tools` | **pass** — both now `Read, Write, Grep, Glob` |
+| Invariants survive compaction | both `<invariants>` blocks well above the recomputed cut band | **pass** — `:22-45` and `:26-50`, against bands of 288–322 and 265–302 |
+| No unresolved placeholder ships | no `«»` in either `SKILL.md` outside prose *about* guillemets | **pass** — 3 hits, all backticked references to the check itself |
+| Relative links resolve | no broken link under `skills/**` | **pass** — clean, where `R3-F10`'s was the only one |
+| Installed = repository | `diff -rq` silent for both skills | **pass** — byte-identical |
+
+**The one result that went the wrong way, and it is `R3-F2`'s.** The minimal hoist made both files
+**longer**: 463→497 and 523→572 lines. `review-adjudication` was already past the documented
+500-line guidance and is now 72 lines past it. The block that must survive compaction does survive
+it, which is what the finding asked for — but strictly more of each file's tail now falls past the
+cut than before the fix. **This is a fix that traded one exposure for a smaller version of itself,
+and it is recorded as such rather than reported as a clean close.** Only Q2(b)'s restructure, which
+the owner did not authorize, actually shortens these files. It is the first thing round 4 should be
+pointed at.
+
+**Did any round-3 fix open a new path to the failure it closed?** Asked explicitly, as the template
+requires. **One candidate, named for round 4 rather than ruled here**, since ruling on the effect of
+one's own fix is the self-review this ledger exists to demote: `R3-F1` removed `Bash` from both
+grants, and `review-adjudication` is a skill whose §5 re-verification is *mostly* `Bash`. Every
+re-verification command in a future adjudication will now prompt. The permission-handling outcome is
+correct and intended; whether the friction causes an adjudicator to run **fewer** checks is a
+behavioural question no static reading settles, and it is exactly the kind of second-order effect a
+fresh reviewer should be asked to attack.

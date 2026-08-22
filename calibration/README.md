@@ -148,7 +148,7 @@ tested.
 What an uncalibrated reviewer cannot do is *close* anything:
 
 - Its **claims-examined-and-upheld** list is not coverage. Every load-bearing claim on it is a
-  `COULD NOT VERIFY` entry unless the adjudicator re-established the claim itself.
+  `COULD NOT DETERMINE` entry unless the adjudicator re-established the claim itself.
 - A **report with no findings** is inconclusive, not an all-clear. It gets no ledger of its own,
   the same as a report that turned out not to be a review.
 - The next brief's **"ground already walked"** section does not inherit anything from it.

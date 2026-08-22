@@ -7,7 +7,6 @@ allowed-tools:
   - Write
   - Grep
   - Glob
-  - Bash
 ---
 
 <objective>
@@ -19,6 +18,31 @@ You are writing the prompt. You are **not** performing the review. Do not review
 do not fix anything, do not summarize findings you noticed while reading. The deliverable is
 two files: the audit brief, and a short paste-ready cover note that hands it over.
 </objective>
+
+<invariants>
+**These hold for the whole task.** They are repeated here because after an auto-compaction
+Claude Code re-attaches only the **first 5,000 tokens** of this skill, so everything past
+roughly line 280 can vanish mid-task without any signal. Each is stated in full in its own
+section; this block is the copy that survives.
+
+1. **You write the prompt. You do not perform the review.** The deliverable is two files.
+   (objective)
+2. **The reviewer's identity is a required input and is never inferred.** It decides the
+   calibration lookup, the envelope, and the independence framing. Ask when `$ARGUMENTS` is
+   silent. (§1)
+3. **Declare the operating envelope, and make brief and cover note agree exactly** — brief
+   path, report path, and every permission. Disagreement between the two is the defect the
+   reviewer will spend its run on. (§7, §8)
+4. **The report is a file the reviewer creates as it works** — never a review handed back in
+   chat for you to file, and never a ship/no-ship verdict. (§6, §7)
+5. **Residual doubts stay out of the brief and the cover note**, and §9's search then checks
+   whether they leaked anyway. Where a query finds nothing the words are **"no line found —
+   unverified"**; never "held back", "withheld", or "excluded from the brief". (§5, §9)
+6. **Never overwrite an existing brief or cover note.** Take the next free name and say which
+   you used. (§6, §8)
+7. **Never claim independence you have not established.** The "different architecture"
+   framing is conditional on the reviewer's identity, in three branches. (§1, template §1)
+</invariants>
 
 <why_this_is_hard>
 The failure mode is not a badly-formatted prompt. It is a prompt that produces confirmation.
@@ -219,8 +243,8 @@ This is where you tell the reviewer to spend disproportionate attention.
 
 Follow [references/prompt-template.md](references/prompt-template.md) for section order and
 the exact framing language. A full worked example — the one this skill was distilled from —
-may be present at [references/example-audit-prompt.md](references/example-audit-prompt.md);
-it is optional, so skip it without comment if absent. Read it when you need to see the
+may be present at `references/example-audit-prompt.md` (named, deliberately not linked —
+it ships absent by default); it is optional, so skip it without comment if absent. Read it when you need to see the
 register and level of specificity, not to copy its content.
 
 Non-negotiables while writing:
@@ -296,6 +320,14 @@ evidence about all the others.
 Save it beside the work being reviewed (e.g. `<phase-dir>/NN-EXTERNAL-REVIEW-PROMPT.md`),
 not in a scratch directory — it is a durable artifact that the resulting review is read
 against.
+
+**Never overwrite an existing brief or cover note.** Check the path before writing; where a
+file is already there, take the next free name — `-2`, `-3` for a later round over the same
+target, `-<reviewer>` for a second reviewer in the same round — and say in the hand-off which
+name you used and what was already occupying the first. A spent brief is not scratch: the
+adjudication ledger's echo audit is scored *against* it, and the next brief's "ground already
+walked" section is read out of it. Destroying one silently deletes the evidence later rounds
+are graded on, and nothing downstream can tell that it happened.
 
 ## 7. Declare the reviewer's operating envelope — and disclose it
 
@@ -379,7 +411,9 @@ read-only while the brief authorizes mutation will spend the run on that instead
 code. Repeating the delivery instructions in both places is deliberate; disagreeing in the two
 places is the defect.
 
-Save it as `<phase-dir>/NN-EXTERNAL-REVIEW-COVER-NOTE.md`, and grep it for `«` and `»` along
+Save it as `<phase-dir>/NN-EXTERNAL-REVIEW-COVER-NOTE.md` — **under §6's no-overwrite rule,
+which applies to this file too**, and carrying the same suffix as its brief, since a `-2` brief
+with an unsuffixed cover note stops the pair being findable. Grep it for `«` and `»` along
 with the brief. Then reproduce it **verbatim in the hand-off message**, inside a single fenced
 block, so the user can copy it in one gesture.
 

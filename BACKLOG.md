@@ -57,3 +57,37 @@ skills trust it for silence.
 **Adjudicator's note on scope:** verified 2026-08-21 that the only replacement guidance in the
 repository is the two lines at `HOW-IT-WORKS.md:737-739`; nothing under `calibration/` resembles a
 checklist or a validation protocol.
+
+---
+
+## B-3 — No executable validator for the skills themselves
+
+**Origin:** `EXTERNAL-REVIEW-3.md`, "Other worthwhile improvements" bullet 1 (OpenAI Codex,
+`gpt-5.6-sol` at `high` effort, 2026-08-22), impact `other`. Adjudicated `CONFIRMED` / `FIX LATER`
+in `REVIEW-ADJUDICATION.md` §R3.3 row `R3-F6`.
+
+**Scope note:** this entry carries the **skill-level** half only. The corpus-level half — that the
+cases and the answer key remain mutually valid — is `B-1` and is not duplicated here.
+
+**Location:** `skills/adversarial-review-prompt/SKILL.md`,
+`skills/review-adjudication/SKILL.md`, both `references/` directories, and the repository root
+(no harness, CI, task runner or lint artifact exists anywhere).
+
+**Mechanism:** The repository has executable tests inside two calibration fixtures and nothing
+else. Verified 2026-08-22: no `Makefile`, `pyproject.toml`, `package.json`, `conftest.py`, `*.sh`
+or `.github/` anywhere in the tree. Every invariant the two skills depend on is therefore checked
+only by a human reading prose, including: frontmatter YAML parses and declares the fields the
+skills assume; no unresolved `«»` placeholder ships in a template; every verdict/disposition pair
+written into a ledger is one the skill's own matrix permits; count-in equals count-out on a
+finished ledger; the two skills' declared permissions agree with the write envelope their prose
+claims; a generated brief does not overwrite an existing one; a report has the brief it answers;
+and the no-filesystem template variant stays consistent with the filesystem one.
+
+**Consequence:** Every one of those invariants has already failed at least once in two rounds of
+external review — the stale `corpus «commit»` header (round-2 `F1`), the `Task`/`Agent` tool-name
+drift (round-1 `F4`), the carried-forward `418`-for-`416` inventory count (round-2 `F9`), the
+`COULD NOT VERIFY` vocabulary break and the missing overwrite guard (round-3 `R3-F8`, `R3-F7`).
+Each was found by a paid external reviewer reading prose, which is the most expensive possible
+detector for a class of defect a script would catch in milliseconds. Until a validator exists, the
+skills' correctness depends on the next review round noticing, and a round that does not notice
+reads as a pass.

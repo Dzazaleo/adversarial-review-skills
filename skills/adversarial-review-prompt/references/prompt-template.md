@@ -23,10 +23,11 @@ the phrasings marked **verbatim-worthy** did the heaviest lifting in practice.
 Name the self-review problem concretely. State the current green status with real numbers
 (tests passing, verification score, open threats) and then turn it into the reason for doubt.
 
-Verbatim-worthy — except that the provenance sentence is a factual claim: verify it before
-keeping it. Where the target contains inherited code, human edits, or third-party work,
-state the actual provenance instead — a false "every line" primes the reviewer to distrust
-evidence on a fabricated basis:
+Verbatim-worthy — except for **two factual claims buried inside it, and you settle both before
+keeping the words.** The first is the provenance sentence: where the target contains inherited
+code, human edits, or third-party work, state the actual provenance instead — a false "every line"
+primes the reviewer to distrust evidence on a fabricated basis. The second is the independence
+sentence, left as a placeholder below and resolved by the three branches that follow the quote:
 
 > Every line of the code you are about to audit was written by one model, reviewed by that
 > same model, and then verified by that same model against tests it also wrote. It currently
@@ -35,7 +36,7 @@ evidence on a fabricated basis:
 > That is exactly the problem. A model validating its own work carries the same blind spots
 > into the review that it had while writing — the same misreadings of the spec, the same
 > unexamined assumptions, the same things it never thought to test because it never thought
-> of them at all. You have a different architecture and different training. **You will notice
+> of them at all. «independence sentence — one of the three branches below». **You will notice
 > different things, and those things are the entire value of this exercise.**
 >
 > - **Confirmation is near-worthless output.** If you spend your effort re-deriving what is
@@ -49,6 +50,27 @@ evidence on a fabricated basis:
 >
 > Assume competence, not correctness. The «work» is carefully built. Where it is wrong, it
 > is wrong in ways its author cannot see — those places are what you are here for.
+
+**Resolving the independence sentence — three branches, and you must know which you are in.**
+The reviewer's identity is a required input to this skill (§1) precisely so this sentence can be
+written truthfully. **Never emit the unconditional "You have a different architecture and
+different training":** this skill explicitly supports handing the brief to another fresh Claude
+session, and a great many review products are thin layers over a small pool of base models, so
+the product's name does not settle lineage.
+
+- **Known and different family** — name both: *"This work was written by «author family». You
+  are «reviewer family». You have a different architecture and different training."*
+- **Same family** — say what is bought and what is not: *"This work was written by «family», and
+  so are you. Your context is fresh and you did not write it — but you do not bring a different
+  architecture, so the blind spots you share with its author are the ones most likely to survive
+  this review. Weight your own agreement accordingly."*
+- **Unknown lineage** — claim nothing: *"The lineage of the model reviewing this is not known to
+  the author, so no claim is made about whether your architecture differs from its author's.
+  What is certain is that you did not write this work and have nothing invested in it."*
+
+A false independence claim is not a harmless flourish. It tells the reviewer that its
+disagreement is evidence of an architectural difference which may not exist, inflating exactly
+the findings this exercise is least able to check.
 
 ## 2. The single most important instruction
 
@@ -341,11 +363,17 @@ ignore in order to proceed — and a brief whose first mechanic is impossible te
 that this brief's instructions are approximate. Replace it, do not append to it:
 
 > **Deliver your report as one continuous message in this chat**, written as a single document
-> rather than a conversational reply. Do not spread it across several turns, and do not stop to
-> ask whether to continue — if length forces a break, end the message at a section boundary and
-> resume from exactly there. Findings arrive in discovery order, so compose the body as you
-> work and finish with a closing pass that re-orders them into the strict rank the skeleton
-> below demands and fills in the coverage line.
+> rather than a conversational reply. Do not spread it across several turns by choice, and do
+> not stop to ask whether to continue. If your output limit forces a break, end at a section
+> boundary, name the section you stopped after, and stop — **the operator will send one word to
+> continue, and you resume from exactly there.** You are not expected to continue unprompted;
+> you are expected not to stop for any other reason. Findings arrive in discovery order, so
+> compose the body as you work and finish with a closing pass that re-orders them into the
+> strict rank the skeleton below demands and fills in the coverage line.
+
+Say this in the hand-off too, because it needs the operator, not the reviewer: **they may have
+to send a single "continue".** A reviewer that stops at its output limit has not failed, and an
+operator who reads that stop as the end will file a truncated report as a complete one.
 
 Everything else in §10 stands unchanged — the skeleton, the ranking, the coverage line, and
 `Do not ask the reviewer for a verdict`. Drop only the summary-in-chat instruction, which

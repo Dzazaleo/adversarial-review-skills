@@ -5,11 +5,8 @@ argument-hint: "<review file | phase N> [--round N]"
 allowed-tools:
   - Read
   - Write
-  - Edit
   - Grep
   - Glob
-  - Bash
-  - Agent
 ---
 
 <objective>
@@ -25,6 +22,32 @@ You are also **not** deciding whether the work ships. That is the owner's call. 
 `adversarial-review-prompt` refuses to let the reviewer issue a verdict for exactly this reason;
 the refusal does not lapse because the reader is now Claude.
 </objective>
+
+<invariants>
+**These hold for the whole task.** They are repeated here because they are the rules most
+expensive to lose: after an auto-compaction Claude Code re-attaches only the **first 5,000
+tokens** of this skill, so everything past roughly line 270 can vanish mid-task without any
+signal. Each is stated in full in its own section; this block is the copy that survives.
+
+1. **Write boundary.** The only files this skill creates or edits are the ledger, `FIX LATER`
+   backlog artifacts, and — where the review arrived as a chat transcript — the report file
+   materialized from it. Never the code, the plans, or an existing review, whatever the tool
+   grants allow. (§7)
+2. **Two axes, never one word.** Every finding leaves with a **verdict** (is the claim true?)
+   and a **disposition** (what happens now?). Never a bare "ACCEPTED". `NO ACTION` is legal
+   only under `REFUTED` or `SETTLED ALREADY`. (§6)
+3. **Count in = count out.** One row per numbered finding, plus separately-counted ruled
+   entries for could-not-verify, process, and prior-review-disagreement items. A finding with
+   no row is the defect this skill exists to prevent. (§2, §7)
+4. **`FIX LATER` costs something.** It requires a durable backlog artifact carrying the
+   finding's Location, Mechanism and Consequence, created **before** the ledger is written,
+   with its path quoted in the row. A bare stub is a drop wearing a deferral label. (§6)
+5. **Refutation carries the finding's own burden.** `REFUTED` on a finding the reviewer rated
+   high or critical, in code you authored, needs execution evidence **and** a second opinion
+   that was not handed the report. Without both, the verdict is `COULD NOT DETERMINE`. (§5)
+6. **No ship verdict, and no fixes.** Nothing in the ledger says the work is complete,
+   correct, or ready to ship, and fixes are a separate explicit act afterwards. (objective, §8)
+</invariants>
 
 <why_this_is_hard>
 The naive framing of this task — "decide what's worth implementing" — is the failure mode, not the
@@ -119,6 +142,16 @@ From `$ARGUMENTS`, resolve:
   not make the record worthless and it is not a reason to discount a single finding; it bounds
   what the reviewer's *silence* is entitled to close, which is the only thing calibration was ever
   buying.
+- **The author's residual doubts, where the brief had an author.** `adversarial-review-prompt`
+  §10 reports the author's 3–5 private doubts to the user at hand-off, and step 5 below
+  requires **you** to rule per doubt on whether each one leaked into the brief. That ruling
+  needs the list, and **nothing puts the list on disk**: it lives in the authoring session's
+  scratchpad, which is gone, and in a chat message you cannot read. So **ask the user for the
+  hand-off and have them paste it verbatim.** Where they no longer have it, or there was no
+  authoring session at all — a review with no brief, a report from another tool — record that
+  the doubts were unavailable and **score no finding as independent corroboration on that
+  basis**. Do not treat their absence as evidence they were kept out of the brief; absence of
+  the list is absence of the check, and the two must never read the same in a ledger.
 - **The round.** If a ledger already exists at the target path, check whether its last round is
   *closed*. Closed is defined over obligations, not cell presence: every numbered row AND every
   auxiliary entry (process, CNV, prior-review disagreement, re-opened upheld claim) carries both a
@@ -234,7 +267,13 @@ the report in full in step 1 and you cannot unread it; the card does not make yo
 argument and nothing in this skill can. What it does is give step 5 a target that contains only the
 claim, so the check is aimed at the mechanism rather than at the case made for it. Genuine
 blindness exists in exactly one place in this skill — the subagent in step 5's escalation, which
-never sees the report — and that is the only place the word is used for it.
+is never *handed* the report — and that is the only place the word is used for it. **Read that
+as narrowly as it is written.** Not being handed the report is not the same as being unable to
+read it: the subagent is spawned into the working directory where the report sits beside the
+code, it keeps `Read`, `Glob` and `Bash`, and the report is one `ls` away — the identical
+exposure this skill names for *reviewers* in step 5. What the escalation buys is a verifier
+whose **prompt** contains only the claim. Buying more than that takes a sanitized copy, and the
+escalation says how.
 
 ## 3. Screen against settled ground — cheap, and gated
 
@@ -424,6 +463,16 @@ Then three escalation rules:
   **Where you cannot restrict its tools**, the second opinion still counts — but say so in the
   ledger beside the verdict it supports: that the verifier ran unbounded is a fact about the
   evidence, and a reader who is not told assumes otherwise.
+
+  **What the allowlist does not buy — and this goes in the ledger too.** Excluding `Write` and
+  `Edit` stops the verifier modifying the target. It does nothing about *reading*: the report
+  is in the directory you spawned it into, and it kept `Read`, `Glob` and `Bash`. Real
+  blindness takes a **sanitized copy** — a scratch directory holding the claim card and only
+  the source files the claim concerns — and where you build one, say so. **Where you do not,
+  the second opinion still counts, and you write beside the verdict that the verifier could
+  have read the report.** Both facts are about the strength of the evidence, and a reader who
+  is not told will assume the stronger one. Never write "blind" for a check that was merely
+  uninformed.
 - Where your refutation rests on a hypothesis you formed before reading the evidence, get an
   independent check that is blind to that hypothesis rather than arguing for it.
 
