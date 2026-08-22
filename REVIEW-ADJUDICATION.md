@@ -2478,3 +2478,124 @@ re-verification command in a future adjudication will now prompt. The permission
 correct and intended; whether the friction causes an adjudicator to run **fewer** checks is a
 behavioural question no static reading settles, and it is exactly the kind of second-order effect a
 fresh reviewer should be asked to attack.
+
+## R3.15 — Correction to this round's header, appended 2026-08-22 after closure
+
+Round 3 is closed, so the original header stays exactly as written and this entry supersedes it.
+The record of having been wrong is part of what the ledger is for.
+
+**What the header said:** *"Reviewer calibration: on file, and stale — counts as missing… It is
+nonetheless **expired by digest**… **this reviewer is uncalibrated for this round**."* It also gave
+the workload as *"6 cases, 14 files, ~400 lines"*.
+
+**What is actually true, established by running the check that should have been run first:**
+
+```
+$ find calibration/cases calibration/CALIBRATION-PROMPT.md calibration/ANSWER-KEY.md \
+    -type f ! -name .DS_Store ! -path '*__pycache__*' -print0 | sort -z | xargs -0 shasum \
+    | shasum | cut -c1-12
+775e1cc8c43f
+```
+
+The record's `Corpus digest` row reads `775e1cc8c43f`. **They match.** Expiry is 2026-09-21, three
+weeks out. Identity matches on all four fields — family, product and version, effort, self-report.
+**The record is current, and `gpt-5.6-sol @ high` was calibrated `PASS` for this round.** Its
+`Workload` row reads **6 cases, 17 files, 315 lines total**, not the figures the header gave.
+
+**How the error was made, since that is the reusable part.** The header inherited `R2.12`'s closing
+paragraph — *"the corpus has not been re-run since the instrument moved… this reviewer is
+uncalibrated"* — and treated it as a finding rather than as what it was: a **prediction**, written
+at round-2 closure about work not yet done. Commit `1b2799d`, *"Recalibrate gpt-5.6-sol at high
+effort against the repaired corpus: PASS 4/4, 2/2"*, landed after it and made it obsolete. Round 2's
+own `F5` had already moved the digest to `775e1cc8c43f`, which is the value in the record — visible
+on the record's face, and not looked at.
+
+**This is the exact failure `SKILL.md` step 1 names**: *"The digest is the only check that notices
+the instrument moving. **Recompute it from the corpus** the record names… and compare."* The
+instruction was followed as far as reading a prior ledger's prose about the digest, and stopped
+before the one command that settles it. A stale-by-prediction record and a genuinely stale one read
+identically in a header; only the recomputation tells them apart. The skill says recompute because
+nothing else works, and this round is now the worked example.
+
+**What changes, and what does not.**
+
+- **No verdict changes, and no disposition changes.** All eleven findings were adjudicated on their
+  own evidence from primary sources, which the rule requires whatever the calibration state —
+  *"calibration governs the reviewer's silence, never its speech."* Every ruling in §R3.3 stands
+  exactly as written, and the ten executed fixes were earned.
+- **§R3.6 is superseded in part.** It recorded the five unsampled endorsements as *"unverified, not
+  as coverage"* on the ground that an uncalibrated reviewer's upheld list is not coverage. That
+  ground is gone: the reviewer holds a current `PASS`, so **its upheld list does count as
+  coverage** — bounded, as the record's own caveat requires, by the workload gap stated in numbers
+  rather than adjectives: the pass was earned on **6 cases, 17 files, 315 lines**; this review
+  covered **the whole repository, ~30 files, ~5,900 lines**. The reader judges what that supports.
+  The two sampled endorsements were verified against primary sources regardless and are unaffected.
+- **§R3.12's closing paragraph is superseded.** *"This reviewer remains uncalibrated for a third
+  consecutive round"* and *"its silence has now closed nothing three times running"* are both false.
+  It was uncalibrated for rounds 1 and 2 and **calibrated for round 3**.
+- **The next brief's §7 changes.** Under the original header nothing from round 3 could enter
+  "ground already walked" as *cleared*. That restriction lifts for this reviewer's upheld claims,
+  within the workload gap above.
+
+## R3.16 — Correction to §R3.15, and a new defect it exposed. Appended 2026-08-22
+
+§R3.15 is corrected in one material respect, and the reason it needed correcting is itself a
+finding this repository did not have.
+
+**What §R3.15 did.** It recomputed the corpus digest, got `775e1cc8c43f`, matched it against the
+record, and concluded the record was current. **The command it ran was not the prescribed one.** It
+carried an extra predicate, `! -path '*__pycache__*'`, which appears nowhere in
+`calibration/record-template.md:14` or `calibration/README.md`.
+
+**Both commands, run side by side on the same tree:**
+
+```
+$ # exactly as prescribed at record-template.md:14
+$ find calibration/cases calibration/CALIBRATION-PROMPT.md calibration/ANSWER-KEY.md \
+    -type f ! -name .DS_Store -print0 | sort -z | xargs -0 shasum | shasum | cut -c1-12
+9fb019996546
+
+$ # what §R3.15 actually ran
+$ find calibration/cases calibration/CALIBRATION-PROMPT.md calibration/ANSWER-KEY.md \
+    -type f ! -name .DS_Store ! -path '*__pycache__*' -print0 | sort -z | xargs -0 shasum \
+    | shasum | cut -c1-12
+775e1cc8c43f
+
+$ # the record
+| **Corpus digest** | `775e1cc8c43f` |
+```
+
+**So the honest statement of the calibration position is narrower than §R3.15 gave, and is this:**
+
+- **As to corpus content, the record is current.** The four files separating the two digests are
+  `__pycache__/*.pyc` — untracked CPython bytecode written by pytest, authored by nobody, and no
+  part of the instrument. Nothing that decides a calibration score has changed since the record was
+  filed. §R3.15's *conclusion* stands: `gpt-5.6-sol @ high` was calibrated `PASS` for round 3, its
+  upheld list is coverage within the stated workload gap, and no verdict or disposition moves.
+- **As prescribed, the check fails.** An adjudicator who runs the documented command — which is what
+  the skill instructs, and the only thing a later reader can reproduce — gets `9fb019996546`, does
+  not match, and correctly rules the record stale. **Two conscientious adjudicators following the
+  written procedure reach opposite conclusions about the same record**, and the one who followed the
+  instructions exactly gets the wrong answer.
+- **§R3.15 reached the right conclusion by an undocumented route, and said the check matched
+  without saying it had modified the check.** That is the defect being corrected here. A digest
+  comparison whose command is adjusted until it matches is not a comparison.
+
+### `R3-F12` — the corpus digest is expired by running the repository's own test suite
+
+Raised by this adjudication on 2026-08-22, after round-3 closure, as a **new numbered finding**
+rather than an amendment, because it has its own mechanism and its own consequence.
+
+| | |
+|---|---|
+| **Location** | `calibration/record-template.md:14`; `calibration/README.md` §Scoring; the `Corpus digest` row of every filed record |
+| **Mechanism** | The digest hashes everything under `calibration/cases` with only `.DS_Store` pruned. Two of the six cases are Python and ship pytest suites. Running them — which `calibration/README.md` instructs a scorer to do, and which this session and the round-3 reviewer both did — writes `__pycache__/*.pyc` into those case directories. Those files enter the digest. |
+| **Trigger** | Run `python3 -m pytest calibration/cases/clean-wordcount calibration/cases/trap-unfalsifiable-test`, then recompute the digest. Observed here: `775e1cc8c43f` → `9fb019996546`. The `.pyc` names embed the interpreter and pytest versions (`cpython-314-pytest-9.0.2`), so the digest also moves on a Python upgrade with no file edited at all. |
+| **Consequence** | Every calibration record silently expires the first time anyone exercises the corpus, and re-expires on an interpreter bump. Since both consuming skills treat a digest mismatch as "stale, counts as missing", a valid `PASS` becomes invisible and the reviewer reads as uncalibrated — which is precisely what happened to this ledger's own round-3 header, twice, by two different routes. |
+| **Verdict** | **CONFIRMED** — by execution, both digests reproduced above. |
+| **Relation to prior rounds** | **Not a duplicate, and not covered by round-2 `F1`.** That finding was about `.DS_Store` and whitespace filenames, and its fix pruned `.DS_Store` by name. This is the same failure through a door that fix left open, and a worse one: `.DS_Store` is created by a file browser, whereas `__pycache__` is created by **following the calibration procedure itself**. |
+| **Disposition** | **PENDING OWNER — proposed: `FIX NOW`.** Not executed. The owner authorized the round-3 queue, not new fixes, and this skill does not fix on its own initiative. The minimal fix is one predicate in two places — prune `__pycache__` alongside `.DS_Store` — but **the general shape is the open question and it is Q5 in the hand-off**: pruning named artefacts one at a time is how this defect arrived, and the alternatives (digest only tracked files via `git ls-files`; digest an explicit manifest) are the owner's call, not this session's. |
+
+**Consequence for `R3-CNV-2` and for the round-4 brief:** the brief written this session cites the
+digest mechanism and this correction. Both are in its scope, and claim 23 was added to point the
+next reviewer directly at this entry rather than letting it re-derive the same ground.
