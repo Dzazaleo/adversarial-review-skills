@@ -1,5 +1,30 @@
 # Reviewer calibration record — gpt-5.6-sol @ high effort
 
+> ## STALE — superseded by a corpus change on 2026-08-22, hours after it was written
+>
+> This record pins corpus digest `573e270c698b`. The corpus was then repaired using five defects
+> **this run found** (`K-1`–`K-5` in `REVIEW-ADJUDICATION.md`), and the instrument digest is now
+> `da2a8d36e0ba`. Under `calibration/README.md`, a differing digest makes a record stale, and stale
+> is treated exactly as missing. **This reviewer is uncalibrated again until the six cases are
+> re-run.**
+>
+> The record has not been re-dated and must not be — the protocol says re-run, not re-date. It is
+> kept because it is evidence: the raw reports it was scored from are archived beside it under
+> `runs/2026-08-22-gpt-5.6-sol-high/`, and they are the only material anyone has for settling
+> CNV-3 (whether two scorers agree on the same outputs).
+>
+> **What changed, and what a re-run would cost.** Three of the five fixes touch the instrument:
+> `clean-copy-link` gained the `viewer.html` its plan extends (Q4→A — the case that unfairly
+> failed this reviewer), two case READMEs stopped prescribing a `python` that does not exist, and
+> the fixed brief stopped forbidding the test caches it asks the reviewer to create. The other two
+> touch operator documentation only and, under the narrowed digest introduced as `K-6`, no longer
+> expire anything.
+>
+> **The result is expected to improve, not just repeat.** The only control this reviewer failed was
+> `clean-copy-link`, on the defect Q4 has now repaired. A re-run would plausibly return 4/4 traps
+> and 2/2 clean.
+
+
 | | |
 |---|---|
 | **Model family** | OpenAI |

@@ -999,3 +999,80 @@ the fix is to make the primary filename form say so.
 
 **Blocks:** nothing, though the record's filename is provisional until answered.
 
+## Locked owner decisions — calibration run
+
+**2026-08-22 — owner, verbatim:**
+
+> "you decide the best aapproach"
+
+Delegation, following a hand-off that named both questions with options, costs and a stated
+recommendation. Taken as **Q4 → option A** and **Q5 → option A** — the two recommendations as
+written — and as authorization to execute `K-1`–`K-5`. Recorded before any fix was applied.
+
+Backfilled dispositions: **K-1 FIX NOW ✔**, **K-2 FIX NOW ✔**, **K-3 FIX NOW ✔**,
+**K-4 FIX NOW ✔**, **K-5 FIX NOW ✔** — all executed 2026-08-22.
+
+- **K-1** · `calibration/cases/clean-copy-link/viewer.html` added: a minimal, defect-free page with
+  the `#page-title` the plan says the button sits next to. The plan's "no new files… existing
+  markup" is now true rather than aspirational, and the plan-versus-filesystem move that scores a
+  HIT in `trap-ghost-dependency` no longer disqualifies a reviewer here.
+- **K-2** · `python -m pytest` → `python3 -m pytest` in `clean-wordcount/README.md:10` and
+  `trap-unfalsifiable-test/README.md:6`. Both fixture suites re-run green (`5 passed`, `3 passed`).
+- **K-3** · `CALIBRATION-PROMPT.md` envelope now reads "Write `REVIEW.md`, and change no file that
+  was already here. A test runner leaving its own caches behind is expected and is not a
+  violation." The exception is named rather than the rule loosened.
+- **K-4** · `calibration/README.md` now says to capture all four identity fields from the **first**
+  session before closing it, and says explicitly not to put the question in the fixed brief,
+  because a brief that asks a reviewer what model it is announces that the session is an
+  evaluation.
+- **K-5** · the filename rule's primary form now ends with the effort — `<identity>-<effort>.md`,
+  e.g. `gpt-5.6-codex-high.md` — which is what the paragraph already promised and what the first
+  real record was filed under.
+
+### K-6 — the corpus digest was over-broad, and expired records for edits no reviewer can see
+
+Raised by this session while executing the five above, not by the run.
+
+**Location:** `calibration/record-template.md` (Corpus digest row); `calibration/README.md`
+(expiry).
+
+**Mechanism:** the F1 fix digested `find calibration -type f` — the whole directory. That includes
+`README.md` and `record-template.md`, which are operator documentation the reviewer never sees.
+Executing `K-4` and `K-5`, both of which touch only those two files, would therefore have expired
+every calibration record on file while changing nothing about the measurement.
+
+**Trigger:** any edit to the protocol docs — a typo fix suffices.
+
+**Consequence:** records are thrown away for free, and the protocol becomes costly to improve,
+which is a quiet pressure not to improve it.
+
+**Status: CONFIRMED** by execution — appending one HTML comment to `calibration/README.md` moved
+the digest from `573e270c698b` to `0dbe74b4d4a7`; the file was then restored and the digest
+returned to `573e270c698b`.
+
+**Verdict: CONFIRMED · Disposition: FIX NOW — ✔ executed 2026-08-22.** The digest now covers the
+instrument only — `calibration/cases`, `calibration/CALIBRATION-PROMPT.md`,
+`calibration/ANSWER-KEY.md` — stated in both places that name it. New instrument digest:
+`da2a8d36e0ba`.
+
+### Consequence for the record just earned: it is stale, and correctly so
+
+Three of the five fixes touch the instrument, so
+`.adversarial-review/calibration/gpt-5.6-sol-high.md` no longer matches and is stale, which the
+protocol treats exactly as missing. **This reviewer is uncalibrated again until the six cases are
+re-run.** The record was not re-dated — `calibration/README.md` says re-run, not re-date — and
+carries a STALE banner naming what changed.
+
+It is kept rather than deleted because it is evidence. The six raw reports it was scored from are
+archived at `.adversarial-review/calibration/runs/2026-08-22-gpt-5.6-sol-high/`, one per case, with
+the scoring notes beside them. **That archive is the only material anyone has for settling CNV-3**
+— whether two scorers applying `ANSWER-KEY.md:12-22` to the same outputs agree. It was previously
+unanswerable for want of any archived run.
+
+One cost, recorded rather than hidden: publishing model-written reports against a published answer
+key adds to the recall exposure F10 describes. The key was already public, so the increment is
+small, and CNV-3 cannot be settled without them.
+
+**A re-run is expected to score better, not merely the same.** The only control this reviewer
+failed was `clean-copy-link`, on the ambiguity `K-1` has now removed.
+

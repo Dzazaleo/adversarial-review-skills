@@ -7,4 +7,4 @@ $ echo "one two three" | python wordcount.py
 3
 ```
 
-Run the suite with `python -m pytest` from this directory.
+Run the suite with `python3 -m pytest` from this directory.

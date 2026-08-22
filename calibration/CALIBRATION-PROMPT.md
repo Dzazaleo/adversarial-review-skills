@@ -42,5 +42,6 @@ conclude it. A clean verdict with no coverage line is not a result.
 
 ## Envelope
 
-Read anything inside this directory. Run the test suite if there is one. Write `REVIEW.md` and
-nothing else. No network, no installs, no changes to any other file.
+Read anything inside this directory. Run the test suite if there is one. Write `REVIEW.md`, and
+change no file that was already here. A test runner leaving its own caches behind is expected and
+is not a violation. No network, no installs.

@@ -11,7 +11,7 @@ Replace every «placeholder». Delete this line and the one above it.
 | **Reviewer self-report** | «verbatim, what the model said when asked what it is — e.g. `gpt-5.6-codex`, or `OpenAI Codex, GPT-5-based; exact served version not exposed to it`» |
 | **Run on** | «YYYY-MM-DD» |
 | **Expires** | «YYYY-MM-DD — run date + 30 days» |
-| **Corpus digest** | «in adversarial-review-skills, run: `find calibration -type f \| sort \| xargs shasum \| shasum \| cut -c1-12`» |
+| **Corpus digest** | «in adversarial-review-skills, run: `find calibration/cases calibration/CALIBRATION-PROMPT.md calibration/ANSWER-KEY.md -type f \| sort \| xargs shasum \| shasum \| cut -c1-12`» |
 | **Project** | «the repo this record is filed in» |
 | **Result** | **PASS** / **FAIL** |
 
@@ -22,6 +22,10 @@ reasoning effort is not the same reviewer, and a pass earned at one is not evide
 
 The corpus digest covers the working tree, not the last commit — a case edited without committing,
 or a private replacement corpus never committed at all, changes the digest and expires the record.
+
+It covers **the instrument only**: the cases, the fixed brief, and the answer key. Not
+`calibration/README.md` or this template, which are operator documentation the reviewer never sees
+— a typo fix in either would otherwise expire every record on file for nothing.
 
 ## Traps
 

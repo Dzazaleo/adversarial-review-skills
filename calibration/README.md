@@ -71,7 +71,14 @@ changes underneath them, and the whole return on cross-model review is the archi
 
 **Many models cannot name their own served version, and that is normal rather than a failure.** Ask
 anyway, record verbatim whatever comes back, and let the rest of the identity carry the key: model
-family, product *and version*, and the reasoning effort the run used. Those four together are the
+family, product *and version*, and the reasoning effort the run used.
+
+**Capture all four from the first session, before you close it** — not after the sixth. Reasoning
+effort in particular is a session setting and is nowhere in the reports, so an operator who runs
+all six and then opens this template is reconstructing it from memory. Ask the reviewer directly in
+that first session, once it has written its report. Do **not** put the question in
+`CALIBRATION-PROMPT.md`: a review brief that asks a reviewer what model it is announces that the
+session is an evaluation, which is the one thing this corpus cannot afford to disclose. Those four together are the
 identity — not the self-reported string alone. Only a reviewer that will not name even its family
 is `UNKNOWN MODEL`, which does not pass.
 
@@ -79,12 +86,12 @@ Effort earns its place in that list. The same model at high and at low reasoning
 same reviewer, and a pass earned by the strong configuration is not evidence about the weak one
 running under the same name.
 
-For the **filename**, use the self-reported identity slugged where you got one — `gpt-5.6-codex.md`.
-Where you did not, build it from the rest so the file still names a reviewer rather than a product:
-`<family>-<product><version>-<effort>.md`, e.g. `openai-codex-cli-0.9.2-high.md`. Both skills look
-the record up by that filename, so a run under a different effort or a bumped product version files
-a new record rather than overwriting the old one — which is the behaviour you want, because it is a
-different reviewer.
+For the **filename**, always end with the reasoning effort, because a run at a different effort is
+a different reviewer and must file its own record rather than overwrite one:
+`<identity>-<effort>.md`. Use the self-reported identity slugged where you got one —
+`gpt-5.6-codex-high.md`. Where you did not, build the identity from the rest so the file still
+names a reviewer rather than a product — `openai-codex-cli-0.9.2-high.md`. Both skills look the
+record up by that filename.
 
 The record lives in the project, not in your home directory, because the result is
 project-shaped: a reviewer that reads Python plans well may be poor on your Rust service, and a
@@ -100,9 +107,12 @@ A record is stale when any of these is true, and stale is treated exactly as mis
   nothing here can. Shorten it freely; the cost of a shorter window is one twenty-minute rerun.
 - **The reviewer's identity differs from the record's** — a different family, a different product
   version, a different reasoning effort, or a different self-reported string.
-- **This corpus changed.** The record names a digest over the corpus tree rather than a commit,
-  so an uncommitted edit to a case or a private replacement corpus expires the record too. A
-  different digest is a different measurement.
+- **The instrument changed.** The record names a digest rather than a commit, so an uncommitted
+  edit to a case or a private replacement corpus expires the record too. A different digest is a
+  different measurement. The digest covers what actually decides a result — `cases/`, the fixed
+  brief, and the answer key — and deliberately **not** this file or the record template, which are
+  operator documentation the reviewer never sees. Fixing a typo in the protocol should not throw
+  away every record you hold.
 
 Do not re-date a stale record. Re-run it.
 
