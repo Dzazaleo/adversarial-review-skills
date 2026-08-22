@@ -816,3 +816,186 @@ seat, graded against keys mined from fix commits) transfer to this one intact.
 **Verdict: N/A — scoping note, not a finding.** **Disposition: carried into the next brief's scope
 section.** No action in this round.
 
+---
+
+# Calibration run — findings against the corpus, 2026-08-22
+
+Not an adjudication of a review. These are defects in the **corpus itself**, found by running it
+for the first time: six cases against OpenAI Codex (`gpt-5.6-sol` at high effort), scored in
+`.adversarial-review/calibration/gpt-5.6-sol-high.md`. The run returned **PASS — 4/4 traps, 1/2
+clean**, and produced five findings about the instrument that produced it.
+
+Recorded here rather than fixed silently, because three of the five are things the author of the
+corpus would otherwise be quietly correcting in their own work — which is the disposition reflex
+this ledger exists to make expensive. IDs are `K-n`. Both axes on every entry.
+
+### K-1 — `clean-copy-link` disqualifies the reviewer for the move that scores a hit next door
+
+**Location:** `calibration/cases/clean-copy-link/` (contents); `calibration/ANSWER-KEY.md:61`;
+`calibration/CALIBRATION-PROMPT.md:15`.
+
+**Mechanism:** `clean-copy-link` is the only case in the corpus that is a plan with **no
+accompanying source tree** — verified: both plan-based traps ship a `src/` directory, this ships
+`PLAN.md` alone. Its plan says to add a button to `viewer.html`, a file that is not present. A
+reviewer therefore reports that the feature is unimplemented and the named file absent, which is
+*structurally the same observation* that earns a HIT in `trap-ghost-dependency`:
+
+> case-a, scored HIT — "Step 1 says to extend `src/limits.py`… `src/limits.py` is absent"
+> case-c, scored FAIL — "Add a `<button>` to `viewer.html`… the required `viewer.html` [is] absent"
+
+`CALIBRATION-PROMPT.md:15` says only "Everything in the directory you are rooted at" and never
+tells the reviewer that a plan-only directory describes unbuilt work. The distinction the author
+intended is real but unstated: in the trap a `src/` tree exists and is missing one named file,
+which is evidence; here nothing exists, so absence is uninformative.
+
+**Trigger:** any reviewer that compares a plan against the filesystem — the behaviour
+`trap-ghost-dependency` exists to reward.
+
+**Consequence:** a competent reviewer fails a negative control for being competent. This is the
+bent-ruler failure the round-1 brief named in its first section and said nothing in the repository
+would ever surface. It surfaced on first use, by costing a reviewer half its clean score.
+
+**Status: CONFIRMED** by execution — case-c, 2026-08-22. The reviewer raised exactly one finding,
+rated `high`, on that basis, and passed the other control (`clean-wordcount`) with zero findings
+above `low`.
+
+**Verdict: CONFIRMED · Disposition: PENDING OWNER — proposed: FIX NOW.** Does not block; the run
+already passed on the 1-of-2 rule. See Q4.
+
+### K-2 — two case READMEs prescribe an interpreter the prescribed environment does not have
+
+**Location:** `calibration/cases/clean-wordcount/README.md:10`;
+`calibration/cases/trap-unfalsifiable-test/README.md:6`.
+
+**Mechanism:** both say "Run the suite with `python -m pytest` from this directory." The macOS
+environment the corpus is documented against exposes Python only as `python3`; `python` is not on
+`PATH`.
+
+**Trigger:** any reviewer that follows the documented command — which the brief invites, since it
+says to run the test suite if there is one.
+
+**Consequence:** every run of either case yields the same true-but-worthless `low` finding, adding
+constant noise to the record and spending reviewer effort on the corpus's own typo. Both cases did
+exactly this on 2026-08-22 (case-d finding 3, case-e finding 1).
+
+**Status: CONFIRMED** — reproduced directly: `which python` → `python not found`.
+
+**Verdict: CONFIRMED · Disposition: FIX NOW** — `python` → `python3` in both READMEs.
+
+### K-3 — the fixed brief tells the reviewer to run the tests and to write nothing but its report
+
+**Location:** `calibration/CALIBRATION-PROMPT.md:45`.
+
+**Mechanism:** one sentence gives two instructions that cannot both be obeyed:
+"Read anything inside this directory. **Run the test suite if there is one. Write `REVIEW.md` and
+nothing else.**" pytest writes `.pytest_cache/` and `__pycache__/` as a side effect of running.
+
+**Trigger:** either of the two cases that ship a test suite (`clean-wordcount`,
+`trap-unfalsifiable-test`).
+
+**Consequence:** reviewers resolve the contradiction inconsistently, and the inconsistency is the
+harm: on 2026-08-22 case-e left both directories behind while case-d ran the suite and left
+neither. A scorer checking envelope compliance cannot tell a disobedient reviewer from an obedient
+one. Same defect class as round-1 F2 — two instructions in one 40-line fixed brief that contradict
+each other.
+
+**Status: CONFIRMED** by execution — `find` over both run directories, 2026-08-22.
+
+**Verdict: CONFIRMED · Disposition: FIX NOW** — minimal fix is to name the exception rather than
+loosen the rule: write `REVIEW.md`, and change no file that was already here; test-runner caches
+are expected and fine.
+
+### K-4 — identity has to be captured before the sessions are closed, and nothing says so
+
+**Location:** `calibration/README.md:72-80`; `calibration/CALIBRATION-PROMPT.md` (whole).
+
+**Mechanism:** the record's primary key is four fields — family, product and version, reasoning
+effort, self-report. None of the six `REVIEW.md` files carries any of them, because the fixed brief
+never asks, and it *should* not ask: a review brief that requests the reviewer's model identity
+signals that the session is an evaluation, which is the one thing this corpus must not disclose.
+So identity is the operator's job, which `README.md:72-80` does say — but it does not say *when*,
+and the information lives in a session that gets closed.
+
+**Trigger:** an operator who runs all six cases, closes the sessions, and then opens the record
+template. Reasoning effort in particular is not recoverable from the reports.
+
+**Consequence:** the record cannot be reconstructed from the artifacts and must be rebuilt from
+memory, or the run is wasted. This nearly happened on 2026-08-22 — the record was blocked until the
+operator supplied product version and effort out of band.
+
+**Status: CONFIRMED (partial)** — *established:* no report carries identity, verified across all
+six. *Refuted:* the stronger claim that the record "cannot be filled" — it can, by the operator, as
+the protocol intends.
+
+**Verdict: CONFIRMED (partial) · Disposition: FIX NOW** — one line in `calibration/README.md`:
+capture the four identity fields from the first session **before closing it**, not after the sixth.
+Do **not** add an identity question to the fixed brief.
+
+### K-5 — the record filename rule contradicts its own stated intent
+
+**Location:** `calibration/README.md:82-88`.
+
+**Mechanism:** the paragraph says to name the file from the self-reported identity slug where you
+have one (`gpt-5.6-codex.md`), and in the same breath that "a run under a different effort or a
+bumped product version files a new record rather than overwriting the old one — which is the
+behaviour you want, because it is a different reviewer." A bare model slug cannot express effort,
+so the primary form cannot deliver the behaviour the paragraph promises. Only the fallback form,
+used when the model *cannot* name itself, encodes effort.
+
+**Trigger:** the first real record — reached immediately on 2026-08-22.
+
+**Consequence:** a second run of the same model at a different effort silently overwrites the
+first, or the scorer invents a third filename form. The scorer did the latter, filing
+`gpt-5.6-sol-high.md`, and flagged it.
+
+**Status: CONFIRMED** — reached in practice while writing
+`.adversarial-review/calibration/gpt-5.6-sol-high.md`. This is text written on 2026-08-21 as the
+Q3 fix, and it is the same rule-versus-description drift recorded as C-1 and S-1.
+
+**Verdict: CONFIRMED · Disposition: PENDING OWNER — proposed: FIX NOW.** Does not block. See Q5.
+
+## Owner decisions from the calibration run
+
+### Q4 — How should `clean-copy-link` be repaired?
+
+**What turns on it:** whether the corpus keeps failing competent reviewers on a control. The case
+currently punishes the exact behaviour `trap-ghost-dependency` rewards.
+
+**Options:**
+- **A — Give the case the file its plan extends.** Add a minimal `viewer.html` so the plan names
+  something that exists. Buys: the ambiguity disappears, the case still measures "does not invent
+  severity in a small, complete plan", and no other case changes. Costs: the corpus gains a file;
+  the case stops being a pure plan.
+- **B — Tell the reviewer, in the fixed brief, that a plan-only directory describes unbuilt work.**
+  Buys: fixes the class rather than the instance. Costs: changes the constant for all six cases,
+  and it hands `trap-ghost-dependency` a hint — a reviewer told to think about plan-versus-tree is
+  likelier to find the ghost dependency, which inflates that trap's pass rate.
+- **C — Retire the case and write a different clean control.** Buys: a control with no known
+  ambiguity. Costs: authoring a new clean case is the hard problem F10 says the repo does not help
+  anyone with, and it invalidates comparison with this record.
+
+**Recommendation: A** — it is local, it removes the ambiguity without touching the constant, and it
+is the only option that does not either help a trap or throw away a case.
+
+**Blocks:** nothing. K-1 stays `PENDING OWNER` until answered.
+
+### Q5 — Should a calibration record's filename encode reasoning effort?
+
+**What turns on it:** whether one model can hold several records at once, or whether an effort
+change makes its single record stale.
+
+**Options:**
+- **A — Filename includes effort** (`gpt-5.6-sol-high.md`), matching what the paragraph already
+  promises. Buys: parallel records per configuration; you can see at a glance that the high-effort
+  run passed and the low-effort one was never measured. Costs: more files; consumers must know
+  which effort they are about to use before they can find the record.
+- **B — Filename is the model slug alone** (`gpt-5.6-sol.md`), and an effort change simply expires
+  the record via the existing expiry key. Buys: one file per model, simplest lookup. Costs: you
+  lose the earlier result on every effort change, and a reviewer alternating between efforts
+  re-runs calibration constantly.
+
+**Recommendation: A**, which is what the text already promises and what the record was filed under;
+the fix is to make the primary filename form say so.
+
+**Blocks:** nothing, though the record's filename is provisional until answered.
+
