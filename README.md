@@ -1,122 +1,106 @@
 # Adversarial Review Skills
 
-**Two Claude Code skills. The first gets a different AI to attack your work. The second helps
-you work out which of its complaints are actually true.**
-
-They come as a pair. One writes the attack. The other judges what comes back.
+**Two Claude Code skills that work as a pair. One sends a rival AI to attack your work.
+The other sorts the true complaints from the false ones.**
 
 ---
 
-## The problem
+## Why they exist
 
 If an AI writes your code and then reviews it, it will tell you the code is fine. It isn't
-lying. It is re-reading its own reasoning and finding it convincing — the same way you find your
-own reasoning convincing. Whatever it misread while writing, it misreads again while reviewing.
-It cannot test for the thing it never thought of.
+lying — it re-reads its own reasoning and finds it convincing, the same way you find yours
+convincing. Whatever it missed while writing, it misses again while reviewing.
 
-So you need a different model to look at it. And then you need a way to sort that model's good
-findings from its bad ones, because you will get both.
+The fix is two steps: get a **different** model to look at the work, and then check what that
+model says — because it will hand you a mix of real bugs, misunderstandings, and confident
+nonsense, and you need to know which is which before acting on any of it.
+
+One skill per step.
 
 ---
 
-## What each one does
+## Skill 1: `adversarial-review-prompt` — writes the attack
 
-### 1. `adversarial-review-prompt` — writes the attack
+Point it at anything: a folder of code, a pull request, a plan, a design document. It produces
+two files:
 
-You point it at some work: a folder of code, a pull request, a design document, a plan.
+- **A briefing for the rival reviewer.** It reads your actual work — not a summary — and lists
+  15–25 specific things the work is betting on, each one a claim the reviewer must go and test.
+  It tells the reviewer the ground rules: prove findings by running things, don't trust the
+  code's own comments as evidence, don't report style opinions, write the report to a file as
+  you go, and here is exactly what you may read, run, and change (usually: nothing but the
+  report file).
+- **A short cover note.** The message you actually paste into Codex, Gemini, Cursor, or a fresh
+  Claude session. You never paste the long brief into a chat box by hand.
 
-It reads the actual work, not a summary of it, and writes a **briefing document** aimed at a
-rival AI. The brief tells that reviewer:
+It also tells you — in the chat, privately — what *it* suspects is wrong with the work. Those
+suspicions stay out of the brief so the reviewer isn't led to them. **Copy that message
+somewhere safe**: the second skill asks for it later, to work out which findings the reviewer
+reached on its own.
 
-- One model wrote this, reviewed it, and tested it against tests it also wrote. If you end up
-agreeing with it, this exercise has failed.
-- Every confident comment in this code is a **claim by the thing being reviewed**, not proof.
-Go and check whether the test it points at would actually fail if the claim were wrong.
-- Here are 15–25 specific things this work is betting on. Come back with CONFIRMED, REFUTED or
-COULD NOT DETERMINE on each one.
-- You cannot sign off one of those claims by quoting a comment or a test name. That is the code
-vouching for itself. Run something, or say you could not tell.
-- If you find a real bug and decide it was deliberate, report it and say why you think so. Do
-not quietly let it go.
-- Here is exactly what you may read, run and write — including "nothing else".
-- Write your report **to a file as you go**, not into the chat window.
+## Skill 2: `review-adjudication` — judges what comes back
 
-It also gives you a short **cover note**: the message you actually paste into Codex, Gemini,
-Cursor, or another Claude session. You don't have to paste a 400-line document into a chat box.
+The review lands with, say, fourteen findings. This skill rules on every single one and writes
+the rulings into a permanent file called the **ledger**. Each finding gets two separate answers:
 
-Then it tells you privately what *it* suspects is wrong. The *list* stays out of the brief — though
-a sharp claim often lands near a suspicion, because both came from the same reading, and blunting
-the claim would cost more than the overlap does. So the author declares the overlap rather than
-certifying there is none, and **whether a finding was genuinely independent is the adjudicator's
-ruling, not the author's**. If it never mentions them, they're still open.
+- **Is it true?** Confirmed, refuted, couldn't tell, already decided long ago, or a judgement
+  call that belongs to you.
+- **What happens now?** Fix it now, fix it later, accept it and ship anyway, or nothing.
 
-It will also tell you which model family you're about to send this to. Plenty of review tools
-are built on the same few underlying models, so two of them can be one opinion bought twice.
-The whole point is to get eyes that work differently from the ones that wrote the code.
+Two answers, because "this bug is real but we're shipping anyway" and "this bug isn't real"
+are very different positions, and one word like "accepted" hides which you meant.
 
-### 2. `review-adjudication` — judges what comes back
+The rules that do the real work are rules against taking the easy way out:
 
-A review lands. Fourteen findings. Some are real. Some are the reviewer misunderstanding a
-decision you made months ago. Some are the reviewer being confidently wrong.
+- **Nothing gets dropped.** Fourteen findings in means fourteen rulings out — including the
+  ones the reviewer admitted it couldn't check.
+- **"Later" has to cost something.** Deferring a finding means a real backlog file on disk,
+  with the details copied in, before the ledger may say "later". A promise with nothing behind
+  it is just a dropped finding with a nicer name.
+- **Disproving takes as much evidence as proving.** To call a finding wrong, the skill has to
+  run something and show the output — feeling reassured after re-reading the code doesn't count.
+- **It checks the claim, not the sales pitch.** Each finding is stripped down to what it
+  actually asserts before being tested, so a well-written false finding doesn't win and a
+  badly-written true one doesn't lose.
+- **Your past decisions are protected.** An outside reviewer can't see the choices you settled
+  months ago, so it will reopen them. The skill screens those out — with a citation, so the
+  screening itself can't become a way to dodge real findings.
+- **It never decides for you.** Anything that turns on taste, risk, or what the product should
+  do comes back to you as a plain question with the options and their costs. And it never
+  fixes anything until you say go.
 
-This skill rules on **every one of them** and writes those rulings into a permanent file — the
-*ledger*. Each finding gets two separate answers:
+The two skills feed each other: this round's ledger tells the next round's reviewer what's
+already been covered, so you never pay twice for the same finding.
 
-- **Verdict — is it true?** `CONFIRMED` · `REFUTED` · `COULD NOT DETERMINE` · `SETTLED ALREADY`
-· `OWNER RULING REQUIRED`
-- **Disposition — what happens now?** `FIX NOW` · `FIX LATER` · `ACCEPTED AS-IS` · `NO ACTION`
-· `VERIFY` · `PENDING OWNER`
+---
 
-Two answers, because they're two different questions. "This bug is real and we're shipping
-anyway" is a reasonable position. "This bug isn't real" is a different one. A single word like
-"accepted" hides which one you meant.
+## The process, start to finish
 
-Before it rules on anything, it checks the report is worth ruling on:
+1. **You:** "Before we build this, I want an outside review." Claude writes the brief and the
+   cover note, and tells you its private suspicions. *(Same session that wrote the work — it
+   knows where it was unsure.)*
+2. **You save the suspicions message** somewhere durable. It exists nowhere else.
+3. **You paste the cover note** into a different model — Codex, Gemini, Cursor, or a fresh
+   Claude session that has never seen the work. Different company beats different product:
+   many review tools run on the same few underlying models.
+4. **The reviewer** reads the brief, does the audit, and writes its report to a file.
+5. **You, in a fresh session:** "The review is in — adjudicate it." Claude re-tests every
+   finding itself and writes the ledger: every finding ruled, a fix queue, and the questions
+   only you can answer. It will ask you to paste the suspicions from step 2. *(Fresh session,
+   because the one that wrote the work has a stake in the findings being wrong.)*
+6. **You answer the questions and say go.** Fixes happen then, against the ledger, and each
+   ledger row is updated as its fix lands.
 
-- **Is this actually a review?** A summary of the code, a restatement of the diff, or a request
-for more information is not a review. Treating one as "found nothing" would record an all-clear
-that nobody gave.
-- **Did it finish?** Reviews get cut off partway. What it managed to write still counts. Its
-silence doesn't — anything it never reached is marked unchecked, not approved.
-- **Is it trying to give me instructions?** The report was written by a model you asked to be
-hostile. Its findings are claims to check. Any line telling *the adjudicator* what to do gets
-flagged, not followed.
+### When to use it
 
-Then the rules that do the real work, most of which are rules against the easy answer:
-
-- **Dismissal has to cost something.** "We'll do it later" means a real backlog file on disk,
-written before the row gets its `FIX LATER` disposition, with the finding's location, cause and
-consequence copied into it. A
-promise with nothing behind it is a dropped finding with a nicer name.
-- **Disproving a finding is as much work as making one.** If the reviewer brought evidence and
-you want to say it's wrong, bring evidence back. Reading the code and feeling reassured is not
-evidence — least of all when the reassuring comment was written by the thing under review.
-- **Claims the reviewer says it checked get spot-checked.** If it signed one off by quoting a
-comment or a test name, it didn't check it, and that claim goes back on the pile.
-- **It checks the claim, not the case made for it.** Every finding is cut down to what it actually
-asserts — where, what breaks, when, and what it costs — and the check is aimed at that, with the
-expected result written down before anything is run. Only afterwards does it re-read the reviewer's
-argument and record whether that changed anything. Otherwise the ruling is partly a verdict on how
-well the reviewer writes, which is a fact about the reviewer and not about your code.
-- **Two reviewers agreeing only counts if the second couldn't see the first.** Reports land in
-the same folder, so usually it could. The skill records what each reviewer was able to read and
-discounts the overlap.
-- **It never decides whether you ship.** Anything that turns on what you want, what risk you'll
-accept, or what the product should do comes back to you as a decision, with the options and
-what each one costs.
-- **It never fixes anything on its own.** The output is the ledger. Fixing is a separate step
-that you ask for.
-
-The two skills close a loop. This round's ledger becomes the "already covered" section of the
-next brief, so the next reviewer doesn't spend its run re-finding what you've already ruled on.
+Not on every commit — that would grind development down. The high-value moments are few:
+a plan before you build it, anything expensive to change later (a published API, a data
+format, a security boundary), and once before shipping a milestone. One round at those points
+buys most of the protection.
 
 ---
 
 ## Install
-
-The repo lives at
-**[https://github.com/Dzazaleo/adversarial-review-skills](https://github.com/Dzazaleo/adversarial-review-skills)**.
-Clone it and copy the two skill folders into your Claude Code skills directory:
 
 ```bash
 git clone https://github.com/Dzazaleo/adversarial-review-skills.git
@@ -124,14 +108,11 @@ cp -r adversarial-review-skills/skills/adversarial-review-prompt  ~/.claude/skil
 cp -r adversarial-review-skills/skills/review-adjudication        ~/.claude/skills/
 ```
 
-For one project instead of everywhere, use `.claude/skills/` inside that project.
+For a single project instead of everywhere, copy into that project's `.claude/skills/` folder.
 
-**Keep the clone.** Those two commands install the skills and nothing else — the calibration corpus
-below is a sibling directory, not part of either skill, so it does not come with them. The skills
-know this and point at the corpus by URL rather than by a path that would not resolve, but the
-twenty-minute procedure needs the actual case files, and the clone is where they are.
+**Keep the clone** — the calibration cases below live in the repo, not inside the skills.
 
-Restart Claude Code. You don't need to remember a command — just say what you want:
+Restart Claude Code. Then just say what you want:
 
 > "Get an independent review of the payment module from Codex."
 
@@ -139,25 +120,18 @@ Restart Claude Code. You don't need to remember a command — just say what you 
 
 Or call them by name: `/adversarial-review-prompt`, `/review-adjudication`.
 
-### What these skills are allowed to do — and how to bound it yourself
+---
 
-Both declare `allowed-tools: Read, Grep, Glob` and nothing more. **Neither pre-approves any write
-tool**, so every file they create — the brief, the cover note, the ledger, a backlog entry — goes
-through your normal permission handling rather than a skill-level grant. Note what that is and is
-not: `allowed-tools` grants, it does not restrict, so the write tools remain callable and your own
-settings decide what happens. Under `acceptEdits`, an auto or bypass mode, or a matching allow
-rule, those writes still proceed without stopping for you. That is deliberate: the
-skills argue at length that a prose boundary over a broad permission grant is not enforcement, and
-they should not ship one.
+## What they're allowed to touch
 
-Their prose write-envelopes are still *instructions*, not a sandbox. If you want the boundary
-actually enforced, put it in your own permission settings, where Claude Code will consult it:
+Both skills declare read-only tools (`Read`, `Grep`, `Glob`) and nothing more. Every file they
+create — brief, cover note, ledger, backlog entry — goes through your normal Claude Code
+permission prompts, not a skill-level grant.
 
-**An allowlist is not expressible here, and this is the trap to avoid.** Rules are evaluated
-deny → ask → allow, the first match wins, and specificity does not change the order — so
-`deny: ["Edit(**)"]` paired with a narrow `allow` blocks the review artifacts too, and the skills
-cannot produce anything at all. Per the docs, *"a deny rule can't carry allowlist exceptions."*
-Name the paths you want protected instead:
+But note what that means: `allowed-tools` *grants*, it doesn't *restrict*. If your own settings
+auto-approve edits, these skills' writes go through without stopping for you. Their written
+rules about what they touch are instructions to the model, not a fence. If you want a real
+fence, build it in your own settings by denying the paths you care about:
 
 ```json
 {
@@ -167,126 +141,65 @@ Name the paths you want protected instead:
 }
 ```
 
-For a real "nothing outside this directory" boundary, that is
-[the sandbox](https://code.claude.com/docs/en/sandboxing), not permission rules.
+Two things worth knowing: write the rules as `Edit(path)` — Claude Code doesn't consult
+`Write(path)` rules for file checks — and don't try a blanket deny with narrow allows, because
+deny always wins and the skills couldn't write their own reports. For a true "nothing outside
+this folder" boundary, use [the sandbox](https://code.claude.com/docs/en/sandboxing).
 
-**Use `Edit(path)`, not `Write(path)`.** Claude Code checks file permissions against `Edit(path)`
-and `Read(path)` rules *only*; a path rule written for `Write` is accepted and then never
-consulted, and it warns at startup when you do it
-([permissions docs](https://code.claude.com/docs/en/permissions)). An `Edit` rule covers the
-`Write` tool too, including creating a new file.
+One more caution that applies to all skills, not just these: `allowed-tools` in a checked-in
+skill isn't gated by workspace trust. Read the frontmatter of skills you didn't write.
 
-This is a recommendation the skills cannot enforce — settings are yours, not theirs. It is worth
-knowing that `allowed-tools` in a checked-in skill is not gated by workspace trust: any repository
-you clone can grant its own skills broad access, these two included. Read the frontmatter of skills
-you did not write.
+---
 
-## A typical run
-
-Say Claude has just written you a plan, and you'd rather not find out it was wrong after the
-thing is built.
-
-Each step says which session to run it in. Two of them need to be fresh sessions, and those two
-are what make the whole exercise worth anything.
-
-1. **You:** "Before we build any of this, I want an outside review of the plan you just wrote."
-  Or run `/adversarial-review-prompt` directly.
-2. Claude reads its own plan, writes `NN-EXTERNAL-REVIEW-PROMPT.md` and a cover note, and tells
-  you its own private suspicions to hold onto.
-  > **Where:** the same session that wrote the plan — that's the point, since it knows which
-  > parts it was least sure of. The one risk is that its own suspicions end up in the brief
-  > without it noticing, so it searches the saved file afterwards and reports what the search
-  > landed on, with the raw output. It cannot certify absence — a session cannot vouch for what it
-  > left out of a document it wrote — so where a search finds nothing the wording is "no line
-  > found — unverified", and the adjudicator re-runs it.
-  >
-  > **Keep that hand-off.** Everything else it writes is on disk and stands on its own, but the
-  > residual doubts are reported to you in chat and are written nowhere else. Step 6 needs them
-  > verbatim to rule on which ones leaked into the brief. If you no longer have them the
-  > adjudication still runs — it records that the check could not be made and credits no finding
-  > as independent corroboration — but that is a real loss, and it is the one thing here that
-  > does not survive closing the window. Paste it somewhere durable.
-3. **You** paste the cover note into Codex / Gemini / Cursor / another Claude session.
-  > **Where: a fresh session, and ideally a different model.** Another Claude session only counts
-  > if it hasn't seen the plan. Show the plan to the session that wrote it and you get agreement
-  > instead of a review, and the run was worth nothing. Different *company* is worth more than
-  > different *product* — several review tools sit on top of the same underlying models.
-4. That model reads the brief, does the audit, and writes `NN-EXTERNAL-REVIEW.md` to disk.
-5. **You, in another fresh session:** "The review's in — adjudicate it." Or run
-  `/review-adjudication` and point it at the report.
-6. Claude checks every finding itself — running commands where a finding is about code, going
-  back to the source where it's about the plan — and writes `NN-REVIEW-ADJUDICATION.md`: every
-  finding ruled on, a fix queue, and the questions that are yours to answer.
-  > **Where: a fresh session again.** It costs you almost nothing, because the skill works from
-  > the report and the files on disk rather than from a conversation — you can pick it up days
-  > later on a different machine. The single exception is the residual-doubts hand-off from
-  > step 2, which it will ask you to paste. And it buys a lot. The session that wrote the plan has a stake in the
-  > findings being wrong, so letting it rule on them is self-review sneaking back in, and "we
-  > already thought about that" is the cheapest sentence in the language. A session with no stake
-  > has to go and look.
-7. **You** answer those questions and say go. Fixing happens then, against the ledger.
-  > **Where:** the session that wrote the ledger can do the fixing, as long as you've actually
-  > said go. It writes your go-ahead into the ledger first, then updates each row as the fix
-  > lands, so the file never claims something is still queued after it shipped.
-
-## Calibrate the reviewer once
+## Test your reviewer once (20 minutes)
 
 When a review comes back clean, you can't tell whether the work is sound or the reviewer never
-really looked. The two produce the same file — and the empty one is worse than running nothing,
-because it gets recorded as covered and the next brief tells the next reviewer to skip it.
+really looked — both produce the same empty report, and the empty one is worse than nothing,
+because it gets recorded as "covered".
 
-[calibration/](calibration/) fixes that the same way everything else here works: hand the reviewer
-work with defects already planted in it and see whether it comes back with them. Six small cases —
-four traps, two clean — about twenty minutes, once per model rather than once per review. Copy a
-case into an empty folder, point the reviewer at it, score it against the key.
+The [calibration/](calibration/) folder settles it: six small pieces of work — four with
+defects deliberately planted, two genuinely clean — that you hand to a reviewer once per model,
+not once per review. If it finds the planted bugs and doesn't invent bugs in the clean ones,
+it has earned some trust.
 
-It buys one specific thing, and both skills say so in the same words: **calibration governs the
-reviewer's silence, never its speech.** An untested reviewer's findings are adjudicated exactly
-like anyone else's — a real bug doesn't stop being real because the model that found it was never
-tested. What it can't do is *close* anything: its "I checked these and they're fine" list is
-recorded as unverified rather than as coverage, and a report with no findings counts as
-inconclusive instead of an all-clear.
+Neither skill refuses to run without this. An untested reviewer's *findings* still count fully
+— a real bug is real regardless of who found it. What an untested reviewer can't do is clear
+anything: its "I checked, it's fine" is recorded as unverified, not as coverage.
 
-Neither skill refuses to run without it. They just tell you once what you're missing.
+---
 
-## See it actually working
+## See real output
 
-The [examples/](examples/) folder holds real output — the skills pointed at *themselves*. Two
-different models (OpenAI's Codex and Claude Fable 5) were sent to audit the skills, found real
-defects in them, and those defects were then adjudicated and fixed using the very skill under
-review. Nothing in there is made up or cleaned up; it's the raw files, with local paths and one
-private project name rewritten.
+The [examples/](examples/) folder holds the skills pointed at *themselves*: two different
+models were sent to audit these skills, found real defects, and the defects were adjudicated
+and fixed using the very skill under review. Raw files, nothing cleaned up.
 
 Start with
 [examples/audit-of-review-adjudication/REVIEW-ADJUDICATION.md](examples/audit-of-review-adjudication/REVIEW-ADJUDICATION.md)
-— 14 findings in, 14 rows out, including two findings that fired against the ledger *while it
-was being written*.
+— 14 findings in, 14 rulings out.
 
-## For the technically curious
+## How it all works under the hood
 
-[HOW-IT-WORKS.md](HOW-IT-WORKS.md) explains the design: why each rule is there, which failure it
-was written against, and which ones were only added after a review caught them missing.
+[HOW-IT-WORKS.md](HOW-IT-WORKS.md) explains every rule: why it exists, which failure it was
+written against, and which ones were only added after an external review caught them missing.
 
 ## Requirements
 
-Claude Code, plus access to at least one other AI that can read files in your repo — Codex CLI,
-Gemini CLI, Cursor, or just a second Claude Code session that hasn't seen the work. A
-browser-only chat works too, with a bit more copying by hand; the skill spots that case and
-adjusts the hand-off.
+Claude Code, plus at least one other AI that can read files in your repo — Codex CLI, Gemini
+CLI, Cursor, or a second Claude Code session that hasn't seen the work. A browser-only chat
+works too, with a little more copying by hand; the skills spot that case and adjust.
 
 ## Credits
 
 Four of the rules here came from reading
 [code review cadre](https://github.com/VibeCodyH/code-review-cadre), which tackles a different
 problem — picking which reviewers to use — but had already measured failures these skills
-weren't guarding against. Details in [HOW-IT-WORKS.md](HOW-IT-WORKS.md#borrowed-from-code-review-cadre).
-
-The calibration corpus follows [cross-model-review](https://github.com/med95Albert/cross-model-review),
-which makes the case that a reviewer has to be shown trustworthy rather than assumed so, and
-[validity-audit](https://github.com/klmtseng/validity-audit), which puts it as *has the checker
-demonstrated that it can fail when it should?* Ruling on the claim before reading the argument
-comes from [refute](https://github.com/Jmosier69/refute). Details and what was deliberately not
-taken: [HOW-IT-WORKS.md](HOW-IT-WORKS.md#borrowed-from-the-wider-adversarial-review-field).
+weren't guarding against. The calibration corpus follows
+[cross-model-review](https://github.com/med95Albert/cross-model-review) and
+[validity-audit](https://github.com/klmtseng/validity-audit), which frame it as *has the
+checker demonstrated that it can fail when it should?* Ruling on the claim before reading the
+argument comes from [refute](https://github.com/Jmosier69/refute). Details, and what was
+deliberately not taken: [HOW-IT-WORKS.md](HOW-IT-WORKS.md#borrowed-from-code-review-cadre).
 
 ## License
 
