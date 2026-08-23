@@ -11,7 +11,7 @@ Replace every «placeholder». Delete this line and the one above it.
 | **Reviewer self-report** | «verbatim, what the model said when asked what it is — e.g. `gpt-5.6-codex`, or `OpenAI Codex, GPT-5-based; exact served version not exposed to it`» |
 | **Run on** | «YYYY-MM-DD» |
 | **Expires** | «YYYY-MM-DD — run date + the window you chose. 30 days is the default, not a requirement; say which you used and why if it was not 30» |
-| **Corpus digest** | «in adversarial-review-skills, run: `git ls-files -z calibration/cases calibration/CALIBRATION-PROMPT.md calibration/ANSWER-KEY.md \| sort -z \| xargs -0 shasum \| shasum \| cut -c1-12`» |
+| **Corpus digest** | «in adversarial-review-skills, run: `git ls-files -z calibration/cases calibration/CALIBRATION-PROMPT.md calibration/ANSWER-KEY.md \| LC_ALL=C sort -z \| xargs -0 shasum \| shasum \| cut -c1-12`» |
 | **Workload** | «what the six cases actually were, in numbers — e.g. `6 cases, 14 files, ~400 lines total`. This is the size the pass was earned on, and the consumer states it beside the size of the work it is adjudicating» |
 | **Project** | «the repo this record is filed in» |
 | **Result** | **PASS** / **FAIL** |
@@ -34,6 +34,12 @@ digest differed on every machine: one corpus, one commit, three different digest
 checkouts. Every record silently expired the first time anyone ran the fixtures, and a valid
 `PASS` read as stale. Enumerating tracked files ends the whole class — there is no artefact list
 to maintain and no next artefact to be surprised by.
+
+**`LC_ALL=C` is not optional.** The ordering step is the shell's collation, and
+`en_US.UTF-8` — the default on most desktops — sorts `README.md` against its lowercase siblings
+differently from `C`. On this corpus that is the difference between `775e1cc8c43f` and
+`bf13a2b6c2ff`: file the wrong one and `scripts/validate.py`, which sorts bytes, will report your
+record stale forever. Round 7 `A7-1`.
 
 **What it costs, stated rather than discovered later:** it enumerates tracked *names* and then
 hashes **working-tree bytes**, so editing a tracked case without committing **does** move the digest

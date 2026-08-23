@@ -224,6 +224,11 @@ a reviewer that was asked for an unseeded pass produces the evidence directly in
 to be reconstructed. Do not drop §6 in favour of this: both rounds above suggest the directed
 questions are where the confirmed defects come from.»
 
+**Where a claim needs the other reviewer's brief, grant that read explicitly and scope it.** A
+parallel-reviewer note saying *"you are not reading that brief"* beside a claim asking the reviewer
+to check both briefs cannot be obeyed — round 7 `grok7-8`, where the reviewer had to invent a
+resolution. Say which part is readable (the envelope table) and which is not (the claims list).
+
 ## 7. Ground already walked — do not re-report, do challenge
 
 Prior findings with severity labels and dispositions — sourced from the adjudication ledger

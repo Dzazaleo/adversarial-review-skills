@@ -40,7 +40,12 @@ verifier (§5) · `inputs-and-calibration.md` for identity and calibration (§1)
    completed round**, and prove the earlier rounds are untouched. (§7)
 2. **Two axes, never one word.** Every finding leaves with a **verdict** (is the claim true?)
    and a **disposition** (what happens now?). Never a bare "ACCEPTED". `NO ACTION` is legal only
-   under `REFUTED`, `SETTLED ALREADY`, or the gated `TRUE, NOT A DEFECT`. (§6)
+   under `REFUTED`, `SETTLED ALREADY`, or `TRUE, NOT A DEFECT` — and that last one is **gated,
+   here, not elsewhere**: the cell quotes the claim's Consequence verbatim (or says `no
+   consequence stated`) and names in one clause what would have to be true for it to be a defect
+   here, and that it is not. **Boundary: if the claim says anything *here* is wrong, the verdict
+   is never this one** — whatever the scope or the cost, that stays `CONFIRMED` + `FIX LATER`.
+   A permission that survives compaction without its gate is a dismissal hatch. (§6)
 3. **Count in = count out.** One row per numbered finding, plus separately-counted ruled entries for
    every auxiliary class — could-not-verify, process, prior-review disagreements, re-opened upheld
    claims (`U-N`), **and your own findings from re-verification (`A-N`)**. A finding with no row is the defect this skill exists to prevent. (§2, §7)
@@ -59,7 +64,8 @@ verifier (§5) · `inputs-and-calibration.md` for identity and calibration (§1)
 <why_this_is_hard>
 "Decide what's worth implementing" is the failure mode, not the goal. Four forces push on the
 rulings and every rule resists one. **You want the phase closed**, and dismissal is the cheapest
-path there — it wears good clothes ("pre-existing", "out of scope", "will handle later"), and a
+path there — it wears good clothes ("pre-existing", "out of scope", "scaffold only", "will
+handle later"), and a
 finding you just found and immediately deferred is the tell. **Rejection is held to a lower
 evidence standard than accusation**: the reviewer produced Location · Mechanism · Trigger ·
 Consequence · Status, so the refutation carries the same burden as the finding. **Self-review
@@ -93,13 +99,11 @@ From `$ARGUMENTS`, resolve:
   on it. Take it from `$ARGUMENTS`, the brief the report answers, or a prior round's ledger
   header. Failing all three, **ask**.
 
-  **Never read it off the report.** Prose style, formatting habits, a tool name in a citation, a
-  familiar section layout — none of that is identification; it is the reviewer's output, which is
-  the thing under adjudication, and many products are thin layers over a shared base model. A
-  wrong identity loads a different model's calibration record, and a `PASS` read for the wrong
-  reviewer enters the header as this reviewer's, where nothing downstream can tell it from a
-  correct one. An identity you could not establish is recorded as **unknown**, and unknown is
-  treated exactly as no record — one honest sentence, and no false credit.
+  **Never read it off the report.** Prose style, a tool name in a citation, a familiar layout —
+  none of that is identification; it is the reviewer's output, the thing under adjudication, and
+  many products are thin layers over one base model. A wrong identity loads another model's
+  record, and that `PASS` enters the header indistinguishable from a correct one. An identity you
+  could not establish is **unknown**, and unknown is treated exactly as no record.
 
 - **The reviewer's calibration record** — `.adversarial-review/calibration/<reviewer-id>.md`
   under the project root, keyed on family, product *and version*, reasoning effort, and the
@@ -108,11 +112,12 @@ From `$ARGUMENTS`, resolve:
   **size of work it was earned on**. A record past expiry, or filed against a different identity,
   is stale and counts as missing.
 
-  **Recompute the digest with the command the record names, unmodified, and compare** — it is the
-  only check that notices the instrument moving, and a check adjusted until it matches is not a
-  check. A different digest is stale however recent the record. Where you do not have the corpus,
-  say staleness was **unknowable** rather than passing the record. Record what you found in the
-  header beside the isolation line.
+  **Recompute the digest with the command the record names, unmodified, and compare** — the only
+  check that notices the instrument moving, and one adjusted until it matches is not a check. A
+  different digest is stale however recent the record; without the corpus, staleness is
+  **unknowable**, not passed. Record what you found beside the isolation line. **Pin the
+  collation** (`LC_ALL=C`): the ordering step is locale-dependent and the same tree hashes two
+  ways without it.
 
   **State the workload gap in numbers, never in adjectives** — the record's `Workload` row beside
   the size this review covered. It bounds what the reviewer's *silence* closes, nothing more.
@@ -200,10 +205,11 @@ check covers these entries, not just the table:
   two axes, and the header carries a separate line: how many you sampled, how many you re-opened.
 
 **Count in = count out — over the report's *numbered* findings.** One table row per numbered
-finding; the auxiliary categories are ruled in their own blocks and counted separately in the
-header ("Findings in: N · Rows out: N · +K process, +M CNV, +D prior-review disagreements
-ruled"). Two findings may be merged only with a row that says which IDs merged and why — then the
-header says so too. A finding with no row is the defect this whole skill exists to prevent.
+finding; auxiliary categories are ruled in their own blocks and counted separately in the header
+("Findings in: N · Rows out: N · +K process, +M CNV, +D prior-review disagreements ruled, +U
+re-opened upheld claims, +A adjudicator findings, +C corrections to earlier rounds"). Merge two
+findings only with a row naming the IDs and why — then say so in the header too. A finding with no
+row is the defect this whole skill exists to prevent.
 
 **Extract a claim card with each row.** Alongside the skeleton, write each finding's *claim* on
 its own, into the session scratchpad — never beside the ledger, where a later reviewer would read
@@ -219,23 +225,18 @@ card says `not stated` — and that absence is itself worth seeing early, becaus
 stated trigger is one nobody can reproduce yet.
 
 **Most reports will not hand you a clean separation, so have a rule ready for the mixed field.**
-Nothing obliges a reviewer to keep its argument out of Mechanism, and in practice a good one does
-not: the evidence that convinced it, a citation, or the case for severity arrives *inside* the very
-field you are told to copy verbatim. Both instructions cannot be obeyed on that field. When it
-happens — and expect it on the highest-impact findings, where the reviewer had the most to argue —
-**copy the claim clause verbatim, and replace the argument with a pointer to the report line it
-came from** (`— argument at :131`). Never paraphrase it: a paraphrase silently edits what you are
-about to verify, which is worse than either instruction taken alone. The pointer keeps the argument
-findable for step 5's re-read while keeping it off the card you check against.
+A good reviewer puts its evidence, citation or severity case *inside* the Mechanism you are told to
+copy verbatim, and both instructions cannot then be obeyed. Expect it on the highest-impact
+findings. **Copy the claim clause verbatim and replace the argument with a pointer to the report
+line** (`— argument at :131`). Never paraphrase: that silently edits what you are about to verify.
 
 The cards are what step 5 works from. Cut them here, while you are still transcribing and before
 any ruling exists, because a card cut later is a card cut by someone who has already decided.
 
-**What the card buys, exactly.** You read the report in full in step 1 and cannot unread it; the
-card does not make you blind to the argument. What it does is give step 5 a target containing only
-the claim, so the check is aimed at the mechanism rather than the case made for it. Genuine
-blindness exists in one place only — the subagent in step 5's escalation, which is not *handed*
-the report — and even there, not being handed it is not the same as being unable to read it. See
+**What the card buys, exactly.** You read the report in step 1 and cannot unread it; the card does
+not make you blind. It gives step 5 a target containing only the claim, so the check aims at the
+mechanism rather than the case for it. Genuine blindness exists only in step 5's subagent, and even
+there, not being *handed* the report is not being unable to read it.
 [references/verification-standard.md](references/verification-standard.md).
 
 ## 3. Screen against settled ground — cheap, and gated
@@ -334,28 +335,23 @@ the reviewer, whichever way it comes out:
   `no line found` — with the query beside it. Score only a doubt *you* ruled absent as
   independent corroboration.
 
-  **The doubts are the small channel; the brief's load-bearing claims list is the large one.**
-  Every claim with a pointed sub-question states the suspected defect outright and directs the
-  reviewer at it, so a reviewer that comes back agreeing has answered a question, not found
-  anything. **Run the same probe over every finding**, query the brief and cover note with that
-  finding's own identifiers, rule the echoes from primary sources, and put the tally in the
-  ledger — how many findings were echoes, how many partial, how many were free to surprise. That
-  last number is what the report's weight actually rests on. History and worked cases:
-  [references/verification-standard.md](references/verification-standard.md).
+  **The doubts are the small channel; the brief's load-bearing claims list is the large one** —
+  a pointed sub-question states the defect and directs the reviewer at it, so agreement answers a
+  question rather than finding anything. **Run the same probe over every finding**, query both
+  documents with that finding's own identifiers, rule the echoes from primary sources, and tally
+  in the ledger how many were echoes, partial, or free. That last number is what the report's
+  weight rests on. [references/verification-standard.md](references/verification-standard.md).
 
-- **The same discount applies between reviewers.** Two reports agreeing is corroboration only if
-  the second could not read the first. Ours land in one directory, so by default it could.
-  **Establish it from timestamps and layout, not from a promise**, record in the header what each
-  reviewer could see, and where it could see the earlier report, re-establish shared findings from
-  primary sources as if only one reviewer had raised them. Two reviewers handed the *same brief*
-  are not independent either, whatever they could or could not read.
+- **The same discount applies between reviewers.** Agreement is corroboration only if the second
+  could not read the first, and ours land in one directory. **Establish it from timestamps, not a
+  promise**, record what each could see, and re-establish shared findings from primary sources
+  where it could. Two reviewers handed the *same brief* are not independent either.
 
 - **A claim the reviewer upheld is a ruling you inherit, not a line you copy.** Sample the
-  claims-examined-and-upheld list rather than transcribing it, and re-open anything upheld on the
-  strength of a comment, a test name, or a docstring — that is the party under review talking,
-  arriving through the reviewer instead of the author. Rank a reviewer that reached the defect and
-  argued it was intentional **below** a plain miss: a miss leaves you the bug, this leaves you the
-  bug plus a written case for keeping it. Any such passage is an open finding, not coverage.
+  upheld list rather than transcribing it, and re-open anything cleared on the strength of a
+  comment, a test name or a docstring — that is the party under review talking through the
+  reviewer. Rank a reviewer that reached the defect and argued it intentional **below** a plain
+  miss: that leaves you the bug plus a written case for keeping it. An open finding, not coverage.
 
 - **Confirm the gate would actually fail.** When a finding is about a test or gate proving nothing,
   the check is not "does the suite pass" but "would it fail if the thing were wrong." Break it
@@ -409,7 +405,7 @@ Every row carries **both**, and they are different questions:
 | `COULD NOT DETERMINE` | Say precisely what would settle it. This is an honest, available outcome. |
 | `SETTLED ALREADY` | Relitigates a locked decision. Citation required (step 3). |
 | `OWNER RULING REQUIRED` | Not yours to rule on. Reframed as a question in the hand-off. |
-| `TRUE, NOT A DEFECT` | The claim is true **and alleges nothing wrong here.** A process observation, a fact about the reviewer rather than the work, or evidence the design worked. **Gated:** the cell quotes the claim's Consequence verbatim from the report (or says `no consequence stated`) and names in one clause what would have to be true for it to be a defect in this repository, and that it is not. **Boundary — this is not an out-of-scope route:** if the claim says anything *here* is wrong, the verdict is never this one, whatever the scope or the cost of the fix; that stays `CONFIRMED` with `FIX LATER` and its backlog artifact. |
+| `TRUE, NOT A DEFECT` | The claim is true **and alleges nothing wrong here** — a process observation, a fact about the reviewer rather than the work, or evidence the design worked. **The gate and the boundary are stated in full in invariant 2 and both bind**; a row using this verdict without filling the gate is not using it. Also the pairing for a re-opened `U-N` claim that checks out: the claim is true and alleges no defect. |
 
 **Disposition — what happens now?**
 
@@ -446,12 +442,19 @@ Non-negotiables:
 - Every command you ran, with its real output, in the re-verification section. Not paraphrased.
 - Nothing in the ledger claims the work is complete, correct, or ready to ship.
 - Completed rounds append only. A superseded ruling gets a new row citing the row it supersedes;
-  the original row stays as written. **The current round is different: its skeleton is written
-  blank and filled in place, which replaces text by design.** So prove the *completed* prefix is
-  untouched, not that the file only grew — `head -n <the prior round's last line> <ledger> | diff
-  - <a copy of the prior version>` must be silent. Where the current round is the only one, there
-  is nothing to prove. A completed round rewritten rather than appended has destroyed the record
-  every later round is scored against, and nothing downstream can tell that it happened.
+  the original stays as written. The current round is filled in place, which replaces text by
+  design — so prove the *completed* prefix is untouched, not that the file only grew:
+  `head -n <the prior round's last line> <ledger> | diff - <a pre-session copy>` must be silent.
+  **Run it after every write, not once at the end, and assemble the round outside the ledger and
+  concatenate it once** — an unanchored replace matches an earlier round's identical phrase first
+  and rewrites history silently, which closed-round warnings will not catch. Take the pre-session
+  copy before your first write; afterwards there is nothing to compare against.
+- **Numbered finding IDs are lowercase** (`codex7-1`, `grok7-3`). Uppercase collides with the
+  auxiliary namespace — `P` `CNV` `D` `U` `A` `C` `X` `Q` — and the validator errors rather than
+  miscounting. The full table, and where a historical exception lives, are in the template.
+- **Vocabulary changes do not reach back.** Rows written under a superseded rule stay as history
+  and surface as warnings the validator labels *expected*; anything else in a closed round it
+  labels *not expected — review it*. Never "repair" a closed round to silence one.
 - The only files this skill creates or edits are the ledger, `FIX LATER` backlog artifacts, and —
   when the input review exists only as a chat transcript — the report file materialized from it,
   saved beside the ledger before adjudication begins. Never the code, the plans, or an existing
@@ -459,8 +462,9 @@ Non-negotiables:
   live in the session scratchpad, never beside the ledger: a card sitting in the review directory
   is the next reviewer's reading material, and it is the finding stripped of its evidence.
 - Before saving, verify one row per numbered finding and **no empty verdict or disposition cells**,
-  and state the counts in the header (numbered findings, plus process, CNV, re-opened upheld claims
-  and your own `A-N` findings separately, and the report's completeness state). A mismatch is a defect in your own work
+  and state the counts in the header (numbered findings, plus process, CNV, prior-review
+  disagreements, re-opened upheld claims, your own `A-N` findings and `C-N` corrections to earlier
+  rounds, each separately, and the report's completeness state). A mismatch is a defect in your own work
   — a merge row or a header note explains it; dropping a row never does.
 
 ## 8. Hand off
@@ -471,20 +475,18 @@ Report to the user, briefly:
 - **The owner questions**, in full — each as one decidable question with its options and what each
   costs. These are the reason the skill stops here. Say which of them block execution.
 - The `FIX NOW` queue, one line each, and an offer to execute it as a separate act. The owner's
-  acceptance of that offer **is** the separate, explicit act: record the acceptance verbatim in
-  the ledger, and the same session may then execute and backfill. Whoever lands a `FIX NOW`
-  change updates that row — a ledger still saying "queued" after the work landed is a false
-  record.
+  acceptance of that offer **is** that act: record it verbatim in the ledger, and the same session
+  may then execute and backfill. Whoever lands a `FIX NOW` change updates that row — a ledger
+  still saying "queued" after the work landed is a false record.
 - The `FIX LATER` items with their backlog artifact paths, so the user can see they exist.
 - Anything you ruled `COULD NOT DETERMINE`, and what would settle it.
 - Whether the report was complete, partial, or inconclusive (step 1). A partial report leaves
   claims unexamined rather than upheld, and an inconclusive one needs a re-run before anything here
   means much — in both cases say what the next run should cover.
-- Whether each reviewer had a passing calibration record, and if not, exactly what that cost:
-  which claims are CNV entries rather than coverage, and that nothing it cleared carries into the
-  next brief. One sentence, one pointer — the URL in §1, not a bare `calibration/README.md`,
-  which resolves to nothing from an installed skill. Reported, never argued: the user chose the
-  reviewer they had.
+- Whether each reviewer had a passing calibration record, and if not what that cost: which claims
+  are CNV entries rather than coverage, and that nothing it cleared carries into the next brief.
+  One sentence, one pointer — the URL in §1, not a bare `calibration/README.md`, which resolves to
+  nothing from an installed skill. Reported, never argued: the user chose the reviewer they had.
 - How many upheld claims you sampled and how many you re-opened.
 - Where a reviewer's figures failed to reproduce, or two reviewers disagreed — that bears on how
   much weight the rest of that report earns.

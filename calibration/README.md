@@ -134,7 +134,10 @@ A record is stale when any of these is true, and stale is treated exactly as mis
   It enumerates **tracked** files (`git ls-files`) but hashes working-tree bytes, so running the
   fixtures cannot expire a record — while an uncommitted edit to a tracked case **does** move the
   digest, and only a never-added file is invisible: commit corpus changes before filing or
-  trusting a record. `record-template.md` carries the command and the reasoning.
+  trusting a record. **Run the command with `LC_ALL=C`** — the ordering step is the shell's
+  collation, and a UTF-8 locale orders this corpus differently, producing a digest the validator's
+  byte-sort will never reproduce and a record that reads as permanently stale (round 7 `A7-1`).
+  `record-template.md` carries the command and the reasoning.
 
 Do not re-date a stale record. Re-run it.
 

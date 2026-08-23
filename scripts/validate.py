@@ -10,7 +10,7 @@ The point is that they now fail instead of needing to be noticed.
 Exits 1 if any ERROR is reported. WARNs do not fail the run.
 Requires PyYAML for the frontmatter check; skips that check with a WARN if absent.
 """
-import os, re, sys, glob, subprocess, hashlib
+import os, re, sys, glob, subprocess, hashlib, datetime
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ERRORS, WARNS, SKIPPED = [], [], set()
@@ -40,6 +40,7 @@ def skill_dirs():
 # --------------------------------------------------------------------------- skills
 
 WRITE_CAPABLE = {"Write", "Edit", "NotebookEdit", "Bash", "Agent"}
+TOOL_NAME_RE = re.compile(r"^\s*([A-Za-z_][A-Za-z0-9_-]*)")
 MAX_SKILL_LINES = 500
 
 
@@ -60,8 +61,14 @@ def check_frontmatter():
         if not text.startswith("---"):
             err("frontmatter", f"{rel(p)} does not open with a frontmatter block")
             continue
+        # Round 7 codex7-9: split("---")[1] ended the block at any triple hyphen, so a valid
+        # quoted description containing one was truncated into invalid YAML.
+        block = re.match(r"^---[ \t]*\n(.*?)\n---[ \t]*(?:\n|$)", text, re.S)
+        if not block:
+            err("frontmatter", f"{rel(p)} frontmatter block is not closed by a --- line")
+            continue
         try:
-            fm = yaml.safe_load(text.split("---")[1])
+            fm = yaml.safe_load(block.group(1))
         except Exception as e:
             err("frontmatter", f"{rel(p)} frontmatter is not valid YAML: {e}")
             continue
@@ -72,7 +79,13 @@ def check_frontmatter():
         raw = fm.get("allowed-tools") or []
         if isinstance(raw, str):
             raw = [x.strip() for x in raw.replace(",", " ").split()]
-        granted = set(raw)
+        if not isinstance(raw, list) or any(not isinstance(x, (str, int, float)) for x in raw):
+            err("frontmatter", f"{rel(p)} allowed-tools must be a string or a flat list of tool "
+                               f"names; got {type(raw).__name__} containing non-scalar values")
+            continue
+        # Claude Code accepts scoped rules such as Edit(/src/**), and the grant is the *tool*.
+        # Intersecting exact strings let every scoped write grant through (round 7 codex7-1).
+        granted = {m.group(1) for m in (TOOL_NAME_RE.match(str(x)) for x in raw) if m}
         bad = granted & WRITE_CAPABLE
         if bad:
             err("permissions", f"{rel(p)} pre-approves write-capable tool(s) {sorted(bad)} - "
@@ -100,26 +113,49 @@ def check_placeholders():
         p = os.path.join(d, "SKILL.md")
         if not os.path.exists(p):
             continue
-        stripped = re.sub(r"`[^`]*`", "", read(p))
+        # Fenced examples and multi-backtick spans are the skill talking *about* placeholders
+        # (round 7 codex7-11); the fence behaviour was previously an accident of the regex.
+        stripped = CODE_SPAN_RE.sub("", mask_escapes(defenced(read(p))))
         for i, line in enumerate(stripped.split("\n"), 1):
             if "«" in line or "»" in line:
                 err("placeholder", f"{rel(p)}:{i} has an unresolved guillemet outside inline code")
 
 
+# An inline destination is either <pointy-bracketed> or a run without spaces in which
+# parentheses may be balanced one level deep - both are CommonMark, and both used to false-fail
+# (round 7 codex7-7).
+INLINE_LINK_RE = re.compile(r"\]\(\s*(<[^<>]*>|(?:[^()\s]|\([^()]*\))+)")
+REF_LINK_RE = re.compile(r"\]\[([^\]]+)\]")
+REF_DEF_RE = re.compile(r"^\s{0,3}\[([^\]]+)\]:\s*(<[^<>]*>|\S+)", re.M)
+
+
+def _destination(raw):
+    """The path part of a link destination, title stripped, angle brackets removed."""
+    raw = raw.strip()
+    if raw.startswith("<") and raw.endswith(">"):
+        return raw[1:-1].strip()
+    return raw.split()[0] if raw.split() else ""
+
+
 def check_links():
-    """Every relative markdown link under skills/ resolves."""
+    """Every relative markdown link under skills/ resolves - inline and reference alike."""
     for f in glob.glob(os.path.join(ROOT, "skills", "**", "*.md"), recursive=True):
-        for m in re.finditer(r"\]\((?!https?:|#|mailto:)([^)#]+)", read(f)):
-            # A quoted title after the path is valid CommonMark and is not part of the path
-            # (round 6 A6-3). An unbracketed path cannot contain a space, so the first token
-            # is the whole of it.
-            parts = m.group(1).strip().split()
-            if not parts:
+        text = defenced(read(f))
+        defs = {k.strip().lower(): _destination(v) for k, v in REF_DEF_RE.findall(text)}
+        targets = [(_destination(m.group(1)), "") for m in INLINE_LINK_RE.finditer(text)]
+        # Round 7 codex7-7: a reference link whose definition pointed nowhere was silent.
+        for m in REF_LINK_RE.finditer(text):
+            label = m.group(1).strip().lower()
+            if label in defs:
+                targets.append((defs[label], f" (reference link [{m.group(1)})"))
+            else:
+                err("links", f"{rel(f)} -> [{m.group(1)}] has no link reference definition")
+        for path, note in targets:
+            if not path or re.match(r"(https?:|#|mailto:|//)", path):
                 continue
-            path = parts[0]
             target = os.path.normpath(os.path.join(os.path.dirname(f), path))
             if not os.path.exists(target):
-                err("links", f"{rel(f)} -> {path} does not resolve")
+                err("links", f"{rel(f)} -> {path} does not resolve{note}")
 
 
 # --------------------------------------------------------------------------- ledger
@@ -135,10 +171,96 @@ def ledger_paths():
     return sorted(glob.glob(os.path.join(ROOT, "**", "*REVIEW-ADJUDICATION.md"), recursive=True))
 
 
+FENCE_RE = re.compile(r"^\s*(`{3,}|~{3,})")
+
+
+def defenced(text):
+    r"""`text` with fenced code blocks blanked out, line numbering preserved.
+
+    Round 7 codex7-2: `^# Round \d+` matched inside a fenced example, so appending four lines
+    of illustration moved the current-round boundary and demoted every real error before it to
+    a warning. Markdown examples are not live syntax and must not be parsed as such - this
+    ledger's own R7.2 contains a planted ruling row that was being read as a real one.
+    """
+    out, fence = [], None
+    for line in text.split("\n"):
+        m = FENCE_RE.match(line)
+        if fence is None:
+            if m:
+                fence = m.group(1)[0]
+                out.append("")
+                continue
+            out.append(line)
+        else:
+            if m and m.group(1)[0] == fence:
+                fence = None
+            out.append("")
+    return "\n".join(out)
+
+
+ROUND_RE = re.compile(r"^# Round \d+")
+
+
+def round_marks(text):
+    """(0-based line index, heading text) for every real `# Round N` heading.
+
+    Line indices rather than byte offsets: `defenced` blanks fenced lines, which preserves
+    line numbering but not character offsets.
+    """
+    return [(i, ROUND_RE.match(l).group(0))
+            for i, l in enumerate(defenced(text).split("\n")) if ROUND_RE.match(l)]
+
+
+def split_cells(line):
+    r"""Split a markdown row on unescaped pipes, counting backslash *parity*.
+
+    Round 7 codex7-8: `(?<!\\)\|` inspects one preceding byte, so a cell ending in the literal
+    backslash spelling `\\` swallowed the next delimiter and merged the column after it.
+    """
+    cells, buf, esc = [], [], 0
+    for ch in line:
+        if ch == "\\":
+            esc += 1
+            buf.append(ch)
+            continue
+        if ch == "|" and esc % 2 == 0:
+            cells.append("".join(buf))
+            buf, esc = [], 0
+            continue
+        esc = 0
+        buf.append(ch)
+    cells.append("".join(buf))
+    return cells
+
+
+DELIMITER_RE = re.compile(r"^\|[\s:|-]+\|?$")
+
+
+def walk_tables(text):
+    """(line number, line, index within its table) for every row of every markdown table.
+
+    A blank or non-pipe line ends a table, so each table's own header can be found - which is
+    what `ruling_rows` needs and what a flat row stream cannot provide.
+    """
+    idx = -1
+    for i, line in enumerate(defenced(text).split("\n"), 1):
+        if not line.startswith("|"):
+            idx = -1
+            continue
+        idx += 1
+        yield i, line, idx
+
+
 def table_rows(text):
-    for i, line in enumerate(text.split("\n"), 1):
-        if line.startswith("|") and not re.match(r"^\|[\s:|-]+\|?$", line):
-            yield i, line
+    """Real table rows only - fenced examples and delimiter rows excluded.
+
+    A delimiter row is recognised by *position* - index 1, directly under the header - rather
+    than by shape, so a data row whose cells are all dashes is no longer discarded (codex7-8).
+    """
+    for i, line, idx in walk_tables(text):
+        if idx == 1 and DELIMITER_RE.match(line):
+            continue
+        yield i, line
 
 
 def check_table_pipes():
@@ -148,20 +270,14 @@ def check_table_pipes():
     """
     for p in ledger_paths():
         text = read(p)
-        marks = [m.start() for m in re.finditer(r"^# Round \d+", text, re.M)]
-        cur_line = text[:marks[-1]].count("\n") + 1 if marks else 0
+        cur_line = current_round_line(text)
         for i, line in table_rows(text):
-            in_code, count, escaped = False, 0, False
-            for ch in line:
-                if escaped:
-                    escaped = False
-                    continue
-                if ch == "\\":
-                    escaped = True
-                elif ch == "`":
-                    in_code = not in_code
-                elif ch == "|" and in_code:
-                    count += 1
+            # A code span is a run of N backticks closed by a run of exactly N (round 7
+            # codex7-11: toggling per backtick made ``a | b`` invisible and broke the
+            # placeholder check in the opposite direction). Escaped characters are neutralised
+            # first, so an escaped backtick cannot mis-pair the runs and an escaped pipe is
+            # correctly not a defect - both spellings occur in closed rounds of this ledger.
+            count = sum(m.group(2).count("|") for m in CODE_SPAN_RE.finditer(mask_escapes(line)))
             if count:
                 report = err if i > cur_line else warn
                 where = "" if i > cur_line else " (closed round - append-only, cannot be repaired)"
@@ -169,45 +285,114 @@ def check_table_pipes():
                                 f"code; the row will render with extra columns{where}")
 
 
-VERDICT_RE = re.compile(r"\*\*(" + "|".join(re.escape(v) for v in VERDICTS) + r")")
-BARE_VERDICT_RE = re.compile(r"^\**(" + "|".join(re.escape(v) for v in VERDICTS) + r")")
-DISPOSITION_RE = re.compile(r"\*\*([A-Z][A-Z ,'-]*?)\*\*")
+CODE_SPAN_RE = re.compile(r"(`+)(.+?)\1", re.S)
+ESCAPE_RE = re.compile(r"\\.", re.S)
 
 
-def declared_disposition(cell):
-    """The disposition a cell *commits to* - its first bolded known term, not any mention."""
-    for m in DISPOSITION_RE.finditer(cell):
-        tok = m.group(1).strip()
-        if tok in DISPOSITIONS:
-            return tok
+def mask_escapes(text):
+    r"""Backslash-escaped characters replaced by a neutral byte, positions preserved.
+
+    `\|` is a literal pipe and not a defect; `` \` `` must not be mistaken for a code-span
+    delimiter. Masking both before span-matching keeps each from corrupting the other.
+    """
+    return ESCAPE_RE.sub("xx", text)
+BOLD_RE = re.compile(r"\*\*(.+?)\*\*", re.S)
+# A whole-cell verdict: the term, optionally emphasised, optionally followed by prose after a
+# separator. `CONFIRMEDLY` is not a verdict and `_**CONFIRMED**_` is (round 7 codex7-8).
+BARE_VERDICT_RE = re.compile(r"^[*_\s]*(" + "|".join(re.escape(v) for v in VERDICTS) + r")(?![A-Z])")
+
+
+def _leading_term(tok, terms):
+    """The known term a bolded run opens with, or None. Admits qualifiers after the term."""
+    for t in sorted(terms, key=len, reverse=True):
+        if tok == t or re.match(re.escape(t) + r"(?![A-Z])", tok):
+            return t
     return None
 
 
-CELL_SPLIT_RE = re.compile(r"(?<!\\)\|")
+def declared_disposition(cell):
+    """The disposition a cell *commits to* - the first bolded run that opens with a known term.
+
+    Round 7 codex7-4: an `any(term in cell)` test made a *mention* into a commitment
+    ("explicitly not FIX NOW" passed), while the skill's own documented compound spelling
+    `**PENDING OWNER - proposed: NO ACTION**` could not be parsed at all.
+    """
+    for m in BOLD_RE.finditer(cell):
+        t = _leading_term(m.group(1).strip(), DISPOSITIONS)
+        if t:
+            return t
+    return None
+
+
+def declared_verdict(cell):
+    """The verdict a cell *commits to*, so a quoted verdict cannot legalise a pairing."""
+    for m in BOLD_RE.finditer(cell):
+        t = _leading_term(m.group(1).strip(), VERDICTS)
+        if t:
+            return t
+    m = BARE_VERDICT_RE.match(cell)
+    return m.group(1) if m else None
 
 
 def row_cells(line):
-    """The cells of a markdown table row, outer pipes stripped.
+    """The cells of a markdown table row.
 
-    Splits on *unescaped* pipes only. A `\\|` is a literal pipe inside a cell, not a column
-    boundary; splitting on it shifted every column after it and mis-read both axes.
+    The trailing pipe is optional in GFM, so it is stripped only when actually present -
+    round 7 codex7-8, where an unconditional `[1:-1]` dropped the last column of a valid row
+    and made a real ruling row invisible to the census.
     """
-    return [c.strip() for c in CELL_SPLIT_RE.split(line)[1:-1]]
+    line = line.strip()
+    parts = split_cells(line)
+    if parts and not parts[0].strip():
+        parts = parts[1:]
+    if parts and line.endswith("|"):
+        parts = parts[:-1]
+    return [c.strip() for c in parts]
+
+
+def _axis_columns(header):
+    """(verdict index, disposition index) named by a table's own header row, or None.
+
+    Round 7 codex7-8: assuming the last two cells is right for this ledger's tables and wrong
+    in general - a trailing notes column silently moved both axes. The header is asked first
+    and the last two are the fallback.
+    """
+    low = [c.strip().lower().strip("*") for c in header]
+    if "verdict" in low and "disposition" in low:
+        return low.index("verdict"), low.index("disposition")
+    return None
+
+
+def ruling_rows(text):
+    """(line number, line, verdict cell, disposition cell) for every ruling row.
+
+    Round 6 g6-12: scanning the whole line made any row *quoting* a bolded verdict a ruling.
+    Both axes are read from their own columns instead - named by **that table's own** header
+    where it names them, otherwise the last two - and vertical two-cell detail blocks, whose
+    disposition sits on a separate row, are not rows to rule on at all.
+    """
+    cols = None
+    for i, line, idx in walk_tables(text):
+        cells = row_cells(line)
+        if idx == 0:                      # this table's header
+            cols = _axis_columns(cells)
+            continue
+        if idx == 1 and DELIMITER_RE.match(line):
+            continue
+        if len(cells) < 3:
+            continue
+        vi, di = cols if cols and max(cols) < len(cells) else (-2, -1)
+        verdict, disposition = cells[vi], cells[di]
+        if BARE_VERDICT_RE.match(verdict):
+            yield i, line, verdict, disposition
 
 
 def ruling_cells(line):
-    """(verdict cell, disposition cell) for a ruling row, or None.
-
-    Round 6 g6-12: scanning the whole line made any row *quoting* a bolded verdict a ruling,
-    and any row whose notes named a disposition carry that disposition. Both axes are read
-    from their own columns instead - the last two - and vertical two-cell detail blocks, whose
-    disposition sits on a separate row, are not rows to rule on at all.
-    """
+    """(verdict cell, disposition cell) for a standalone row, or None. Header-blind."""
     cells = row_cells(line)
     if len(cells) < 3:
         return None
-    verdict, disposition = cells[-2], cells[-1]
-    return (verdict, disposition) if BARE_VERDICT_RE.match(verdict) else None
+    return (cells[-2], cells[-1]) if BARE_VERDICT_RE.match(cells[-2]) else None
 
 
 def is_ruling_row(line):
@@ -217,14 +402,14 @@ def is_ruling_row(line):
 
 def last_round(text):
     """The final '# Round N' section, or the whole file if there are no round headings."""
-    marks = [m.start() for m in re.finditer(r"^# Round \d+", text, re.M)]
-    return text[marks[-1]:] if marks else text
+    marks = round_marks(text)
+    return "\n".join(text.split("\n")[marks[-1][0]:]) if marks else text
 
 
 def current_round_line(text):
-    """First line number of the current round; 0 when the file has no round headings."""
-    marks = [m.start() for m in re.finditer(r"^# Round \d+", text, re.M)]
-    return text[:marks[-1]].count("\n") + 1 if marks else 0
+    """Line number of the current round's heading; 0 when the file has no round headings."""
+    marks = round_marks(text)
+    return marks[-1][0] + 1 if marks else 0
 
 
 def reporter(i, cur_line):
@@ -244,17 +429,36 @@ def check_ledger_axes():
     for p in ledger_paths():
         text = read(p)
         cur_line = current_round_line(text)
-        for i, line in table_rows(text):
-            cells = ruling_cells(line)
-            if cells is None:
-                continue
-            if not any(d in cells[1] for d in DISPOSITIONS):
+        for i, line, _verdict, disposition in ruling_rows(text):
+            # A *commitment*, not a mention: "explicitly not FIX NOW" is not a disposition
+            # (round 7 codex7-4).
+            if declared_disposition(disposition) is None:
                 report, where = reporter(i, cur_line)
                 report("two-axes", f"{rel(p)}:{i} row '{line[:44].strip()}...' has a verdict "
                                    f"but no disposition{where}")
 
 
 NO_ACTION_RE = re.compile(r"\*\*(" + "|".join(re.escape(v) for v in NO_ACTION_OK) + r")")
+
+# Round 7 A7-4: operators are told two closed-round warnings are expected and permanent, so a
+# third would arrive among them unremarked. The expected two are pinned by file, line and ID;
+# anything else is flagged as new. Round 3 wrote these under a rule that has since changed and
+# they are history, documented at R6.15.
+# Pinned by row *identity*, not by line: appending anywhere above shifts every line number
+# below it, and pinning on those re-flagged the two known rows as new the first time it was
+# tested. The IDs are stable because closed rounds are immutable.
+EXPECTED_HISTORY = {
+    ("REVIEW-ADJUDICATION.md", "R3-P3"),
+    ("REVIEW-ADJUDICATION.md", "R3-P4"),
+}
+
+
+def history_note(p, cells):
+    """'' for a known permanent warning, a loud marker for any other closed-round one."""
+    raw = re.sub(r"[*`]", "", cells[0]).strip() if cells else ""
+    if (rel(p), raw) in EXPECTED_HISTORY:
+        return " (expected permanent history, documented at R6.15)"
+    return " (NOT one of the expected history warnings - this is new, review it)"
 
 
 def check_no_action_legality():
@@ -266,55 +470,95 @@ def check_no_action_legality():
     for p in ledger_paths():
         text = read(p)
         cur_line = current_round_line(text)
-        for i, line in table_rows(text):
-            cells = ruling_cells(line)
-            if cells is None:
-                continue
-            verdict, disposition = cells
+        for i, line, verdict, disposition in ruling_rows(text):
             report, where = reporter(i, cur_line)
             declared = declared_disposition(disposition)
             says_no_action = (declared == "NO ACTION" if declared
                               else "NO ACTION" in disposition)
-            if says_no_action and not NO_ACTION_RE.search(verdict):
+            # The verdict the row *commits to* - a quoted REFUTED elsewhere in the cell no
+            # longer legalises the pairing (round 7 codex7-4).
+            if says_no_action and declared_verdict(verdict) not in NO_ACTION_OK:
+                mark = where if i > cur_line else history_note(p, row_cells(line))
                 report("disposition", f"{rel(p)}:{i} row '{line[:44].strip()}...' pairs NO ACTION "
-                                      f"with a verdict that does not permit it{where}")
+                                      f"with a verdict that does not permit it{mark}")
             if re.search(r"\*\*ACCEPTED\*\*(?!\s*AS-IS)", disposition):
                 report("disposition", f"{rel(p)}:{i} row '{line[:44].strip()}...' uses a bare "
                                       f"'ACCEPTED' - it means both 'real' and 'shipping with it'{where}")
 
 
+# The ID namespace, declared rather than guessed (round 7 Q7-1, closing codex7-10 and A7-3).
+# Auxiliary series are these eight uppercase tags and nothing else; a numbered finding carries a
+# lowercase reviewer tag (`codex7-1`, `grok-3`, `g6-1`), the historical `F<n>` of rounds 1-3, or a
+# bare integer as the worked example under examples/ uses. All three spellings were read off the
+# corpus rather than invented - the rule is a description of the data, not a preference.
+# An ID that is neither is reported rather than silently classified - which is what the old
+# `^(CNV|[PDUACXQ])` guess did, dropping any finding whose tag began with a reserved letter.
+AUX_SERIES = ("CNV", "P", "D", "U", "A", "X", "Q", "C")
 AUX_ID_RE = re.compile(r"^(CNV|[PDUACXQ])[0-9]*(-|$)")
+NUMBERED_ID_RE = re.compile(r"^([a-z][a-z0-9]*-?[0-9]+|F[0-9]+|[0-9]+)$")
+
+# Censuses history records that the namespace rule cannot derive. Immutable rounds cannot be
+# edited to declare themselves, so the exception lives here, dated and reasoned, rather than the
+# rule being relaxed until history passes.
+COUNT_EXCEPTIONS = {
+    # Round 4 filed its 27th reviewer finding as `P-1 (grok-13)` because the fix landed in the
+    # brief rather than the code; round 4's own header says so. Adjudicated 2026-08-22.
+    "# Round 4": (27, 26, "grok-13 is filed under the process ID P-1; round 4's header records it"),
+}
 
 
 def bare_id(cell):
     """An ID cell reduced to its series - emphasis stripped, round prefix dropped."""
     ident = re.sub(r"[*`]", "", cell).strip()
+    ident = re.sub(r"\s*\(.*\)$", "", ident)          # `P-1 (grok-13)` -> `P-1`
     return re.sub(r"^R\d+-", "", ident)
 
 
+def classify_id(cell):
+    """'aux', 'numbered', or None when the ID matches no declared series."""
+    b = bare_id(cell)
+    if AUX_ID_RE.match(b):
+        return "aux"
+    if NUMBERED_ID_RE.match(b):
+        return "numbered"
+    return None
+
+
 def rounds(text):
-    """(name, first-line-number, body) for each '# Round N' section, or one unnamed section."""
-    marks = [(m.start(), m.group(0)) for m in re.finditer(r"^# Round \d+", text, re.M)]
+    """(name, first-line-number, body) for each section, opening adjudication included.
+
+    Round 7 codex7-3: slicing only from the first `# Round N` heading put everything above it -
+    this ledger's entire first adjudication - in no section at all, where its census could be
+    vandalised in complete silence.
+    """
+    lines = text.split("\n")
+    marks = round_marks(text)
     if not marks:
         return [("(no round heading)", 1, text)]
     out = []
-    for k, (pos, name) in enumerate(marks):
-        end = marks[k + 1][0] if k + 1 < len(marks) else len(text)
-        out.append((name, text[:pos].count("\n") + 1, text[pos:end]))
+    if "\n".join(lines[:marks[0][0]]).strip():
+        out.append(("(opening adjudication)", 1, "\n".join(lines[:marks[0][0]])))
+    for k, (idx, name) in enumerate(marks):
+        end = marks[k + 1][0] if k + 1 < len(marks) else len(lines)
+        out.append((name, idx + 1, "\n".join(lines[idx:end])))
     return out
 
 
 def count_finding_rows(section):
-    """Ruling rows for *numbered findings* - auxiliary series are counted separately."""
-    n = 0
-    for _, line in table_rows(section):
-        if not is_ruling_row(line):
-            continue
+    """(numbered rows, [undeclared IDs]) - auxiliary series are counted separately."""
+    n, unknown = 0, []
+    for _, line, _v, _d in ruling_rows(section):
         cells = row_cells(line)
-        if cells and AUX_ID_RE.match(bare_id(cells[0])):
+        if not cells:
+            continue
+        kind = classify_id(cells[0])
+        if kind == "aux":
+            continue
+        if kind is None:
+            unknown.append(bare_id(cells[0]))
             continue
         n += 1
-    return n
+    return n, unknown
 
 
 def check_counts():
@@ -331,21 +575,32 @@ def check_counts():
             current = name == last
             report = err if current else warn
             where = "" if current else f" in the closed {name} (history, not repairable)"
+            actual, unknown = count_finding_rows(section)
+            for u in unknown:
+                report("counts", f"{rel(p)} {name} has ruling row ID '{u}', which matches no "
+                                 f"declared series - it is counted as neither a numbered finding "
+                                 f"nor an auxiliary entry{where}")
             m = re.search(r"Findings in:\s*\*{0,2}(\d+)", section)
             n = re.search(r"Rows out:\s*\*{0,2}(\d+)", section)
             if not m or not n:
-                if current:
-                    warn("counts", f"{rel(p)} current round states no findings-in/rows-out pair")
+                # A round with no rows to account for has nothing to state (round 1 is a
+                # correction). A round carrying rulings must state its census.
+                if actual:
+                    report("counts", f"{rel(p)} {name} states no findings-in/rows-out pair but "
+                                     f"carries {actual} numbered finding row(s){where}")
                 continue
             if m.group(1) != n.group(1):
                 report("counts", f"{rel(p)} states {m.group(1)} findings in but "
                                  f"{n.group(1)} rows out{where}")
-            if not current:
+            # Closed rounds are counted too (round 7 codex7-3: scoping this to the current
+            # round meant a row could be deleted from a closed one in silence).
+            stated = int(n.group(1))
+            exc = COUNT_EXCEPTIONS.get(name)
+            if exc and (stated, actual) == exc[:2]:
                 continue
-            actual = count_finding_rows(section)
-            if int(n.group(1)) != actual:
-                err("counts", f"{rel(p)} states {n.group(1)} rows out but {actual} numbered "
-                              f"finding rows are present")
+            if stated != actual:
+                report("counts", f"{rel(p)} {name} states {stated} rows out but {actual} "
+                                 f"numbered finding rows are present{where}")
 
 
 # --------------------------------------------------------------------------- corpus
@@ -358,6 +613,15 @@ def corpus_digest():
     """Digest the tracked instrument, mirroring calibration/record-template.md."""
     out = subprocess.run(["git", "ls-files", "-z"] + DIGEST_PATHS,
                          cwd=ROOT, capture_output=True)
+    # Round 7 A7-1: without this, a tree with no .git returns empty, the digest becomes the
+    # hash of nothing, and every filed record is reported stale - a false statement, raised
+    # with no exception for the caller to catch.
+    if out.returncode != 0:
+        raise RuntimeError(f"git ls-files exited {out.returncode}: "
+                           f"{out.stderr.decode('utf-8', 'replace').strip()[:120]}")
+    # Byte order, so the digest does not depend on the shell's collation. `sort` under
+    # en_US.UTF-8 orders README.md against its lowercase siblings differently from LC_ALL=C,
+    # and on this very corpus that is the difference between 775e1cc8c43f and bf13a2b6c2ff.
     files = sorted(f for f in out.stdout.split(b"\0") if f)
     inner = b""
     for f in files:
@@ -376,6 +640,7 @@ def check_calibration_digests():
         actual = corpus_digest()
     except Exception as e:
         warn("calibration", f"could not compute the corpus digest: {e}")
+        SKIPPED.add(check_calibration_digests)   # round 7 codex7-5
         return
     for r in records:
         text = read(r)
@@ -388,15 +653,30 @@ def check_calibration_digests():
         e = re.search(r"\*\*Expires\*\*\s*\|\s*(\d{4}-\d{2}-\d{2})", text)
         if not e:
             err("calibration", f"{rel(r)} has no Expires row")
-        elif e.group(1) < __import__("datetime").date.today().isoformat():
-            err("calibration", f"{rel(r)} expired {e.group(1)} - a record past its window is "
-                               "stale and counts as missing")
+            continue
+        # Round 7 codex7-6: a lexical compare against *local* today made one record pass on one
+        # machine and fail on another at the same instant, and let 9999-99-99 never expire.
+        try:
+            expires = datetime.date.fromisoformat(e.group(1))
+        except ValueError:
+            err("calibration", f"{rel(r)} has an Expires value that is not a real date: "
+                               f"{e.group(1)}")
+            continue
+        if expires < datetime.datetime.now(datetime.timezone.utc).date():
+            err("calibration", f"{rel(r)} expired {e.group(1)} (UTC) - a record past its window "
+                               "is stale and counts as missing")
 
 
 # --------------------------------------------------------------------------- install
 
 def check_installed_copies():
-    """Where the skills are installed, they match the repository."""
+    """Where the skills are installed, they match the repository.
+
+    This check reads `~/.claude/skills`, so its output is a statement about this machine rather
+    than about the repository, and it can only ever warn - it never fails the build. Round 7
+    codex7-12 is right that this sits outside "nothing depends on which machine it runs on";
+    it is kept because knowing the version you actually run is stale is worth a warning line.
+    """
     home = os.path.expanduser("~/.claude/skills")
     if not os.path.isdir(home):
         return
@@ -475,11 +755,12 @@ CHECKS = [
     ("no unresolved guillemet ships in a SKILL.md", check_placeholders),
     ("every relative link under skills/ resolves", check_links),
     ("no unescaped pipe inside a ledger table cell", check_table_pipes),
-    ("current round: every verdict has a disposition", check_ledger_axes),
-    ("current round: NO ACTION legality, no bare ACCEPTED", check_no_action_legality),
-    ("current round: findings in equals rows out", check_counts),
-    ("calibration records match the corpus digest", check_calibration_digests),
-    ("installed copies match the repository", check_installed_copies),
+    ("every verdict has a disposition (closed rounds warn)", check_ledger_axes),
+    ("NO ACTION legality, no bare ACCEPTED (closed rounds warn)", check_no_action_legality),
+    ("findings in equals rows out, every round (closed rounds warn)", check_counts),
+    ("calibration records match the corpus digest and are in date", check_calibration_digests),
+    ("installed copies match the repository (environment report; warns only)",
+     check_installed_copies),
     ("no retired rule wording survives in live prose", check_retired_wordings),
     ("every invariant back-reference names a real section", check_invariant_backrefs),
 ]

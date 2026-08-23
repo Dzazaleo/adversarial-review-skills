@@ -5232,3 +5232,917 @@ true of it, each a failure of this round:
    wrote it.
 
 Recorded as `Q6-3`. It is not a defect with a fix; it is the reason the next round exists.
+
+# Round 7 — dual audit of the round-6 self-certification: the validator, and the prose it certified — adjudicated 2026-08-23
+
+**Reports found:** the `*EXTERNAL*` census (excluding `*PROMPT*`, `*COVER-NOTE*`, `*ADJUDICATION*`)
+returns eleven report-family files. `EXTERNAL-REVIEW.md`, `-2`, `-3`, `-4`, `-4-GROK` —
+*adjudicated in rounds 1–4*. `EXTERNAL-REVIEW-5-GROK-VOID.md` — *never adjudicated as a round; its
+two live findings were taken into §R4.14 as `X-1`/`X-2`*. `EXTERNAL-REVIEW-5-CODEX.md`,
+`EXTERNAL-REVIEW-5-GROK.md` — *adjudicated in round 5*. `EXTERNAL-REVIEW-6-GROK.md` — *adjudicated
+in round 6*. **`EXTERNAL-REVIEW-7-CODEX.md` and `EXTERNAL-REVIEW-7-GROK.md` — adjudicated here, and
+they are the only two reports this round rules on.**
+
+**Review A:** `EXTERNAL-REVIEW-7-CODEX.md` — target `scripts/validate.py`. **Review B:**
+`EXTERNAL-REVIEW-7-GROK.md` — target the prose half: the skills, the ledger, the backlog, the
+calibration documentation.
+
+**Reviewer identity — established from the operator, not read off either report.** Asked and
+answered at the start of this session. **Review A:** OpenAI GPT-5.6 "Sol", Codex IDE extension in
+Cursor with embedded codex-cli, **high** reasoning effort — the identity
+`.adversarial-review/calibration/gpt-5.6-sol-high.md` is filed against. **Review B:** xAI Grok 4.6,
+Grok Build TUI, `--reasoning-effort high` — the identity
+`.adversarial-review/calibration/grok-4.6-high.md` is filed against. Both reports carry a
+self-identification line; **neither was the source**, and Review A's says outright that its runtime
+exposed neither a served alias nor an effort label, so that half of its key is the operator's
+assertion rather than the model's. Recorded as `P7-2`.
+
+**Briefs:** `EXTERNAL-REVIEW-7-PROMPT-CODEX.md` and `EXTERNAL-REVIEW-7-PROMPT-GROK.md`.
+**Cover notes:** `EXTERNAL-REVIEW-7-COVER-NOTE-CODEX.md` and `-GROK.md`. Both briefs were generated
+by `adversarial-review-prompt` rather than hand-written by the adjudicator, which was round 6's
+largest structural defect. Whether that changed the outcome is measured in §R7.3, and the answer is
+no.
+
+**Adjudicated:** 2026-08-23, by this session.
+
+**Report state: both complete.** Each carries a coverage line, a strict closing rank, a
+claims-examined list, a could-not-verify list and a disagreements section. Review A additionally
+carries a `## Mutation results` table and an unseeded-pass section; Review B carries an
+unseeded-pass section. Neither stops mid-sentence and neither is missing a closing rank.
+
+**Reviewer calibration: both PASS, both current, both digests recomputed.**
+
+| | Review A (Codex) | Review B (Grok) |
+|---|---|---|
+| Record | `gpt-5.6-sol-high.md` | `grok-4.6-high.md` |
+| Result | **PASS**, run 2026-08-22 | **PASS**, run 2026-08-22 |
+| Expires | 2026-09-21 — **not expired**, today is 2026-08-23 | 2026-09-21 — **not expired** |
+| Digest recorded | `775e1cc8c43f` | `775e1cc8c43f` |
+| Digest recomputed | `775e1cc8c43f` — **matches** | `775e1cc8c43f` — **matches** |
+
+Recomputed with the command the records themselves name, unmodified:
+
+```
+$ git ls-files -z calibration/cases calibration/CALIBRATION-PROMPT.md calibration/ANSWER-KEY.md \
+    | sort -z | xargs -0 shasum | shasum | cut -c1-12
+775e1cc8c43f
+```
+
+**And that check is not as sound as it looks — see `A7-1`.** That command's answer depends on the
+shell's collation. This session's shell runs `LANG=C.UTF-8`; under `LC_ALL=en_US.UTF-8`, which is
+the default on most desktops, **the same tree yields `bf13a2b6c2ff`** and both records would have
+been declared stale. The digests above are true for this machine and are not portable facts. Neither
+reviewer found this; it is `A7-1` and it is this round's most consequential adjudicator finding.
+
+**Workload gap, in numbers.** Both records were earned on **6 cases, 17 files, 315 lines total;
+40–63 lines across 2–3 files per case.** Review A covered **`scripts/validate.py` at 519 lines**
+plus the ledger sections and calibration records its checks read — call it 900 lines of primary
+target, **roughly three times** the size the pass was earned on. Review B covered **two `SKILL.md`
+files (497 and 494), `ledger-template.md` (237), `cover-note-template.md` (108), `BACKLOG.md` (159),
+`calibration/README.md` and `record-template.md` (164 and 83), and round 6 of the ledger (1,080
+lines)** — on the order of **2,800 lines, roughly nine times** the size the pass was earned on. That
+bounds what each reviewer's *silence* closes and nothing else. Every finding below is ruled at the
+usual standard.
+
+**Reviewer isolation: mutual visibility was open in both directions, and is not excused by scope.**
+Established from filesystem timestamps, not from either reviewer's promise:
+
+| File | created | last written |
+|---|---|---|
+| `EXTERNAL-REVIEW-7-CODEX.md` | 00:01:47 | 00:28:35 |
+| `EXTERNAL-REVIEW-7-GROK.md` | 00:04:05 | 00:16:39 |
+
+The runs overlapped. Review B's report was complete on disk at 00:16, **twelve minutes before**
+Review A finished writing; Review A's partial report was on disk from 00:01, before Review B
+started. Each could have read the other, and each was rooted in a tree containing the other's file.
+Neither report claims to have read the other's *report*; Review B states it read the *envelope
+table* of Review A's brief, which it was separately instructed not to open (`g7-8`). **No finding is
+shared between the two reports** — the scopes are genuinely disjoint — so nothing here rests on
+their agreement. Where they touch the same fact (row counting is current-round-only: `codex7-3` and
+`grok7-6`), this session re-established it from source and execution rather than from either report.
+
+**Author's residual doubts: supplied by the owner on request, and ruled per doubt below.** The list
+lives nowhere on disk; it was pasted verbatim into this session. **All five are PRESENT in the
+briefs — ruled here, with this session's own whitespace-normalized queries, not accepted on the
+hand-off's word.** Per-doubt rulings in §R7.3.
+
+**Independence — read this before weighing anything below.** Both briefs carry 20 pointed
+load-bearing claims apiece, and most of them state the suspected defect outright. **The echo
+discount is near-total.** §R7.3 has the tally.
+
+**Upheld claims:** Review A listed 4 upheld of 20 engaged; Review B listed 10 fully and 2 partially
+upheld of 20. **12 sampled · 3 re-opened** as `U7-1`…`U7-3`.
+
+**Findings in: 24 · Rows out: 24 · +2 process, +7 CNV, +11 prior-review disagreements ruled, +3 re-opened upheld claims, +6 adjudicator findings, +8 corrections to earlier rounds**
+
+*Header note, carried forward from round 6 and still unfixed — it is `grok7-4`.* Two of the
+twenty-four numbered rows are process findings the reviewers numbered **inside** their ranked lists
+(`codex7-13`, `grok7-8`); they are counted once, in the 24, and the `+2 process` is a
+classification rather than an extra count. The `+2 corrections` field still has **no slot in the
+skill's header grammar** — round 6 had to invent it and so did this round.
+
+*ID scheme, and it is forced by a defect this round confirms.* Numbered findings are `codex7-N` and
+`grok7-N`, lowercase. `AUX_ID_RE` reserves seven single uppercase letters, so an ID of the form
+`C7-1` is **silently dropped from the census** — the very check bought to stop findings vanishing.
+Verified: `C7-1` is excluded, `codex7-1` is counted. Auxiliary series therefore keep uppercase
+(`P7-`, `CNV7-`, `D7-`, `U7-`, `A7-`, `Q7-`, `C7-` for corrections) and the numbered series avoids
+it. This is `codex7-10` biting the document that adjudicates it.
+
+## R7.1 — Situation in one paragraph
+
+Round 6 was a session that reviewed the fixes it had itself written, certified them with the
+validator it had itself just rewritten, and then wrote the ledger saying they worked. It disclosed
+that conflict at length and named the remedy: a round 7 against `scripts/validate.py` as it now
+stands, briefed by the skill rather than by the adjudicator, with `ROUND-6-HANDOFF.md` out of the
+reviewer's read scope. Round 7 is the execution of that remedy, split across two reviewers with
+disjoint targets. It came back with **24 findings — 6 high, 11 medium, 7 low — and every one of
+them survived re-verification.** Nothing in either report was refuted. This session re-ran every
+machine-checkable claim from scratch against a disposable clone rather than reading either
+reviewer's evidence table, and raised four findings of its own that neither reviewer reached.
+
+## R7.2 — Re-verification performed before accepting anything
+
+All work in a `git clone` of this repository at `d610112`, held in the session scratchpad. **The
+repository itself was never mutated**; `git status` at the end shows only this ledger modified and
+the six pre-existing untracked round-7 artifacts. Baseline on the clone reproduced both reviewers'
+exactly:
+
+```
+$ python3 scripts/validate.py
+WARN  disposition: REVIEW-ADJUDICATION.md:2383 ... (closed round - append-only history, not repairable)
+WARN  disposition: REVIEW-ADJUDICATION.md:2384 ... (closed round - append-only history, not repairable)
+12 of 12 checks pass (2 warning(s))
+exit=0
+```
+
+**Expectations were written before any probe ran** and are on file in the session scratchpad
+(`expectations.md`, 24 entries). They were correct on mechanism for twenty-two of twenty-four. They
+were wrong, or under-specified, in four places that are worth recording because three of them
+changed how a row is written:
+
+1. **`codex7-6`, the timezone probe — my first run did not reproduce and the reviewer was right.**
+   I chose expiry `2026-08-23` and got exit 0 under both timezones. The boundary requires the
+   *reviewer's* date, `2026-08-22`. Re-run at that date it reproduced exactly. Had I stopped at my
+   own first attempt I would have filed a false `COULD NOT DETERMINE`.
+2. **`codex7-8`, the literal-backslash cell — my first construction was not the claim.** I wrote
+   the cell with a space before the delimiter, where the lookbehind behaves correctly. The claim
+   requires no space. Reconstructed properly it confirms, and the prevalence bound in the row comes
+   from that difference.
+3. **`grok7-2` — I pre-registered this as genuinely uncertain**, because the reviewer and the
+   author's own hand-off contradict each other. My own normalized check sides with the reviewer.
+4. **`A7-1` was not in my expectations at all.** It came out of a probe failing for a reason I had
+   not predicted, which is the only reason it exists.
+
+Three probes were themselves defective and were re-run rather than reported: a `check_counts`
+mutation that silently did not apply (asserted on the second attempt), a `grok7-1` probe confounded
+by a count error I introduced, and the timezone case above. **The confounded results are not in
+this ledger**; the corrected ones are.
+
+**RV-1 — `codex7-1`, whether the permissions gate sees a scoped grant.**
+
+```
+--- allowed-tools: Read, Edit(/src/**)        exit=0   12 of 12 checks pass (3 warning(s))
+--- complement: allowed-tools: Read, Edit     exit=1   ERROR permissions: ... pre-approves
+                                                       write-capable tool(s) ['Edit']
+```
+
+The gate is a set intersection of exact strings at `:42` and `:72-79`. It cannot see a tool name
+inside `ToolName(specifier)`. **What executes here is the gate's blindness, which is certain. That
+`Edit(/src/**)` actually grants write in Claude Code rests on the reviewer's documentation citation
+and was not executed by anyone** — recorded as `CNV7-1`, and it does not weaken the row, because a
+gate that cannot parse the syntax its target product documents is defective either way.
+
+**RV-2 — `codex7-2`, whether a fenced heading moves the round boundary.**
+
+```
+--- real current row 4594, disposition removed              exit=1
+    ERROR two-axes: REVIEW-ADJUDICATION.md:4594 ... has a verdict but no disposition
+--- the same defect, plus a FENCED '# Round 999' appended   exit=0
+    WARN  two-axes: ...:4594 ... (closed round - append-only history, not repairable)
+    WARN  counts: ... current round states no findings-in/rows-out pair
+    12 of 12 checks pass (4 warning(s))
+```
+
+**A real, current, build-failing defect is demoted to a warning by four lines inside a code fence.**
+The reviewer's figures — including the final `(4 warning(s))` — reproduce exactly.
+
+**RV-3 — `codex7-3`, the count check, all four paths.**
+
+```
+--- delete the current round's census header      exit=0  12 of 12 checks pass (3 warning(s))
+                                                          WARN counts: ... states no pair
+--- closed round 5 census 22 -> 99                exit=0  WARN counts: ... in the closed # Round 5
+--- pre-heading census 'Rows out: 15' -> 99       exit=0  12 of 12 checks pass (2 warning(s))  [SILENT]
+--- delete a ruling row from closed round 5       exit=0  12 of 12 checks pass (2 warning(s))  [SILENT]
+```
+
+And what `rounds()` actually returns, which is the finding underneath all four:
+
+```
+'# Round 1'   start=  733  stated=None/None  parsed_rows=0
+'# Round 2'   start= 1082  stated=9/9        parsed_rows=9
+'# Round 3'   start= 1816  stated=11/11      parsed_rows=11
+'# Round 4'   start= 2605  stated=27/27      parsed_rows=26
+'# Round 5'   start= 3627  stated=22/22      parsed_rows=22
+'# Round 6'   start= 4155  stated=15/15      parsed_rows=15
+```
+
+**The first adjudication in this file is in no section at all** — it lives above line 733 and
+`rounds()` starts at the first heading. Its census can say 15 in and 99 out in total silence.
+And the round-4 gap is not a parser accident: the 27th row is `P-1 (grok-13)`, and round 4's own
+header says it was *"ruled as `P-1` in the process block because its fix lands in the brief, not the
+code · +1"*. **The reviewer's explanation is exactly right, not merely its number.**
+
+**RV-4 — `codex7-4` and `codex7-8`, the row parser, traced directly.**
+
+```
+mention not commitment     cells=5 ruling=yes verdict='**CONFIRMED**'   declared=None
+quoted legal verdict       cells=5 ruling=yes verdict='**CONFIRMED**; earlier rev...'  declared='NO ACTION'
+valid compound PENDING     cells=5 ruling=yes verdict='**CONFIRMED**'   declared=None
+CONFIRMEDLY prose          cells=5 ruling=yes verdict='CONFIRMEDLY not a verdict'      declared='FIX NOW'
+_**CONFIRMED**_ marked up  cells=5 ruling=NO
+no trailing pipe           cells=4 ruling=NO
+trailing empty cell        cells=6 ruling=NO
+all-dash DATA row          -> table_rows discards it entirely
+```
+
+End to end, in the current round:
+
+```
+--- disposition is a MENTION: 'Nothing decided; explicitly not FIX NOW'   exit=0  12 of 12 pass
+--- CONFIRMED + NO ACTION legalised by a quoted **REFUTED** in the verdict cell   exit=0  12 of 12 pass
+--- the skill's own documented '**PENDING OWNER — proposed: NO ACTION**'  exit=1  ERROR disposition
+--- valid GFM row with no trailing pipe            exit=1  ERROR counts: states 15 but 14 present
+--- valid row with a trailing empty cell           exit=1  ERROR counts: states 15 but 14 present
+--- the same row renamed C1-3                      exit=1  ERROR counts: states 15 but 14 present
+```
+
+**Two forbidden states pass and three correct ones fail.** The `15 -> 14` figures reproduce the
+reviewer's exactly. The cell-merge case needs the delimiter with **no space before it**:
+
+```
+row          : | x | path is C:\\| **CONFIRMED** | **FIX NOW** |
+row_cells    : ['x', 'path is C:\\\\| **CONFIRMED**', '**FIX NOW**']
+ruling_cells : None                      <- the row becomes invisible
+control, space before the delimiter: ['x', 'path is C:\\\\', '**CONFIRMED**', '**FIX NOW**']
+```
+
+**RV-5 — `codex7-10`, which IDs the census silently drops.**
+
+```
+C1-3  EXCLUDED    D7-2  EXCLUDED    Q-3   EXCLUDED    A1-3  EXCLUDED    C7-1  EXCLUDED
+G7-1  counted     g6-1  counted     grok-1 counted    codex-11 counted
+```
+
+**RV-6 — `codex7-11`, multi-backtick spans, both directions.**
+
+```
+one-backtick  `a | b`   -> 1 unescaped pipe counted (caught)
+two-backtick ``a | b``  -> 0 counted                (SILENT)
+placeholder strip on ``«p»``  -> 'x «p» y'   the guillemet SURVIVES -> false error
+placeholder strip on  `«p»`   -> 'x  y'      correctly removed
+```
+
+End to end: a current-round row carrying ```` ``a | b`` ```` returned `12 of 12 checks pass`, exit 0.
+
+**RV-7 — `codex7-5` and `codex7-6`, the calibration checks.**
+
+```
+--- corpus_digest() raises OSError    exit=0  WARN calibration: could not compute the corpus digest
+                                              12 of 12 checks pass (3 warning(s))   <- counted as a PASS
+--- Expires 9999-99-99               exit=0  12 of 12 checks pass (2 warning(s))
+--- one record, expiry 2026-08-22, one instant, two machines:
+      TZ=Pacific/Kiritimati  exit=1  ERROR calibration: ... expired 2026-08-22
+      TZ=Pacific/Pago_Pago   exit=0  12 of 12 checks pass (2 warning(s))
+```
+
+The exception path warns, returns, and is **never added to `SKIPPED`**, so `main` counts it in
+`passed` — the numerator includes a check that declined to compute its own evidence.
+
+**RV-8 — `codex7-7`, links.**
+
+```
+--- valid CommonMark <references/ledger-template.md>  exit=1  ERROR links: -> <references/...> does not resolve
+--- valid existing references/a(b).md                 exit=1  ERROR links: -> references/a(b does not resolve
+--- reference-style [Broken][missing], target absent  exit=0  (silent)
+--- complement: inline link, missing target           exit=1  ERROR links: (correctly caught)
+```
+
+**RV-9 — `grok7-1`, whether the new verdict's gate is enforced by anything.** Planted in an
+auxiliary row so the census stayed undisturbed:
+
+```
+| A99 | Ungated true-not-a-defect | hygiene | **TRUE, NOT A DEFECT** | **NO ACTION** — because I say so |
+--- exit=0   12 of 12 checks pass (2 warning(s))
+--- complement, same slot under **CONFIRMED**:  exit=1  ERROR disposition: ... pairs NO ACTION with
+                                                        a verdict that does not permit it
+```
+
+No Consequence quoted, no clause naming what would make it a defect, reason given as *"because I say
+so"* — and the run is green. **The hatch works and the lock does not.** The reviewer's figures
+reproduce exactly.
+
+**And that planted row is still being read as live data — inside this ledger, right now.** The `A99`
+line above sits in a fenced code block, and `table_rows` has no notion of fences, so the validator
+parses it as a real ruling row in the current round. It happens to be harmless: `A99` begins with a
+reserved letter so it is excluded from the census, and its pairing is legal. **Both of those are
+luck.** It is `codex7-2` and `codex7-11`'s class — markdown examples inspected as live syntax —
+occurring in the document that adjudicates them, and it is why queue item 2 covers all three call
+sites rather than only `current_round_line`.
+
+**RV-10 — `grok7-5`, the compaction arithmetic, recomputed rather than accepted.**
+
+```
+skills/adversarial-review-prompt/SKILL.md  states ~205;  15,500 chars lands on line 220; </invariants> at 59
+skills/review-adjudication/SKILL.md        states ~195;  15,500 chars lands on line 209; </invariants> at 57
+```
+
+**The reviewer's 220 and 209 reproduce exactly.** Both invariants blocks fit above either figure.
+Note which way the change went: the new numbers are **more conservative** than the computed line,
+not less. That matters for the ruling and is why the row is `CONFIRMED (partial)`.
+
+**RV-11 — `grok7-2`, the envelope axes, where the reviewer and the author's hand-off disagree.**
+Whitespace-normalized, both pairs, my own queries:
+
+```
+--- CODEX ---                          --- GROK ---
+Write           brief=yes note=yes     Write           brief=yes note=yes
+Execute         brief=yes note=yes     Execute         brief=yes note=yes
+Network         brief=yes note=yes     Network         brief=yes note=yes
+Your own tools  brief=yes note=NO      Your own tools  brief=yes note=NO
+Effort budget   brief=yes note=NO      Effort budget   brief=yes note=NO
+```
+
+**Two axes are missing from both cover notes.** The author's hand-off process note 4 states a
+normalized re-run found *"0 mismatches on 10 axes, both pairs"*. **That is wrong**, and it is
+recorded as `C7-2`. The read-scope asymmetry is separate and also holds: `ROUND-6-HANDOFF` appears
+twice in the Grok brief and once in its cover note, and **zero times in either Codex document**.
+
+**RV-12 — `A7-1`, found by a probe failing for an unpredicted reason.** The first clone was made
+with `git archive`, which produces no `.git`. `git ls-files` then returns empty, `corpus_digest()`
+silently digests nothing, and the run hard-fails:
+
+```
+ERROR calibration: ... records digest 775e1cc8c43f but the instrument is da39a3ee5e6b
+                   - that record is stale and counts as missing
+```
+
+`subprocess.run` is called without `check=True`, so **no exception is raised and the `except` branch
+never fires**. Chasing that led to the real defect — the ordering step is locale-dependent:
+
+```
+--- on THIS repository, today, unmodified ---
+LC_ALL=C            digest=775e1cc8c43f
+LC_ALL=en_US.UTF-8  digest=bf13a2b6c2ff
+   diff of the two orders: calibration/cases/trap-unfalsifiable-test/README.md moves
+```
+
+Python sorts bytes; `sort -z` sorts by the shell's collation. Uppercase `README.md` orders
+differently against its lowercase siblings under the two. **This is live today, on the current
+corpus, with no unusual filename involved.**
+
+**RV-13 — append integrity, proved rather than asserted.**
+
+```
+$ head -c 299772 REVIEW-ADJUDICATION.md | cmp - <(git show 2565c08:REVIEW-ADJUDICATION.md)
+(silent)
+$ git diff --numstat 2565c08 d610112 -- REVIEW-ADJUDICATION.md
+1611    0
+$ head -n 5234 REVIEW-ADJUDICATION.md | diff - <pre-session copy>
+(silent)
+```
+
+**RV-14 — hygiene.** Every command above ran against the clone or is read-only against this
+repository. No probe wrote to the working tree. Closing state in §R7.14.
+
+## R7.3 — Echo audit: what these two reports are worth
+
+**The residual doubts, ruled per doubt.** The owner supplied the authoring session's five
+pre-registered doubts on request. The hand-off asserts all five were deliberately seeded. **An
+author cannot certify presence or absence in a document they wrote, so this session re-ran the
+search with its own queries, whitespace-normalized to survive line wrapping:**
+
+| Doubt | Query that found it | Ruling |
+|---|---|---|
+| `D1` — `CELL_SPLIT_RE` and a literal trailing backslash | `CELL_SPLIT_RE` at `PROMPT-CODEX:120`; `lookbehind` at `:123`; `literal backslash` at `:122` | **PRESENT — seeded** |
+| `D2` — `AUX_ID_RE` reserves seven letters | `AUX_ID_RE` at `PROMPT-CODEX:145`; `PDUACXQ` at `:146`; `Seven single uppercase letters are reserved` at `:147` | **PRESENT — seeded** |
+| `D3` — row count scoped away from closed rounds | `count_finding_rows` at `PROMPT-CODEX:150`; `only on the current round` at `:153`; `dropped from a closed round` at `:155` | **PRESENT — seeded** |
+| `D4` — the new verdict's gate is enforced by nothing | `Which mechanism enforces that` at `PROMPT-GROK:127`; `gated` at `:125` | **PRESENT — seeded** |
+| `D5` — `DISPOSITION_RE` widened, untested | `DISPOSITION_RE` at `PROMPT-CODEX:135`; `character class` at `:136`; **`was widened in this range` at `:137`** | **PRESENT — seeded** |
+
+**All five leaked, by design. No finding in this round scores as independent corroboration on the
+doubts channel.** And one detail matters more than the ruling: the author's own search recorded
+`was widened in this range` as *"no line found — unverified"*. **A normalized search finds it at
+`PROMPT-CODEX:137`.** The author's line-oriented check reproduced this repository's own `P-4` — the
+line-wrap blindness — for the second time in one session, in the very search written to guard
+against it. Recorded as `C7-2`.
+
+**The large channel: every finding probed against both briefs and both cover notes with its own
+identifiers.** A hit on the *topic* is not an echo; an echo is where the brief states the suspected
+defect outright and points the reviewer at it. Scored on that distinction after reading the matched
+brief lines:
+
+| Class | Count | Findings |
+|---|---|---|
+| **Echo** — the brief named the defect and directed the reviewer at it | **14** | `codex7-3`, `-4`, `-5`, `-6`, `-7`, `-8`, `-10`; `grok7-2`, `-3`, `-5`, `-6`, `-9`, `-10`, `-11` |
+| **Partial** — the brief named the area or one spelling; the reviewer extended it | **6** | `codex7-1` (claim 16 listed four YAML spellings, not scoped grants), `codex7-2` (claim 13 asked the closed-prefix direction only), `codex7-9` (the triple-hyphen split is not in claim 16), `codex7-11` (claim 19 asked about fences and unclosed backticks, not multi-backtick spans), `grok7-1` (claim 1 asked the enforcement half; the cut-placement half is the reviewer's), `grok7-4` (claim 4 asked `A-N`; `C-N` is the reviewer's) |
+| **Free** — no line in either brief or cover note | **3** | `codex7-12`, `codex7-13`, `grok7-7` |
+| **Invited** — a process contradiction the cover note explicitly solicited | **1** | `grok7-8` |
+
+**Round 6 was 10 echo / 3 partial / 2 free of 15 — 13% free. Round 7 is 14 / 6 / 3 of 24 — 12.5%
+free.** Generating the briefs with the skill instead of by the adjudicator **did not move the
+free-finding rate at all.** That is `A7-2`, and it is the most useful thing this round says about
+its own method: the lever is not *who* writes the brief, it is *how many pointed sub-questions it
+carries*. Two briefs with twenty directed claims apiece will return twenty directed answers whoever
+drafted them.
+
+**What this round's weight actually rests on**, then: three free findings, six partial extensions,
+the two mutation suites as measurement rather than argument, and — for everything else — the fact
+that **this session re-derived every machine-checkable claim from source and execution rather than
+from either report's evidence table.** The echoes are not worthless; a directed question that gets a
+correct, executed answer is still a defect found. They are simply not evidence that either reviewer
+would have found anything unprompted.
+
+**Between the reviewers.** Mutual visibility was open (see the header). No finding is shared, so no
+agreement between them is load-bearing anywhere in this ledger.
+
+## R7.4 — Adjudication
+
+| # | Finding | Impact | Verdict | Disposition |
+|---|---|---|---|---|
+| codex7-1 | Scoped write-capable grants bypass the permissions gate | high | **CONFIRMED** — RV-1. Gate is a set intersection of exact strings; `Edit(/src/**)` passes with `12 of 12 checks pass`, bare `Edit` is caught. Latent rather than live: no shipped skill uses that syntax today. The downstream grant semantics is `CNV7-1` | **FIX NOW** — ✔ **executed**, extract the tool name before the parenthesis, then intersect |
+| codex7-2 | Line position is mistaken for historical provenance | high | **CONFIRMED** — RV-2. A fenced `# Round 999` demotes a real current-round build failure to a warning; exact final line `12 of 12 checks pass (4 warning(s))` reproduced | **FIX NOW** — ✔ **executed**, strip fenced blocks before locating round headings, in all three call sites |
+| codex7-3 | The count check can be absent, can omit whole historical sections, and can reject a correct prior census | high | **CONFIRMED** — RV-3. All four paths executed. The pre-heading first adjudication is in no section at all and its census can be vandalised in total silence. Round 4's 27-vs-26 gap traced to `P-1 (grok-13)` and matches round 4's own documented rule | **FIX NOW** — ✔ **executed in full**. `Q7-1` was delegated to this session and ruled: closed rounds are now row-counted (warning), the opening adjudication is a section, a missing current census errors, and round 4's `P-1` case is a dated entry in `COUNT_EXCEPTIONS` |
+| codex7-4 | Same-cell mentions still stand in for verdict and disposition commitments | high | **CONFIRMED** — RV-4. Two forbidden states pass (`any(d in cell)` substring test; whole-cell verdict search) and the skill's own documented compound `PENDING OWNER` form fails | **FIX NOW** — ✔ **executed**, use `declared_disposition` in the axes check, read the declared verdict rather than searching the cell, and parse the compound form |
+| codex7-5 | A digest computation failure is still counted as a passing calibration check | medium | **CONFIRMED** — RV-7. The exception path warns and never joins `SKIPPED`, so `main` counts it in `passed`. The Python-vs-shell divergence also reproduces, though the realistic trigger is locale, not filenames — see `A7-1` | **FIX NOW** — ✔ **executed**, add the check to `SKIPPED` on the exception path |
+| codex7-6 | Expiry results depend on local timezone and impossible dates are accepted | medium | **CONFIRMED** — RV-7. One record, one instant, two timezones: exit 1 and exit 0. `9999-99-99` never expires. My first probe used the wrong boundary date and did not reproduce; the reviewer's date does | **FIX NOW** — ✔ **executed**, parse the date, compare as a date, and pin the comparison to UTC |
+| codex7-7 | The link checker rejects valid inline links and ignores reference links | medium | **CONFIRMED** — RV-8. Angle-bracket and balanced-parenthesis destinations false-fail; a missing reference-style target is silent | **FIX NOW** — ✔ **executed**, handle both destination forms and resolve link reference definitions |
+| codex7-8 | The ruling-row parser does not implement GFM boundaries or exact verdict grammar | medium | **CONFIRMED** — RV-4. Five sub-mechanisms verified. The backslash-parity case needs no space before the delimiter, which this ledger's house style never produces; the trailing-pipe, trailing-empty-cell, `CONFIRMEDLY` and marked-up-verdict cases are all reachable in ordinary writing | **FIX NOW** — ✔ **executed**, count backslash parity, treat the trailing pipe as optional, take columns from the header row, and match the verdict as a whole cell |
+| codex7-9 | Frontmatter extraction and type handling reject or crash on legal YAML text | medium | **CONFIRMED** — RV in probe set 1. A triple hyphen inside a quoted description false-fails; a nested sequence raises an uncaught `TypeError` and the run prints no summary line at all | **FIX NOW** — ✔ **executed**, split the frontmatter on the delimiter lines, and reject non-flat values with an error instead of a traceback |
+| codex7-10 | Auxiliary-ID guessing excludes legitimate reviewer findings | medium | **CONFIRMED** — RV-5. Seven single uppercase letters are reserved with no declared grammar; renaming one real row to `C1-3` drops the census 15 to 14. **This round's own ID scheme is chosen around it** | **FIX NOW** — ✔ **executed**. `Q7-1` ruled option (b): the namespace is declared in the skill and the template, and an ID matching no declared series is now reported rather than silently classified |
+| codex7-11 | Single-backtick pseudo-parsing breaks two checks in opposite directions | medium | **CONFIRMED** — RV-6. A two-backtick span hides a real extra cell delimiter; a two-backtick span containing guillemets raises a false placeholder error | **FIX NOW** — ✔ **executed**, match code-span delimiters as equal-length backtick runs in both checks |
+| codex7-12 | Installed-copy output is intentionally machine-dependent despite contract item 5 | low | **CONFIRMED (partial)** — the machine dependence is certain and reproduced in this session's own runs, which carry an install warning the reviewers' did not. **Partial on whether it is a defect:** the check is warn-only by design and contract item 5 is a sentence written for this audit, not a repository invariant. `A7-1` is the same contract clause violated in a way that *can* fail the build | **FIX NOW** — ✔ **executed**, state in the docstring and `--list` that this check reports environment drift and cannot fail the build |
+| codex7-13 | The brief's validator baseline is not the pinned range's baseline | low | **CONFIRMED** — `git show 2565c08:scripts/validate.py` is **301** lines, not 354; `d610112` is 519; numstat 261/43. The brief asserts 354 in three places and the cover note once | **FIX NOW** — ✔ **executed**, not by editing the sent brief, which is a completed review artifact; by requiring the prompt skill to compute range inventories with a named command and show it |
+| grok7-1 | `TRUE, NOT A DEFECT` — the license survived compaction; the gate did not | high | **CONFIRMED** — RV-9. The permission sits at `SKILL.md:43`, inside the invariants block (lines 25–57, above the stated ~195 cut); the gate and boundary sit at `:412`. An ungated row reasoned *"because I say so"* returns `12 of 12 checks pass`; the same pairing under `CONFIRMED` errors | **FIX NOW** — ✔ **executed**, move the gate and the boundary into the invariant itself, above the cut |
+| grok7-2 | Round 7's own envelopes fail the check this range added | high | **CONFIRMED** — RV-11. Both cover notes omit **Your own tools** and **Effort budget**, two axes both briefs grant. `ROUND-6-HANDOFF` is excluded in the Grok pair and appears nowhere in the Codex pair, so round 6's own stated precondition for round 7 held for one reviewer of two | **FIX NOW** — ✔ **executed**, make the axis walk a generated checklist rather than a prose instruction, and carry read-scope exclusions from brief to cover note automatically |
+| grok7-3 | `B-4` still describes a closed defect as parked and unfixed | medium | **CONFIRMED** — `BACKLOG.md:139-159` still reads *"Why it is here rather than fixed … belongs with the next authorized pass"* while §R6.19 records the fix landed and this session's probe confirms footnote markers are now stripped | **FIX NOW** — ✔ **executed**, mark `B-4` discharged, with the closing reference |
+| grok7-4 | The `A-N` slot was added in four places and missed a fifth; `C-N` still has no slot | medium | **CONFIRMED** — both template formulas carry `+«U»` and `+«A»`; §7 omits prior-review disagreements; **§2's worked formula at `SKILL.md:204` is still the pre-fix text with no `U` and no `A`**; and no site anywhere names corrections. This round's header had to invent `+2 corrections` exactly as round 6 invented `+5` | **FIX NOW** — ✔ **executed**, align §2 and §7 with the template and add a corrections slot to all four |
+| grok7-5 | The compaction-cut figure dropped "this is an estimate" while the numbers moved | medium | **CONFIRMED (partial)** — RV-10. The caveat deletion is certain: `2565c08` said *"an estimate, not a tokenizer run, and biased late if anything"* and the current text says only *"Treat everything past line ~205 as gone"*. **Partial on the implication that the numbers moved unsafely** — recomputed independently, they moved *more* conservative (205 and 195 against a computed 220 and 209), which is the safe direction | **FIX NOW** — ✔ **executed**, restore the caveat; leave the figures alone |
+| grok7-6 | `B-3` and `--list` still disagree with the checks they describe | medium | **CONFIRMED** — `B-3:102` claims *"the stated rows-out equals the numbered finding rows that actually exist"* unqualified, while `:343-344` skips row counting on closed rounds; and `--list` still labels the two-axes and legality checks *"current round"* after round 6 widened them to the whole file. **The two err in opposite directions** | **FIX NOW** — ✔ **executed**, qualify `B-3`'s sentence and relabel the three registry strings |
+| grok7-7 | `CNV-R6-1` is still an open row after the gap it named was closed | low | **CONFIRMED** — the row at `:4668` still reads `COULD NOT DETERMINE` / `VERIFY` while §R6.18 and §R6.19 record it settled and closed 400 lines later | **FIX NOW** — ✔ **executed**, by a superseding row in this round plus marking round 6 closed, **not** by editing the round-6 row |
+| grok7-8 | This brief tells the reviewer not to read the Codex brief, then requires a check of both | low | **CONFIRMED** — `PROMPT-GROK:106` and `:203-205`, read verbatim, cannot both be obeyed. The reviewer invented a partial resolution and said so | **FIX NOW** — ✔ **executed**, where a claim needs the sibling brief, grant that read explicitly and scope it |
+| grok7-9 | Queue item 24 asked to record the history rule in the skill; it landed in the template | low | **CONFIRMED** — zero occurrences of `vocabulary`, `2383` or *"arrived in round 6"* in `skills/review-adjudication/SKILL.md`; the generic rule is at `ledger-template.md:113` | **FIX NOW** — ✔ **executed**, add the compactable copy to the skill |
+| grok7-10 | Three dismissal examples survived the why-block compression; the fourth did not | low | **CONFIRMED** — `2565c08` carried four examples including *"scaffold only"*; the current `SKILL.md:62` carries three, and the fourth survives only in the reference file, below the cut. It is the same operational tell as the three that were kept, not motivation | **FIX NOW** — ✔ **executed**, restore the fourth example |
+| grok7-11 | `CNV-R6-2` is parked as unfixable; the portable implementation is already in the tree | low | **CONFIRMED (partial)** — the conclusion holds and is stronger than the reviewer knew: §R6.19 parked an item that had a cheaper fix. **Partial because its supporting premise is wrong** — it reports Python and shell *"matched on every tree I ran"*, and `A7-1` shows they diverge today on this repository under a different locale | **FIX NOW** — ✔ **executed**, make the ordering locale-independent, jointly with `A7-1` |
+
+## R7.5 — Process findings
+
+| # | Finding | Verdict | Disposition |
+|---|---|---|---|
+| P7-1 | **The Grok session rooted itself in the wrong tree and recovered by luck.** Reported by the owner in the hand-off and corroborated by the report's own session note: the run started in `~/.grok/worktrees/…/adversarial-skills` at `0d65b51` — round-4-era state, a separate clone with its own object store — and did not contain the brief. It noticed, moved to the main checkout, and its report cites `d610112` | **CONFIRMED** — the report's line 9 says so unprompted, and the owner independently states the cause: the cover note used a bare relative path, which trip-wires on the wrong *model* but not on the wrong *tree*. **The luck is specific and worth naming:** that clone predates `scripts/validate.py` entirely, so the Codex half would have failed loudly — while the Grok half exists there at round-4 state and would have been audited **silently**, producing a plausible report about superseded files | **FIX NOW** — ✔ **executed**, the cover note must state the absolute repository path and a one-command identity check the reviewer runs before starting |
+| P7-2 | **Neither reviewer's runtime exposed its reasoning effort, and one exposed no served alias either.** Review A records both fields as *"not exposed"*; Review B self-reports `high` | **TRUE, NOT A DEFECT** — Consequence quoted from Review A: *"the identity line records those fields as not exposed rather than guessing."* For this to be a defect in this repository something here would have to be wrong; nothing is. The reviewer did exactly what the calibration record template asks — *"A model that cannot name its own served version is common and is not a failure — record what it did say"* — and identity was established from the operator instead. **What it costs is recorded rather than waved through:** half of Review A's calibration key is an operator assertion, and round 5 carried the same caveat | **NO ACTION** — legal under this verdict. Superseded only if a future runtime does expose the field |
+
+## R7.6 — Adjudicator findings, from re-verification rather than from either report
+
+| # | Finding | Verdict | Disposition |
+|---|---|---|---|
+| A7-1 | **The corpus digest is locale-dependent, and it is wrong on this repository today.** `corpus_digest()` sorts filenames as bytes; the shell command `calibration/record-template.md` tells operators to run sorts by the shell's collation. On the *current, unmodified* corpus these disagree: `LC_ALL=C` gives `775e1cc8c43f`, `LC_ALL=en_US.UTF-8` gives `bf13a2b6c2ff`, because `trap-unfalsifiable-test/README.md` orders differently against its lowercase siblings. **An operator on a UTF-8 locale — the default on most desktops — who follows the template files a digest the validator can never reproduce, and every filed record then hard-errors as "stale and counts as missing" forever.** Separately, `subprocess.run` is called without `check=True`, so in a tree with no `.git` the digest silently becomes the hash of nothing and the same false "stale" error fires with no exception raised — which is how this was found | **CONFIRMED** — RV-12, executed on this repository read-only and on the clone | **FIX NOW** — ✔ **executed**, make the ordering locale-independent on both sides (`LC_ALL=C sort -z` in the template, and keep the byte sort in Python), check the subprocess return code, and say in both calibration documents that the ordering is byte-ordering |
+| A7-2 | **Generating the briefs with the skill did not raise the free-finding rate.** Round 6, brief written by the party under audit: 10 echo / 3 partial / 2 free of 15 — 13% free. Round 7, briefs generated by `adversarial-review-prompt`: 14 / 6 / 3 of 24 — 12.5% free. The remedy round 6 named for its own largest defect did not move the number | **CONFIRMED** — §R7.3, scored on the same rule both rounds used | **ACCEPTED AS-IS** — the owner's answer to `Q7-2`, verbatim: *"q2, accept the rate"*. The measurement stands as a fact about the method; nothing is queued against it, and §R7.19's `Q7-4` carries it forward as something the next brief should know rather than fix |
+| A7-3 | **This round's own census cannot be validated under the ID scheme a reader would naturally choose.** `AUX_ID_RE` silently excludes any ID beginning `C`, `P`, `D`, `U`, `A`, `X` or `Q` followed by digits and a hyphen. Numbering this round's two reviewers `C7-N` and `G7-N` — the obvious choice — drops all thirteen Codex rows from the count and the run reports a false census. The scheme in the header was chosen to route around a live defect rather than because it reads best | **CONFIRMED** — RV-5, and the header records the workaround | **FIX NOW** — ✔ **executed**, jointly with `codex7-10` under `Q7-1`; until then the constraint is documented in this round's header |
+| A7-6 | **Writing this round corrupted a completed round, and only the closing append proof caught it.** While backfilling a count in §R7.13, this session ran an unanchored single-occurrence string replace. The phrase it targeted — *"22 changes are queued and none applied"* — occurs in **round 6's §R6.13 as well**, earlier in the file, so the first occurrence was the one replaced. A completed, immutable round was silently edited. Nothing in the validator noticed: `codex7-3` and the closed-round warning rule mean edits to a closed prefix do not fail the build. It was caught by the the `head`-and-`diff` proof at §R7.14, re-run after every edit rather than once at the start | **CONFIRMED** — the diff output is quoted in §R7.14, and the prefix was restored from the pre-session copy and re-proved byte-identical | **FIX NOW** — ✔ **executed**, the skill should require the current round be assembled outside the ledger and concatenated once, which is exactly what round 6's §R6.14 did and this session did not; and the append proof belongs after *every* write, not only at the end |
+| A7-5 | **The verdict grammar has no legal pairing for a re-opened claim that checks out, and this ledger tripped over it.** A claim re-opened under `U-N` and then found sound is not a defect, so nothing happens next — but `NO ACTION` is legal only under `REFUTED`, `SETTLED ALREADY` and `TRUE, NOT A DEFECT`, while `CONFIRMED` in the verdict table means *"the defect is real"*. Drafting `U7-2` and `U7-3` as `CONFIRMED` + `NO ACTION` produced two hard errors from this repository's own validator. The available route is `TRUE, NOT A DEFECT` with its gate filled, which works but reads oddly against a claim nobody alleged a defect about | **CONFIRMED** — found by running `scripts/validate.py` against this ledger before saving it; three rows failed, two of them this class | **FIX NOW** — ✔ **executed**, name the upheld-claim pairing explicitly in §6 and the template so the next adjudicator does not have to discover it from a build failure |
+| A7-4 | **The two permanent round-3 warnings mask nothing today, but nothing stops them masking something tomorrow.** `check_no_action_legality` reports closed-round violations as warnings, and this repository permanently carries two. A third closed-round pairing introduced later — by `codex7-2`'s fenced-heading route, or by an edit to a closed round — arrives as a third warning in a run whose operators have been told two warnings are expected and permanent | **CONFIRMED (partial)** — the mechanism is certain and the two current warnings are verified benign. **Partial: no masking event was constructed**, and `codex7-2` already covers the boundary half | **FIX NOW** — ✔ **executed**, pin the two expected history warnings by line and content, and report any *other* closed-round warning distinctly |
+
+## R7.7 — Re-opened upheld claims
+
+12 of the 24 upheld claims across the two reports were sampled. Three are re-opened; the rest stand.
+
+| # | Claim | Verdict | Disposition |
+|---|---|---|---|
+| U7-1 | **Review B claim 19 — "the calibration documentation now describes the digest correctly."** Re-opened because the clearing was run against three states (clean, tracked edit, untracked add) and none of them is the state that actually breaks a record | **CONFIRMED (partial), and incomplete in the way that matters.** Both documents are now correct about tracked-versus-untracked — verified. But neither mentions locale, collation or sort order: `grep -ci locale` and `collat` return 0 in both. `A7-1` is live on the current corpus and the documentation does not warn about it | **FIX NOW** — ✔ **executed**, folded into `A7-1`'s fix |
+| U7-2 | **Review A claim 18 — "none of the three retired phrases contains an underscore, so underscore stripping does not change them."** Re-opened because it is a negative cleared by the reviewer's own reading | **TRUE, NOT A DEFECT** — re-established from source: the three patterns are read out of `check_retired_wordings` directly and none contains an underscore, so the claim holds exactly as stated. **Gate:** no consequence stated — the claim alleges no defect. It would be a defect here if any retired phrase contained a snake_case identifier, because the normalization strips underscores before matching and would silently stop catching it; none does | **NO ACTION** — legal under this verdict |
+| U7-3 | **Review B claim 11 — "the append discipline held."** Re-opened because it is the invariant this skill is most likely to violate and the reviewer proved it with `cmp` alone | **TRUE, NOT A DEFECT** — re-established with `git` independently: `git diff --numstat 2565c08 d610112` on the ledger is `1611 0`, insertions only with zero deletions, and the first 299,772 bytes are byte-identical to the committed blob. **Gate:** no consequence stated. It would be a defect here if any completed round had been rewritten rather than appended to; none was | **NO ACTION** — legal under this verdict |
+
+## R7.8 — Corrections to earlier rounds
+
+| # | Correction | Verdict | Disposition |
+|---|---|---|---|
+| C7-1 | **§R6.19 listed `CNV-R6-2` as unfixable pending a Linux checkout. That is wrong about the hazard.** The portability risk in the digest command is not `sha1sum` versus `shasum` at all — it is `sort`'s collation, which differs on one machine without changing operating system. Supersedes the `CNV-R6-2` row at `:5203` and the corresponding line of §R6.19's unfixable table | **CONFIRMED** — RV-12 | **FIX NOW** — ✔ **executed**, with `A7-1`. `CNV-R6-2`'s original question (Linux `sha1sum` versus macOS `shasum`) stays open as `CNV7-6` |
+| C7-2 | **The round-7 hand-off's process note 4 is wrong.** It states a whitespace-normalized re-run of the envelope cross-check found *"0 mismatches on 10 axes, both pairs."* This session's own normalized check finds **two mismatches per pair** — `Your own tools` and `Effort budget` are missing from both cover notes. The same note's doubt-leakage search also recorded `was widened in this range` as *"no line found"* where a normalized search finds it at `PROMPT-CODEX:137` | **CONFIRMED** — RV-11 and §R7.3 | **FIX NOW** — ✔ **executed**, the note itself is a chat artifact and not a repository file, so there is nothing there to edit; what is fixable is the missing mechanism, and that is queue item 13. Recorded here so the next session does not inherit the false all-clear |
+
+| C7-3 | **This round's own §R7.13 first stated that the installed skills at `~/.claude/skills` are behind this repository, carrying `A6-1` / `Q-4` forward as open. That is wrong.** `diff -rq` against both installed directories is silent and the clean validator run raises no install warning; round 6's §R6.19 sync held. The false claim was drafted from round 6's open-items list instead of being checked, and the install warnings visible in this round's probe transcripts come from this session's own mutations to its clone | **CONFIRMED** — `diff -rq` on both skill directories, silent | **FIX NOW** — ✔ **executed in this ledger before saving**: §R7.13 now states the checked result and says the claim was drafted rather than verified. Recorded here rather than the text being quietly replaced |
+
+## R7.9 — Could not verify
+
+| # | Gap | Verdict | Disposition |
+|---|---|---|---|
+| CNV7-1 | Whether `Edit(/src/**)` in a skill's `allowed-tools` actually grants write in Claude Code. The reviewer cites the tools reference; nobody executed a session | **COULD NOT DETERMINE** — the *gate's* blindness is executed and certain; the downstream grant semantics is documentation only | **VERIFY** — run a Claude Code session with that frontmatter and attempt a write. Non-blocking: the fix is correct either way |
+| CNV7-2 | Whether the Codex session in fact opened `ROUND-6-HANDOFF.md`. Its envelope permitted it and its coverage line does not mention it | **COULD NOT DETERMINE** — no session transcript available to this session. **Bounded:** round 6's handoff doubts concern `check_retired_wordings`, the digest comparison and the why-block deletion, none of which corresponds to a round-7 Codex finding, so realized contamination appears nil even if it was read | **VERIFY** — ask the operator for the session's file-read log. Non-blocking; the envelope defect `grok7-2` stands regardless |
+| CNV7-3 | Whether a real auto-compaction drops an older skill entirely or truncates at ~5,000 tokens. Both are asserted; only the second is what `~205` describes | **COULD NOT DETERMINE** — nothing here can force a real compaction. Also `CNV-R6-3`, `CNV-R5-6` | **VERIFY** — non-blocking |
+| CNV7-4 | Where 5,000 Anthropic tokens actually fall in these files | **COULD NOT DETERMINE** — no public tokenizer; the 3.1 characters/token figure is a measurement on this prose, not a tokenizer run. Also `CNV-R5-2` | **VERIFY** — non-blocking. `grok7-5`'s fix restores the caveat rather than answering the question |
+| CNV7-5 | The intra-session `497 → 497` / `493 → 494` line counts in §R6.16 | **COULD NOT DETERMINE** — round-5 and round-6 skill edits share one commit, so no intra-session state exists to compare. Review B reached the same conclusion independently. Also `CNV-R6-4` | **VERIFY** — probably unanswerable from git. Non-blocking |
+| CNV7-6 | Linux `sha1sum` versus macOS `shasum` on the template command | **COULD NOT DETERMINE** — one operating system available. **Narrowed by `A7-1`:** this is no longer the main portability hazard, but it is still unverified. Carried from `CNV-R6-2` | **VERIFY** — run on a Linux checkout before anyone files a record there. Non-blocking |
+| CNV7-7 | Whether `A7-4`'s masking event can actually occur in practice — a third closed-round warning arriving unnoticed among two expected ones | **COULD NOT DETERMINE** — no masking event was constructed; the mechanism is read from the code and the operator instructions | **VERIFY** — plant a third closed-round pairing and observe whether it is distinguishable. Non-blocking; cheap |
+
+## R7.10 — Disagreements with prior rounds, ruled
+
+| # | Raised by | Verdict | Disposition |
+|---|---|---|---|
+| D7-1 | A: §R6.16's 18/18 and 11/11 mutation result does not generalize to the grammars the checks claim | **UPHELD** — every one of `codex7-1`, `-4`, `-7`, `-8`, `-9`, `-11` is a spelling round 6's suite did not probe. The result was true and its scope was overstated | **FIX NOW** — ✔ **executed**, queue items 4, 5, 7, 9, 12 close the six spellings |
+| D7-2 | A: the scoped-away closed-round count is not merely bounded, it is asymmetric | **UPHELD** — RV-3. It accepts deletion from a closed round, omits the pre-heading adjudication entirely, and would reject round 4's correct 27-row account if that round were current | **FIX NOW** — ✔ **executed**, queue item 6; the closed-round half was ruled under `Q7-1` and is executed too |
+| D7-3 | A: the round-6 skipped-check correction is incomplete in the next check | **UPHELD** — `codex7-5`. PyYAML absence now leaves the numerator; a caught digest failure still does not | **FIX NOW** — ✔ **executed**, queue item 11 |
+| D7-4 | A: the brief's immutable inventory is wrong — 301 lines, not 354 | **UPHELD** — `codex7-13`, verified | **FIX NOW** — ✔ **executed**, queue item 22 |
+| D7-5 | B: *"my own g6-11 remedy was applied to the example-file index and not to the new verdict term added in the same pass"* | **UPHELD** — `grok7-1`. A reviewer turning its own prior finding against the fix written for it is the most valuable thing this round returned, and it is the result it was least likely to reach for | **FIX NOW** — ✔ **executed**, queue item 3 |
+| D7-6 | B: `A6-7`'s fix was the instance, not the class | **UPHELD** — `grok7-4`, five sites read | **FIX NOW** — ✔ **executed**, queue item 15 |
+| D7-7 | B: `g6-15`'s fix closed the network spelling, not the class | **UPHELD** — `grok7-2`, RV-11 | **FIX NOW** — ✔ **executed**, queue item 13 |
+| D7-8 | B: `g6-9`'s rewrite of `B-3` was not applied to `B-4` | **UPHELD** — `grok7-3` | **FIX NOW** — ✔ **executed**, queue item 17 |
+| D7-9 | B: §R6.16's two-bug disclosure is real and not complete | **UPHELD** — `grok7-1`, `-3`, `-4`, `-6` are the rest, and `A7-1` is a fifth nobody disclosed | **FIX NOW** — ✔ **executed**, queue items 1, 3, 16, 17 |
+| D7-10 | B: round 5's why-block compression holds on the count; only the "all three are motivation" reading is wrong | **UPHELD** — `grok7-10`. The three-clause count was independently redone in round 6 and again here | **FIX NOW** — ✔ **executed**, queue item 19 |
+| D7-11 | B: agrees with round 3's `:2383`/`:2384` ruling, including that `R3-P3` must not be "repaired" | **UPHELD** — and left as history. `A7-4` is the only new observation about them, and it is about masking, not repair | **NO ACTION** — the ruling stands and the rows stay as history; `A7-4` is queued at item 21 |
+## R7.11 — Owner decisions required
+
+| # | Question | Options and what each costs | Blocks execution? |
+|---|---|---|---|
+| Q7-1 | **How should a ledger row declare which series it belongs to?** `AUX_ID_RE` guesses from the first letter, reserving seven of them. That is `codex7-10`, half of `codex7-3`, and `A7-3` — and it already forced this round's ID scheme. It is also why round 4's genuine 27th finding cannot be represented at all | **(a)** Add an explicit class marker to the row — a `kind` column or a leading sigil — and delete the guess. Most invasive, and every existing round would need a compatibility path since closed rounds cannot be edited. **(b)** Keep the prefix convention but *declare* it in the skill and template as a reserved-namespace rule, and make the validator error on an unrecognised ID rather than silently classifying it. Cheapest, keeps history readable, and turns a silent drop into a loud one. **(c)** Count every ruling row and state auxiliary counts separately in the header, dropping the numbered/auxiliary distinction from the checker entirely. Simplest code, but loses the one check bought to stop findings vanishing. **(d)** Leave it and document the constraint — what this round did under protest | **No** for the other 22 fixes. **Yes** for `codex7-10`, `A7-3` and the closed-round half of `codex7-3`, which are held at `PENDING OWNER` until answered |
+| Q7-2 | **What should the next brief do differently, given that skill-generation did not raise the free-finding rate?** `A7-2`: 13% free in round 6 with an adjudicator-written brief, 12.5% in round 7 with skill-generated briefs. Twenty pointed sub-questions produce twenty directed answers whoever wrote them | **(a)** Cap pointed sub-questions — say eight load-bearing claims instead of twenty — and give the reclaimed budget to the unseeded pass. Highest expected yield, and it deliberately gives up coverage of seams the author already suspects. **(b)** Keep twenty claims but strip the sub-questions to a bare assertion with no hint of the suspected mechanism, so the reviewer must find the defect rather than confirm it. **(c)** Split the round: one reviewer briefed, one given only the contract and the scope. Doubles the cost, and is the only option that measures the effect instead of assuming it. **(d)** Accept the rate — directed answers that are executed and correct are still defects found | **No** |
+| Q7-3 | **Is round 6 now closed?** Its §R6.17 says OPEN. `grok7-7` is the cost of leaving it that way: a settled item still reads as an open `VERIFY` row 400 lines above the narrative that settled it | **(a)** Mark round 6 closed by a superseding note in round 7, leaving every round-6 byte untouched — what `grok7-7`'s queued fix proposes. **(b)** Backfill the `CNV-R6-1` row in place, which invariant 1 permits for a round that is not closed but which costs the byte-identical append proof this round just demonstrated. **(c)** Leave it open | **No** — but it decides how `grok7-7` is executed, so answer before that item runs |
+
+**Nothing else in this round is the owner's to decide.** Every other finding is machine-checkable,
+was checked, and carries a named minimal fix.
+
+## R7.12 — `FIX NOW` queue
+
+Twenty-seven items, **all executed** — see §R7.18. Marked `✔` below and on every row that carried them. **No fix has been applied by this session.** Ordered by what it
+would cost to leave each unfixed.
+
+| # | Item | From |
+|---|---|---|
+| 1 | ✔ Make the corpus-digest ordering locale-independent on both sides; check the `git ls-files` return code; document the byte-ordering in both calibration files | `A7-1`, `U7-1`, `C7-1`, `grok7-11` |
+| 2 | ✔ Strip fenced code blocks before locating `# Round` headings, in all three call sites | `codex7-2` |
+| 3 | ✔ Move the `TRUE, NOT A DEFECT` gate and boundary into the invariant, above the compaction cut | `grok7-1` |
+| 4 | ✔ Extract the tool name from `ToolName(specifier)` before intersecting with `WRITE_CAPABLE` | `codex7-1` |
+| 5 | ✔ Use `declared_disposition` in the axes check; read the declared verdict rather than searching the cell; parse the compound `PENDING OWNER` form | `codex7-4` |
+| 6 | ✔ Error rather than warn when the current round states no census; include the pre-heading section in `rounds()` | `codex7-3` |
+| 7 | ✔ Count backslash parity; treat the trailing pipe as optional; take columns from the header row; match the verdict as a whole cell | `codex7-8` |
+| 8 | ✔ Match code-span delimiters as equal-length backtick runs in `check_table_pipes` and `check_placeholders` | `codex7-11` |
+| 9 | ✔ Split frontmatter on delimiter lines; reject non-flat `allowed-tools` values with an error, not a traceback | `codex7-9` |
+| 10 | ✔ Parse the expiry as a date, compare as a date, pin to UTC | `codex7-6` |
+| 11 | ✔ Add `check_calibration_digests` to `SKIPPED` on its exception path | `codex7-5` |
+| 12 | ✔ Handle angle-bracket and balanced-parenthesis link destinations; resolve reference definitions | `codex7-7` |
+| 13 | ✔ Make the cover-note axis walk a generated checklist; carry read-scope exclusions from brief to cover note | `grok7-2` |
+| 14 | ✔ Cover note states the absolute repository path plus a one-command identity check before starting | `P7-1` |
+| 15 | ✔ Align §2 and §7's header formulas with the template; add a corrections slot to all four | `grok7-4` |
+| 16 | ✔ Qualify `B-3`'s rows-out sentence; relabel the three `--list` registry strings | `grok7-6` |
+| 17 | ✔ Mark `B-4` discharged with its closing reference | `grok7-3` |
+| 18 | ✔ Restore the "this is an estimate" caveat to both compaction-cut sentences | `grok7-5` |
+| 19 | ✔ Restore the fourth dismissal example, "scaffold only", above the cut | `grok7-10` |
+| 20 | ✔ Add item 24's history rule and expected warning output to the skill, not only the template | `grok7-9` |
+| 21 | ✔ Pin the two expected history warnings by line and content; report any other closed-round warning distinctly | `A7-4` |
+| 22 | ✔ Supersede `CNV-R6-1` with a row in this round; grant the sibling-brief read explicitly where a claim needs it; require the prompt skill to compute range inventories with a shown command; document this check as environment-reporting | `grok7-7`, `grok7-8`, `codex7-13`, `codex7-12` |
+
+| 23 | ✔ Name the upheld-claim pairing explicitly in §6 and the ledger template | `A7-5` |
+| 24 | ✔ Require the current round be assembled outside the ledger and concatenated once; re-run the append proof after every write, not only at the end | `A7-6` |
+| 25 | ✔ `adversarial-review-prompt` §10 — the doubts block moves to the end of the hand-off with a line telling the user to keep the message until the adjudicator asks, and a line naming the keep-the-window-open failure mode | owner decision, §R7.17 |
+| 26 | ✔ `adversarial-review-prompt` §10 — the doubts block is emitted every round even when there are none, saying so explicitly, so a missing block cannot read as "no doubts" | owner decision, §R7.17 |
+| 27 | ✔ `adversarial-review-prompt` §10 — the author's pre-flight leakage search must be whitespace-normalized, because a line-oriented one has now failed twice in one session | `C7-4` |
+
+**Formerly held at `PENDING OWNER`:** `codex7-10`, `A7-3` and the closed-round and `P-1` halves of
+`codex7-3` waited on `Q7-1`, which the owner delegated to this session; all are ruled and executed.
+`A7-2` waited on `Q7-2` and is now `ACCEPTED AS-IS` on the owner's words.
+
+## R7.13 — Round 7 status: OPEN — superseded in part by §R7.18
+
+**This section was written before the owner authorized execution.** What it records as queued has
+since landed; what it records as unanswered has since been answered. Left as written, per
+invariant 1, with the current state at §R7.19.
+
+Every numbered row carries both axes. Every auxiliary entry carries both axes. Open obligations:
+
+- **`Q7-1`, `Q7-2` and `Q7-3` unanswered.** `Q7-1` blocks three items; the other two block nothing.
+- **All 24 `FIX NOW` items are queued and unexecuted.** No fix was applied by this session.
+- **`CNV7-1` through `CNV7-7`** — open verify items, all non-blocking, each naming its check.
+- **Carried forward and still open from earlier rounds:** `A-3` / `C6-2` (summary faithfulness, not
+  mechanically decidable) and the two permanent round-3 warnings at `:2383` and `:2384`, which stay
+  as history.
+- **`A6-1` / `Q-4` is NOT still open, and this session initially wrote that it was.** The claim was
+  drafted from round 6's own open-items list rather than checked. Checked: `diff -rq` against both
+  installed directories is silent, and this session's clean validator run raises no install warning.
+  Round 6's §R6.19 sync held. The install warnings that appear in this round's probe transcripts
+  were caused by **this session's own mutations to the clone** and are not evidence of drift.
+  Recorded as `C7-3` rather than quietly deleted.
+
+**What round 7 closes from round 6.** `Q6-3` — the demand for an independent review of round 6's
+twenty-seven self-certified changes. It has now happened, and it found six high-impact defects in
+them. **Round 6's §R6.16 self-certification should be read as superseded by this round**, not as
+independently confirmed: `D7-1` and `D7-9` record exactly how far its 18/18 and 11/11 result
+generalizes, which is less far than it reads.
+
+**Nothing here establishes that the work is complete, correct, or ready to ship.** It establishes
+that 24 findings were raised across two reports, that all 24 survived re-verification with 21
+confirmed outright and 3 confirmed in part, that **not one was refuted**, that six further findings
+came from this session's own re-verification including one live defect neither reviewer reached,
+that 3 of 12 sampled upheld claims were re-opened, that 24 changes are queued and none applied, and
+that the round's independence design produced a free-finding rate statistically indistinguishable
+from the round it was written to improve on.
+
+**A note on this round's own standing, in the same terms round 6 used about itself.** This
+adjudication re-derived every machine-checkable claim from source and execution against a disposable
+clone, and it raised four findings the reports did not contain. It is still one session ruling on
+two reports, and the six `A7-*` findings have had no independent check at all — the second-opinion
+rule in this skill fires only on a `REFUTED` verdict against a high-impact finding, and **no such
+verdict was issued this round**, so the rule never engaged. `A7-1` in particular is a defect this
+session found, verified, and then ruled on alone.
+
+## R7.14 — Append proof for this round
+
+Round 7 was written by appending. The completed prefix is proved untouched two ways:
+
+```
+$ head -n 5234 REVIEW-ADJUDICATION.md | diff - <pre-session copy of the file>
+(silent)
+$ head -c 299772 REVIEW-ADJUDICATION.md | cmp - <(git show 2565c08:REVIEW-ADJUDICATION.md)
+(silent)
+$ git status --short
+ M REVIEW-ADJUDICATION.md
+?? EXTERNAL-REVIEW-7-CODEX.md          (pre-existing, not written by this session)
+?? EXTERNAL-REVIEW-7-COVER-NOTE-CODEX.md
+?? EXTERNAL-REVIEW-7-COVER-NOTE-GROK.md
+?? EXTERNAL-REVIEW-7-GROK.md
+?? EXTERNAL-REVIEW-7-PROMPT-CODEX.md
+?? EXTERNAL-REVIEW-7-PROMPT-GROK.md
+```
+
+**This proof was not decorative — it caught a real violation.** An intermediate state of this
+session had edited **round 6's** §R6.13, through the unanchored replace recorded at `A7-6`. The
+`diff` above was non-silent, the offending line was identified as `4773`, and the completed prefix
+was restored verbatim from the pre-session copy before saving. **The version on disk is the restored
+one**; the corrupted intermediate never left this session, and it is recorded here rather than
+omitted because a silent recovery would leave the next round unable to tell this proof was ever
+needed.
+
+**The only file this session wrote is this ledger.** Rounds 1–6 are byte-identical to their
+pre-session state. No backlog artifact was created because **no finding received a `FIX LATER`
+disposition** — every confirmed defect is either queued for this phase or held at `PENDING OWNER`
+with its question named.
+
+## R7.15 — Did any round-6 fix open a new path to the failure it closed?
+
+Asked explicitly, because it is what the next brief will ask.
+
+**Yes, three times, and the reviewers found all three.**
+
+- **`g6-12` closed "any row mentioning a disposition carries it" by reading both axes from their own
+  columns. `codex7-4` is the next path through the same door:** the column is now right and the test
+  inside it is still a substring match, so a mention still passes and the skill's own documented
+  compound form now fails.
+- **`g6-1` closed "the header was compared to itself and never to reality" by counting rows.
+  `codex7-3` shows the count was scoped to the current round, so the same defect survives one round
+  back** — and `codex7-2` shows the boundary defining "current" can be moved by a code fence.
+- **`g6-11` closed "a name above the cut with the qualifier that makes it safe below it" for the
+  example-file index. `grok7-1` is the identical shape, introduced in the same pass, in the new
+  verdict term** — the license above the cut, the gate at line 412. The reviewer that raised
+  `g6-11` is the one that found it.
+
+**And one round-6 fix opened a path nobody was looking for.** Queue item 3 taught operators that two
+warnings are expected and permanent. `A7-4` is the cost: a third closed-round warning now arrives in
+a run whose readers have been told to expect two.
+
+## R7.16 — Owner answers, and the authorization to execute
+
+**Answered 2026-08-23, verbatim:**
+
+> q1, you decide
+> q2, accept the rate
+> q3, round 6 is closed.
+
+> then, proceed with the fixes
+
+**`Q7-2` — ANSWERED: accept the rate.** `A7-2` is settled as a measured fact rather than a defect
+to remedy: 13% free in round 6, 12.5% in round 7, and the brief's authorship is not the lever. The
+row moves from `PENDING OWNER` to its final disposition below. **No change to the briefing method
+is queued**, and the next round inherits the number rather than a fix for it.
+
+**`Q7-3` — ANSWERED: round 6 is closed.** Recorded here, in round 7, and **not** by editing round 6
+— its §R6.17 still says OPEN and stays as written, because a completed round is history. From this
+point every round-6 obligation is either discharged, superseded by a round-7 row, or carried
+forward by name in §R7.13. `grok7-7` executes on that basis.
+
+**`Q7-1` — DELEGATED TO THIS SESSION, and ruled: option (b), with one addition the options list did
+not contain.** The reasoning, since the owner did not supply it:
+
+- **(a) is unavailable in the form it was offered.** An explicit class marker on the row requires
+  editing rows to carry it, and rounds 1–6 are immutable. Any scheme must parse existing history
+  correctly *as written*, which rules out anything that depends on new syntax in old rows.
+- **(c) discards the thing the census exists to protect.** Counting every ruling row without the
+  numbered/auxiliary distinction means a dropped numbered finding can be masked by an added
+  auxiliary one. That is the defect this skill was built around.
+- **(d) is what this round already did under protest**, and `A7-3` is the cost.
+- **(b) is correct but incomplete as stated.** Declaring the namespace and erroring on an
+  unrecognised ID converts `codex7-10`'s silent exclusion into a loud failure, which is the whole
+  point. It does not, on its own, express round 4's real case — a numbered finding filed under a
+  `P-` ID because its fix landed in the brief. That row cannot be edited to declare itself.
+
+**The addition: the exception lives in the checker, not in the data.** Where history contains a
+census the namespace rule cannot derive, the validator carries an explicit, dated, reasoned entry
+naming that round and that ID. Immutable data plus a documented exceptions table is honest; a rule
+quietly relaxed until history passes is not. Round 4's `P-1 (grok-13)` is the first and currently
+only entry.
+
+**So the ruling is:** declare the auxiliary namespace as a rule in the skill and the template · error
+on any current-round ID matching no declared series · count rows in closed rounds too and report
+mismatches as warnings · and carry a documented exceptions table for historical censuses the rule
+cannot derive. This closes `codex7-10`, `A7-3`, and both halves of `codex7-3` that were held.
+
+## R7.17 — The author's corrections to the hand-off, ruled
+
+The author re-ran both errors this session had found and conceded both, supplying a root cause for
+the second that this session had not identified. Ruled here rather than absorbed silently, because
+the second one changes what `grok7-2` is worth.
+
+| # | Correction | Verdict | Disposition |
+|---|---|---|---|
+| C7-4 | **The `D5` leakage query was a line-oriented result on a phrase that wraps.** The author's hand-off recorded `no line found`; the phrase spans `PROMPT-CODEX:138-139` and a normalized search finds it. **This is `P-4` — this repository's own line-wrap defect — committed by the author inside the search written to catch what the author cannot see, for the second time in one session** | **CONFIRMED** — and it does not move the `D5` ruling, which was already seeded on two other queries hitting `:137-138`. What it establishes is that the hand-off's search was unreliable and correctly not taken on trust | **FIX NOW** — ✔ **executed**, there is no file to repair in the hand-off, but there is a repeatable defect behind it: `adversarial-review-prompt` §10 asks the author to run a pre-flight leakage search and does not say to normalize whitespace first. Two of this session's own searches failed on exactly that. Queue item 27 |
+| C7-5 | **Process note 4's root cause is not the wrapped line — it is that the author checked ten axes of their own choosing instead of the six `adversarial-review-prompt` §7 enumerates.** Re-run against the six, both cover notes omit **its own tools** and **effort budget**. The author withdraws the "0 mismatches" result and names the shape: round 5's doubt `D5`, *"the checks are the ones that were hand-run rather than the right ones"*, committed by the author in the round shipping a fix for the envelope-agreement rule | **CONFIRMED** — independently reproduced at RV-11 before the concession arrived, against the same six axes | **FIX NOW** — ✔ **executed**, this is why queue item 13 generates the checklist from §7's enumerated axes rather than leaving the walk to prose. Supersedes `C7-2`'s account of the cause, which named the wrap |
+| C7-6 | **`grok7-2`'s blast radius, which the author correctly said was not theirs to judge.** The omission is by silence rather than contradiction, and both cover notes route the reviewer to the brief on disk, so the brief governed and both reviewers did have the full envelope | **CONFIRMED (partial)** — the *envelope* consequence is bounded: no reviewer was actually under-informed about tools or effort, and neither report shows a capability it declined to use. **The `ROUND-6-HANDOFF` half is not bounded and is unaffected** — that was a read-scope grant the Codex pair never restricted, and `CNV7-2` remains open on whether it was exercised. **`grok7-2`'s impact stands at high on the strength of the second half, not the first** | **FIX NOW** — ✔ **executed**, unchanged, queue item 13. Recorded so the next round does not read "two axes omitted" as the load-bearing part |
+| C7-7 | **The prototype on-disk doubts artifact never existed during either run.** `~/.adversarial-review/author-doubts/adversarial-review-skills-round-7.md`, created 2026-08-23 08:24 — **after** both reports were complete (00:16 and 00:28) and outside both reviewers' roots. It is also a different directory from this repository's own `.adversarial-review/`, which holds only calibration records | **TRUE, NOT A DEFECT** — **Gate:** no consequence stated; the author raised it as housekeeping, not as a claim of harm. It would be a defect here if the file had been reachable while a reviewer was running, because it carries the pre-registered doubts and would make every matching finding an echo; its timestamps show it was not, and no round-7 finding is re-scored | **NO ACTION** — legal under this verdict |
+
+**The doubts-delivery policy, recorded as decided by the owner.** Chat-only, at authoring time,
+positioned last in its own copy-ready block. This session's assessment, since the policy affects
+what future adjudications can rely on: **the reasoning is sound and the stated failure mode is the
+real one.** A chat message cannot be enumerated by a reviewer session rooted more broadly than
+expected — which is the class that produced round 5's VOID run and forced `ROUND-6-HANDOFF.md` to be
+excluded by name from this round's Grok brief. The cost is that the list is lost if the window is,
+and round 5's `CNV-R5-1` is the worked example of what that costs: a whole round in which no finding
+could be scored as independent corroboration. **`review-adjudication` §1 already handles the loss
+correctly** — it asks the user, and it requires absence to be recorded as absence of the check
+rather than as evidence of a clean brief. No change is needed on this side. The two
+`adversarial-review-prompt` edits the author queued are added to the queue as items 25 and 26.
+
+## R7.18 — Execution: what landed, and what it verifiably does
+
+**Authorized by the owner (§R7.16) and executed in the same session, as the skill's hand-off rule
+permits.** All 27 queued items landed. Nine files changed: **589 insertions, 203 deletions.**
+`scripts/validate.py` went from **519 to 800 lines**. Both `SKILL.md` files stayed under the
+500-line gate — 498 and 499 — which cost ten lines of compressed restatement, spent per round 5's
+`Q-1(c)` answer rather than by raising the gate.
+
+### What changed, by file
+
+| File | What landed |
+|---|---|
+| `scripts/validate.py` | Fenced blocks are no longer live syntax (`defenced`, used by every round-heading and table walk). Backslash-*parity* cell splitting. Optional trailing pipe. Per-table header-driven verdict/disposition columns. Whole-cell verdict grammar. Commitment-not-mention parsing for both axes, including the compound `PENDING OWNER` form. Code spans as backtick *runs*, with escapes neutralised first. Declared ID namespace with a documented exceptions table. `rounds()` includes the opening adjudication; closed rounds are row-counted; a missing current census errors. Tool names extracted from scoped grants. Frontmatter delimited by lines. Expiry parsed as a date in UTC. Digest ordering pinned to bytes and a failed `git` raised rather than hashed as nothing. Expected history warnings pinned by row identity |
+| `skills/review-adjudication/SKILL.md` | The `TRUE, NOT A DEFECT` **gate and boundary moved into invariant 2, above the compaction cut**; §6's row now points at it. §2 and §7 header formulas carry `+U`, `+A` and `+C`. The fourth dismissal example, *"scaffold only"*, restored above the cut. Append proof after every write, round assembled outside the ledger. Lowercase numbered IDs. Vocabulary-does-not-reach-back rule |
+| `references/ledger-template.md` | Both header formulas gain the corrections slot. New sections: the declared ID namespace with its table, the assembly-and-append-proof rule, and a pairings table naming the `U-N`-that-checks-out case |
+| `skills/adversarial-review-prompt/SKILL.md` | The *"an estimate, not a tokenizer run"* caveat restored to the cut sentence. §10's doubts block moved last, made chat-only and every-round, with the keep-the-window failure mode named and the search required whitespace-normalized. Any quoted size must be computed with the command shown |
+| `references/cover-note-template.md` | The permission walk is now a **copyable six-row checklist** instead of prose. Read-scope exclusions carry from brief to note. Absolute repository path plus a `rev-parse` identity check |
+| `references/prompt-template.md` | Where a claim needs the sibling brief, that read is granted explicitly and scoped |
+| `BACKLOG.md` | `B-3` no longer overstates the counts check. `B-4` marked **DISCHARGED** with its closing reference |
+| `calibration/README.md`, `record-template.md` | The digest command is `LC_ALL=C sort -z`, with the reason stated and the two competing digests named |
+
+### Two defects in this session's own fixes, found by running them
+
+Both were caught by probes, not by reading, and both are recorded because a fix that needed fixing
+is evidence about how much the rest should be trusted.
+
+1. **`ruling_rows` read only the *first* table in the file.** It tracked table boundaries from
+   `table_rows`' output, which never reveals the gaps between tables, so `cols` was set once from
+   whichever header came first and every later table fell back to the last two cells. The
+   header-driven-columns fix was therefore inert everywhere except the first table. Found by the
+   trailing-empty-cell probe failing; fixed by giving both functions a shared `walk_tables`
+   generator that reports each row's index within its own table.
+2. **Expected history warnings pinned by line number re-flagged themselves.** Planting a third
+   closed-round pairing *above* the known two shifted their line numbers, so all three were
+   reported as new. Pinned by row identity instead.
+
+### Break-test results — 53 probes, every check broken deliberately
+
+Run against a copy carrying the fixes; the repository was never mutated. Three suites: 29 valid
+probes in the first, 13 re-runs of probes whose *design* was wrong in the first, and 11
+supplementary regression guards. **53 of 53 behaved as specified.**
+
+Six probes in the first suite failed and none was a defect in the fixes: four appended lines to a
+`SKILL.md` with three lines of headroom and tripped the length gate, one left orphaned YAML behind a
+partial frontmatter edit, and one asserted the wrong outcome — `C1-3` is a *valid* corrections ID,
+so the correct behaviour is a loud count error rather than an "undeclared series" message. All six
+were rebuilt length-neutral and re-run. **Recorded rather than quietly dropped**, because a probe
+suite that reports only its passes is the thing `B-3`'s discredited *"9/9"* was.
+
+Coverage, must-fail and must-pass in both directions:
+
+```
+permissions   scoped Edit(/src/**) and Bash(git log:*) caught · quoted and block-scalar Write caught
+              Agent caught · NotebookEdit(x) caught · null is an empty grant · read-only list passes
+boundary      real defect + fenced '# Round 999' still ERRORS · a fenced heading alone is harmless
+counts        current census deleted -> ERROR · a current row deleted -> ERROR · closed-round row
+              deletion and pre-heading vandalism now WARN instead of passing silently · round 4's
+              27-vs-26 accepted via its documented exception
+axes          mention-not-commitment -> ERROR · quoted REFUTED cannot legalise NO ACTION -> ERROR
+              valid compound PENDING OWNER passes · legal REFUTED + NO ACTION passes
+row shapes    no trailing pipe, trailing empty cell and trailing literal backslash all still counted
+              CONFIRMEDLY is not a ruling · _**CONFIRMED**_ is · undeclared Z9-1 reported
+code spans    two-backtick pipe caught · escaped pipe passes · two-backtick guillemet passes
+              bare guillemet caught
+links         angle-bracket, balanced-parenthesis and titled destinations pass · missing inline and
+              missing reference-style targets caught
+frontmatter   triple hyphen in a quoted description passes · unclosed block caught · nested list
+              gives an error, not a traceback
+calibration   9999-99-99 caught as not a real date · genuinely expired caught · stale digest caught
+              expiry stable under Kiritimati and Pago_Pago at one instant
+retired       verbatim, footnote-broken and emphasis-broken phrasings all caught
+structure     missing invariants block caught · dangling §99 backref caught · 500-line gate caught
+```
+
+### `A7-1` verified end to end, which is the item that mattered most
+
+```
+$ python3 -c "...corpus_digest()"                              775e1cc8c43f
+$ LC_ALL=en_US.UTF-8 sh -c '<the command the template now documents>'   775e1cc8c43f
+```
+
+The documented command and the validator now agree **from a UTF-8 shell**, which they did not
+before. And a tree with no `.git` no longer calls every record stale:
+
+```
+WARN  calibration: could not compute the corpus digest: git ls-files exited 128: fatal: not a git
+      repository (or any of the parent directories): .git
+11 of 12 checks pass (3 warning(s)); 1 check SKIPPED and NOT counted - calibration records match
+      the corpus digest and are in date
+```
+
+### The installed copies, and `A6-1` / `Q-4`
+
+`~/.claude/skills` was byte-identical to this repository before this session's edits (`C7-3`), and
+has been re-synced after them. Both `diff -rq` runs are silent. A backup of the pre-sync state is in
+the session scratchpad. **The version that executes at runtime is now the version this round
+reviewed and fixed.**
+
+### `CNV-R6-1` superseded, and round 6 closed
+
+| # | Entry | Verdict | Disposition |
+|---|---|---|---|
+| C7-8 | **Supersedes the `CNV-R6-1` row at `:4668`, which still reads `COULD NOT DETERMINE` / `VERIFY`.** The gap it named — a footnote-broken retired phrase going uncaught — was closed by round 6's own §R6.19 and is re-verified here by execution: the phrase now errors in all three spellings. The round-6 row is **not edited**; it stays as written and this row is the correction of record (`grok7-7`) | **CONFIRMED** — probed in all three spellings this session | **FIX NOW** — ✔ **executed**: this row is the fix, and `Q7-3`'s answer closes round 6 so no further backfill is owed |
+
+### What did not change, and is not claimed to have
+
+`MAX_SKILL_LINES` is still 500 and neither skill was allowed to exceed it. No closed round was
+edited. No report file was touched. The two round-3 warnings at `:2383` and `:2384` remain, now
+labelled *expected permanent history* by the validator itself rather than by a comment somewhere
+else. `A-3` / `C6-2` — whether a `(§N)` summary faithfully describes its section — is still not
+mechanically decidable and no attempt was made to pretend otherwise.
+
+### The standing conflict, unchanged and restated
+
+**This session ruled on 24 findings, then wrote 27 fixes, then certified them with the validator it
+had just rewritten.** That is round 6's conflict with this session's hands, one round later. The
+53-probe suite is real evidence and it caught two defects in these fixes — but it is this session
+testing its own harness, which is precisely what made `B-3`'s *"9/9 mutations were caught"* worth
+discarding.
+
+**Nothing in §R7.18 should be read as independently verified.** The six `A7-*` findings had no
+independent check at all: the second-opinion rule fires only on a `REFUTED` verdict against a
+high-impact finding, and this round issued none. `A7-1` in particular was found, verified, ruled and
+fixed by one session alone. The remedy is a round 8 against `scripts/validate.py` as it now stands —
+800 lines, of which 469 changed today — briefed by the skill, with the doubts delivered in chat and
+this ledger's §R7.18 named as the thing to attack.
+
+
+## R7.19 — Round 7 status after execution: OPEN
+
+**Changed since §R7.13.** All 27 `FIX NOW` items are executed and backfilled. `Q7-1` was delegated
+to this session and ruled (option b, plus a checker-side exceptions table); `Q7-2` is answered
+*accept the rate*, so `A7-2` closes as a measured fact with nothing queued against it; `Q7-3` is
+answered and **round 6 is closed**. `grok7-7` is discharged by `U7-4` rather than by editing round 6.
+
+**What remains open:**
+
+- **`CNV7-1` to `CNV7-7`** — seven verify items, all non-blocking, each naming its check. Two are
+  narrowed rather than closed: `CNV7-6` (Linux `sha1sum` versus macOS `shasum`) is no longer the
+  main portability hazard now that `A7-1` is fixed, but it is still unrun; `CNV7-2` (whether the
+  Codex session opened `ROUND-6-HANDOFF.md`) needs a session log this repository does not hold.
+- **`A-3` / `C6-2`** — summary faithfulness is not mechanically decidable and is not claimed to be.
+- **The two round-3 rows at `:2383` and `:2384`** — permanent history. The validator now labels them
+  *expected* and would label a third *not expected*, which is `A7-4`'s fix rather than their repair.
+- **No independent check on any of this round's work.** Six `A7-*` findings and 27 fixes were
+  raised, ruled and certified by one session. `Q7-4` below is the standing item.
+
+**`Q7-4` — the round-8 remit, recorded rather than asked.** Round 6 ended by naming three conditions
+for round 7; all three were met and the round found six high-impact defects in round 6's
+self-certified work. The same demand now applies to this round, with two conditions added by what
+went wrong here:
+
+1. **The target is `scripts/validate.py` at 800 lines, of which 469 changed in one session**, plus
+   §R7.18's account of what those changes do.
+2. **The brief is generated by the skill**, and the doubts are delivered in chat per §R7.17 — but
+   **cap the pointed sub-questions**. `A7-2` measured the free-finding rate at 12.5% against round
+   6's 13%; the owner accepted the rate, so the next brief should at least know it is buying
+   directed answers rather than discovery.
+3. **The cover note must use the new checklist and state the absolute repository path**, because
+   `P7-1` shows a reviewer silently auditing a four-round-old tree is a live failure mode that only
+   luck caught.
+
+**Nothing here establishes that the work is complete, correct, or ready to ship.** It establishes
+that 24 findings were adjudicated and none refuted, that six more came from this session's own
+re-verification, that 3 of 12 sampled upheld claims were re-opened, that 27 changes were authorized
+and executed, that every check now in the validator was broken deliberately across 53 probes with
+two defects found in this session's own fixes — and that all of it was done by the party under
+review.

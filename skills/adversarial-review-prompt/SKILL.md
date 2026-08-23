@@ -21,8 +21,9 @@ two files: the audit brief, and a short paste-ready cover note that hands it ove
 <invariants>
 **These hold for the whole task.** After an auto-compaction Claude Code re-attaches only the
 **first 5,000 tokens** of this skill; where several skills were invoked they share a 25,000-token
-budget and an older one can be dropped **entirely**. Treat everything past **line ~205** as gone,
-and re-invoke this skill after a compaction. Each rule below is stated in full in its own section.
+budget and an older one can be dropped **entirely**. Treat everything past **line ~205** as gone —
+**an estimate back-computed at ~3.1 characters per token, not a tokenizer run, and deliberately
+early** — and re-invoke this skill after a compaction. Each rule is stated in full in its section.
 
 **The references, and when to open each.** `prompt-template.md` before writing any part of the
 brief — **it is the authority on the framing block and its four branches** ·
@@ -171,7 +172,10 @@ commands to state facts, not guesses:
 - **The audit range, pinned to immutable commit IDs — never to a branch relation.** State the
   work under review as explicit commits (`abc1234^..def5678`, or a list) with the file count
   and `+N/−M` from `git diff --stat` over that exact range, and run that command while
-  authoring the brief so the numbers are observed, not remembered. Never write "N commits
+  authoring the brief so the numbers are observed, not remembered. **Any other size you quote —
+  "it went from N lines to M" — is computed the same way and the command is shown beside it**
+  (`git show «commit»:«path» \| wc -l`); round 7 shipped a brief asserting a 354-line baseline for
+  a file that was 301 at the pinned commit, and the reviewer had to spend a finding on it. Never write "N commits
   ahead of `main`" or "`git diff main..HEAD` is the work" — `main` and the branch converge and
   re-diverge as work lands (a local fast-forward is one command), and on 2026-08-16 a brief
   said "2 commits ahead of `main`" three minutes *after* `main` had been fast-forwarded onto
@@ -298,23 +302,19 @@ Non-negotiables while writing:
   levels, the file path — and all detail in the file. This one write is authorized even under
   an otherwise read-only envelope; state the authorization and the read-only rule in the same
   breath (§7) so they cannot read as contradictory instructions.
-- **Never ask the reviewer for a verdict.** Whether the work ships or is marked complete is
-  the owner's call, and a reviewer that commits to YES or NO up front bends its own findings
-  to stay consistent with it. What the verdict was buying is commitment, and forced ranking
-  buys it better: order the findings by the cost of leaving each unfixed — blast radius ×
-  likelihood the trigger is reached — with no ties and a one-clause justification for each
-  position. Each finding carries an **Impact** level (critical/high/medium/low) as an
-  attribute; severity is never a section heading — buckets are how a reviewer avoids saying
-  which of six "criticals" it would fix first. Evidence status is not impact: a THEORETICAL
-  data-loss defect outranks a CONFIRMED cosmetic one. Per-claim CONFIRMED / REFUTED / COULD
-  NOT DETERMINE adjudication (§3) is evidence about a claim, not a verdict, and stays.
-- **Author's residual doubts stay out of the prompt entirely.** A reviewer that reads them
-  is anchored by them — demotion disclaimers do not survive contact — while a suspicion the
-  reviewer reaches blind is independent corroboration, the strongest evidence this exercise
-  can produce. Collect 3–5, each a question with a mechanism and the `file:line` it is about,
-  and put them in the hand-off summary (§10) for the user to compare against the returned
-  review. They stay out of the cover note too (§8) — it is read first, so anchoring there is
-  worse, not better.
+- **Never ask the reviewer for a verdict.** Whether the work ships is the owner's call, and a
+  reviewer that commits to YES or NO up front bends its findings to stay consistent. Forced
+  ranking buys the commitment better: order findings by the cost of leaving each unfixed — blast
+  radius × likelihood the trigger is reached — no ties, one clause per position. **Impact**
+  (critical/high/medium/low) is an attribute, never a section heading: buckets are how a reviewer
+  avoids saying which of six "criticals" it would fix first. Evidence status is not impact — a
+  THEORETICAL data-loss defect outranks a CONFIRMED cosmetic one. Per-claim adjudication (§3) is
+  evidence about a claim, not a verdict, and stays.
+- **Author's residual doubts stay out of the prompt entirely.** A reviewer that reads them is
+  anchored — disclaimers do not survive contact — while a suspicion it reaches blind is the
+  strongest evidence this exercise produces. Collect 3–5, each a question with a mechanism and its
+  `file:line`, and put them in the hand-off (§10). They stay out of the cover note too (§8), which
+  is read first, so anchoring there is worse.
 - **Where a load-bearing claim's sub-question is one of your own doubts, keep it sharp and
   declare it.** Doubts and claims come out of the same reading, so the overlap is the normal
   case, not a slip. Do not blunt a claim to protect a doubt: that spends the brief's main value
@@ -472,14 +472,18 @@ Report to the user, briefly:
   report stops at a section boundary.** The brief tells the reviewer to stop there and wait; the
   reviewer cannot resume itself, so if this never reaches the user a truncated report gets filed
   as a complete one — which is the whole failure the instruction exists to prevent
-- Your 3–5 residual doubts, kept out of both the prompt and the cover note by design. For each
-  one: the doubt, and what §9's search landed on — the brief items by id and line ("claim 7 at
-  `:301`") or **"no line found — unverified"** — with the search output itself in one fenced
-  block, so the labels can be checked instead of believed. Say plainly that none of it is a
-  ruling: a doubt becomes independent corroboration only once an adjudicator has searched the
-  brief and said so (`review-adjudication` does exactly that). Until then, a doubt the reviewer
-  raised is a lead rather than a confirmation, a doubt it refuted is settled either way, and a
-  doubt it never touched is still open
+- **Last in the hand-off, in its own copy-ready block: your 3–5 residual doubts.** Kept out of the
+  prompt and the cover note by design, and **chat-only — never written to disk**, because a file
+  is one `ls` away from a reviewer session rooted more broadly than you expected. Tell the user to
+  keep the message until the adjudicator asks for it, and say plainly that if the window is lost
+  the list is lost: no finding in that round can then be scored as independent corroboration.
+  **Emit this block every round, even when you have no doubts, saying so explicitly** — a missing
+  block and "no doubts" must never read the same. For each doubt: the doubt, and what §9's search
+  landed on — by id and line ("claim 7 at `:301`") or **"no line found — unverified"** — with the
+  search output in one fenced block, so the labels can be checked instead of believed. **Run that
+  search whitespace-normalized**, because the phrases wrap and a line-oriented search has now
+  reported "no line found" for text that was present, twice in one session. None of it is a
+  ruling: a doubt becomes corroboration only once an adjudicator searches the brief and says so.
 - One line, only if they use a terminal: the brief can also be piped —
   `codex exec "$(cat path/to/PROMPT.md)"` (bash/zsh) or
   `codex exec (Get-Content path/to/PROMPT.md -Raw)` (PowerShell). The cover note is the

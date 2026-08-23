@@ -71,9 +71,33 @@ loss costs the entire run, and it is competing with a long brief for the reviewe
 
 **Every permission axis the brief states, this note states too — including the ones that grant
 nothing.** Invariant 3 is `agree exactly`, and omission breaks it as surely as contradiction: a
-reviewer reading only this note cannot tell an ungranted capability from an unmentioned one. Round
-6 shipped a brief granting web search beside a cover note silent on network, and the silence was
-the finding. Walk the brief's permission table row by row before sending this.
+reviewer reading only this note cannot tell an ungranted capability from an unmentioned one.
+
+**Copy this checklist into the note's draft and tick every row before sending.** Round 6 shipped a
+brief granting web search beside a cover note silent on network; round 7 then shipped *two* cover
+notes silent on **its own tools** and **effort budget** — because the author cross-checked ten axes
+of their own choosing instead of the six §7 enumerates. Prose telling you to "walk the table" is
+what failed twice; the list is the fix.
+
+| Axis | Brief says | This note says |
+|---|---|---|
+| Reading | | |
+| Writing | | |
+| Executing | | |
+| Network | | |
+| Its own tools (subagents, MCP) | | |
+| Effort budget | | |
+
+**Read-scope exclusions carry across.** Where the brief withholds a path — a residual-doubts
+hand-off, a sibling reviewer's brief — this note names the same exclusion in the same words. Round 7
+excluded `ROUND-6-HANDOFF.md` from one of two reviewers and left the other free to read it.
+
+**Name the repository by absolute path, and give a one-command identity check.** A bare relative
+path trip-wires on the wrong *model* and not on the wrong *tree*: round 7's Grok session started in
+a stale clone four rounds behind, and only recovered because the file it needed was missing. Where
+the target had existed at that older state, the audit would have run silently against superseded
+work. Tell the reviewer to run `git -C «abs path» rev-parse --short HEAD` and stop if it does not
+match the commit the brief pins.
 
 ---
 

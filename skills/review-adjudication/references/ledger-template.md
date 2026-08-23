@@ -47,8 +47,9 @@ written by `adversarial-review-prompt`»». **This line is required.** Without i
 told apart from one where the audit was silently skipped, and the skipped case is the common one
 **Upheld claims:** «S» sampled of «T» listed · «K» re-opened as `U-N`
 **Findings in: «N» · Rows out: «N» · +«K» process, +«M» CNV, +«D» prior-review disagreements
-ruled, +«U» re-opened upheld claims, +«A» adjudicator findings** «numbered counts must match; if
-merged, say which IDs; state each auxiliary count even when it is zero»
+ruled, +«U» re-opened upheld claims, +«A» adjudicator findings, +«C» corrections to earlier
+rounds** «numbered counts must match; if merged, say which IDs; state each auxiliary count even
+when it is zero»
 ```
 
 The envelope line matters. The brief's permissions are an instruction, not a sandbox — if the
@@ -225,7 +226,7 @@ step 1 defines closure).
 `adjudicated in round N`»
 **Review:** `«NN-EXTERNAL-REVIEW-«N».md»` («reviewer», «date»)
 **Findings in: «N» · Rows out: «N» · +«K» process, +«M» CNV, +«D» prior-review disagreements
-ruled, +«U» re-opened upheld claims, +«A» adjudicator findings**
+ruled, +«U» re-opened upheld claims, +«A» adjudicator findings, +«C» corrections to earlier rounds**
 ```
 
 Then the same sections. Two additions specific to later rounds:
@@ -235,3 +236,60 @@ Then the same sections. Two additions specific to later rounds:
   Never edit the original row. The record of having been wrong is part of what the ledger is for.
 - **Did any round-1 fix open a new path to the failure it closed?** Ask it explicitly. It is the
   question the next reviewer will be asked in the brief's §7, and it is cheaper to answer now.
+
+
+---
+
+## The ID namespace — declared, not guessed
+
+`scripts/validate.py` classifies every ruling row by its ID, and it now **errors on an ID that
+matches no declared series** rather than guessing. Round 7 `codex7-10`: the old rule reserved seven
+single uppercase letters silently, so numbering two reviewers `C7-N` and `G7-N` dropped all thirteen
+`C7-` rows from the census — the very check bought to stop findings vanishing.
+
+| Series | Spelling | What it is |
+|---|---|---|
+| Numbered findings | a lowercase reviewer tag — `codex7-1`, `grok7-3`, `g6-1` | one row per numbered finding in the report |
+| | `F«n»` or a bare integer | historical; rounds 1–3 and the worked example use these |
+| Auxiliary | `P-«n»` process · `CNV-«n»` could-not-verify · `D-«n»` prior-review disagreements | ruled in their own blocks, counted separately |
+| | `U-«n»` re-opened upheld claims · `A-«n»` your own findings · `C-«n»` corrections to earlier rounds | |
+| | `X-«n»` · `Q-«n»` owner questions | |
+
+**Pick numbered IDs that are lowercase.** An uppercase tag collides with the auxiliary namespace,
+and the validator will tell you so rather than quietly miscounting.
+
+**Where history records a census the rule cannot derive**, the exception belongs in the validator's
+`COUNT_EXCEPTIONS` — dated, reasoned, naming the round and the ID. Closed rounds cannot be edited to
+declare themselves, so the exception lives in the checker. Do not relax the rule until history
+passes; that is how a check stops being one.
+
+## Assembling a round — and the append proof
+
+**Assemble the current round outside the ledger and concatenate it once.** Round 7 `A7-6`: an
+in-place edit with an unanchored string replace matched an *earlier round's* identical phrase first
+and silently rewrote a completed round. Nothing mechanical catches that — closed-round edits are
+warnings by design.
+
+**Re-run the append proof after every write, not only at the end:**
+
+```
+head -n «last line of the prior round» «ledger» | diff - «a copy taken before this session»
+```
+
+Silent, or you have edited history. Keep the pre-session copy in the session scratchpad from the
+first write, because after the fact there is nothing to compare against.
+
+## Verdict and disposition pairings that are easy to get wrong
+
+| Situation | Verdict | Disposition |
+|---|---|---|
+| A re-opened `U-N` claim that checks out — true, and alleges no defect | `TRUE, NOT A DEFECT` with its gate filled | `NO ACTION` |
+| A re-opened `U-N` claim that does not | `CONFIRMED` / `CONFIRMED (partial)` | `FIX NOW` or `FIX LATER` |
+| A real defect you will not fix this phase | `CONFIRMED` | `FIX LATER` **plus its backlog artifact** — never `NO ACTION` |
+| A correction to an earlier round, where the erroneous text is not a repository file | `CONFIRMED` | `FIX NOW` naming what *is* fixable, or the queue item that carries it |
+
+**When the vocabulary changes, earlier rounds do not become wrong** — and the validator now says so
+at the point of use. Rows written under a superseded rule surface as warnings labelled *"expected
+permanent history"*; anything else in a closed round is labelled *"NOT one of the expected history
+warnings"*. Pin the expected ones by row **identity** in `EXPECTED_HISTORY`, never by line number:
+appending above them shifts every line below and re-flags them as new.

@@ -100,7 +100,8 @@ unresolved `«»` ships in a `SKILL.md`; every relative `references/` link resol
 all**; no unescaped `|` sits inside a ledger table cell, **while a backslash-escaped one passes**;
 every verdict carries a disposition; `NO ACTION` appears only under the verdicts that permit it and
 no bare `ACCEPTED` appears at all; **the stated rows-out equals the numbered finding rows that
-actually exist**; every filed calibration record's digest matches the instrument **and is inside
+actually exist, in every round — a mismatch in a closed round warns rather than fails, and a row ID
+matching no declared series is reported rather than silently classified**; every filed calibration record's digest matches the instrument **and is inside
 its expiry window**; no retired rule wording survives in live prose; and every invariants block
 exists and cites real sections. Closed rounds are append-only, so defects there are **reported as
 warnings** — visible, never failing the build.
@@ -154,6 +155,8 @@ file is live prose inside the check's own glob, and quoting them would trip it. 
 check was extended to cover in every other form, and the run still certifies itself. The same class
 as round 6's `g6-7`, in the one spelling queue item 10 did not reach.
 
-**Why it is here rather than fixed:** the round-6 owner authorization covered 25 named items and
-this is a twenty-sixth, found while verifying one of them. The fix is small — strip footnote
-markers alongside emphasis — and belongs with the next authorized pass.
+**DISCHARGED 2026-08-22**, in the same round that raised it. `check_retired_wordings` now strips
+markdown footnote markers alongside emphasis characters and backticks before matching; the closing
+record is `REVIEW-ADJUDICATION.md` §R6.19, and round 7 `grok7-3` is the finding that this paragraph
+was left reading as open work after the fix landed. Re-verified by execution 2026-08-23: a
+footnote-broken retired phrase now errors. **Nothing here is outstanding.**
