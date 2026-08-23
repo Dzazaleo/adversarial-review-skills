@@ -162,6 +162,11 @@ defects deliberately planted, two genuinely clean — that you hand to a reviewe
 not once per review. If it finds the planted bugs and doesn't invent bugs in the clean ones,
 it has earned some trust.
 
+The result goes in `~/.adversarial-review/calibration/`, so it follows the reviewer to every
+project on your machine rather than being re-earned in each one — the twenty minutes really is
+paid once. Both skills look there and in the current project, and a record you drop into a
+project's own `.adversarial-review/calibration/` wins, for teams that want one checked in.
+
 Neither skill refuses to run without this. An untested reviewer's *findings* still count fully
 — a real bug is real regardless of who found it. What an untested reviewer can't do is clear
 anything: its "I checked, it's fine" is recorded as unverified, not as coverage.

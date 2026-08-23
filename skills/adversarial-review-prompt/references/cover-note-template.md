@@ -19,8 +19,10 @@ Text in `«guillemets»` is an instruction to you and must not survive into the 
 4. **Host gotchas** — only the ones that would otherwise read as defects.
 
 What stays out: the adversarial framing (the brief carries it in full — restating a compressed
-version here dilutes it and risks contradicting it), and the author's residual doubts (they
-anchor the reviewer; they go to the user instead).
+version here dilutes it and risks contradicting it), and anything about the author's own
+suspicions (they anchor the reviewer, and this note is read *first*, so anchoring here is worse
+than in the brief). The doubts themselves do not exist yet: the skill forms them in §9, after this
+file is saved, and searches **this file as well as the brief** when bucketing them.
 
 Part 1 is not politeness. An audit brief arriving cold — attack this, find what is wrong,
 prove it — reads like a request to break into someone else's system, and a reviewer that is

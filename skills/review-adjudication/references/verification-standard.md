@@ -50,18 +50,34 @@ talking. Reconstruct and run the actual path.
 - **Discount non-independent agreement.** Where a brief claim was the author's own suspicion — a
   residual doubt leaked into the brief — the reviewer agreeing with it is an echo, not
   confirmation. Verify those findings from primary sources as if the reviewer had said nothing.
-  **Whether a doubt was kept out of the brief is your ruling to make, not the hand-off's.** An
-  author cannot certify absence in a document they wrote, and here they never have: 2026-08-10,
-  five doubts of five were in the brief; 2026-08-15, four of four, reported as "deliberately
-  excluded"; 2026-08-17, two of three, reported after the authoring skill had made a search
-  mandatory and the author had run it with queries that missed their own doubt. Claims of
-  *presence* have been reliable throughout — it is only absence that fails. So for each doubt,
-  search the whole brief **and the cover note**, not just the claims list (in the 2026-08-17 case
+
+  **The hand-off arrives with the doubts already bucketed, and the two buckets are not worth the
+  same to you.** `adversarial-review-prompt` §9 now forms the doubts *after* the brief is saved
+  and searches the brief and cover note for each, labelling it `SEEDED` (found) or `UNSEEDED` (not
+  found). Take `SEEDED` at its word — a claim of presence, provable by pointing at a line, and
+  reliable on every occasion it has been made here. **Re-run the search yourself on every
+  `UNSEEDED` doubt**, because that is a claim of absence in a document its author wrote, and here
+  those have failed every time they were checked: 2026-08-10, five doubts of five were in the
+  brief; 2026-08-15, four of four, reported as "deliberately excluded"; 2026-08-17, two of three,
+  after a search had been made mandatory and the author ran it with queries that missed their own
+  doubt; 2026-08-23, five of five, that last one with the search performed correctly and the leak
+  reported accurately — which is what moved the fix upstream into the ordering.
+
+  Search the whole brief **and the cover note**, not just the claims list (in the 2026-08-17 case
   half the leak sat in the one-way doors), using the doubt's own citations and identifiers as the
-  queries rather than a paraphrase. Record per doubt what you found — in the brief at ‹id›:‹line›,
-  or no line found — with the query beside it, and score only a doubt *you* ruled absent as
-  independent corroboration. A hand-off that says "held back", "withheld" or "excluded from the
-  brief" is asserting what its author was not positioned to know: unverified until you check.
+  queries rather than a paraphrase, and flatten whitespace before concluding nothing is there —
+  the brief's prose wraps, and a line-oriented grep has reported "no line found" for a phrase that
+  was present. Record per doubt what you found — in the brief at ‹id›:‹line›, or no line found —
+  with the query beside it, and score only a doubt *you* ruled absent as independent corroboration.
+  A hand-off that says "held back", "withheld" or "excluded from the brief" is asserting what its
+  author was not positioned to know: unverified until you check.
+
+  **A `SEEDED` doubt the reviewer never raised is worth reading, and it is the only thing that
+  bucket buys.** The brief pointed the reviewer straight at that seam. A **calibrated** reviewer
+  that came back silent on it has told you something — that the doubt is unfounded, or that this
+  reviewer does not reach this class of defect. Rule which in the ledger, or record that you could
+  not tell. From an uncalibrated reviewer the silence is worth nothing, exactly as everywhere else:
+  calibration governs the reviewer's silence, never its speech.
 
   **The residual doubts are the small channel. The brief's load-bearing claims list is the large
   one, and it is the one that will actually be carrying the author's suspicions.** Every claim

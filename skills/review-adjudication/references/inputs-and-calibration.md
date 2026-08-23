@@ -5,8 +5,19 @@ kept out of the main file so the obligations sit above the compaction cut.
 
 ## calibration record
 
-- **The reviewer's calibration record** — `.adversarial-review/calibration/<reviewer-id>.md` under
-  the project root. The record is keyed on what the reviewer actually is — model family, product
+- **The reviewer's calibration record** — `.adversarial-review/calibration/<reviewer-id>.md`,
+  looked up in **two locations: `./` (the project root) first, then `~/`.** A project-local record
+  wins where both exist, because a project that pins one has done so deliberately — a team-shared
+  record checked into the repository, or a private replacement corpus (`calibration/README.md`,
+  B-2). The home copy is the normal case and the one that makes the scheme work: the corpus is
+  fixed, the run happens in a scratch directory, and nothing in the measurement came from the
+  project under review, so a record earned while reviewing project A is evidence about the same
+  reviewer in project B. Filing it under a project root and looking for it only there is how, on
+  2026-08-23, a reviewer holding a filed `PASS` was written into a second project's hand-off as
+  "none on file" — a false negative that costs a twenty-minute rerun at best and, at worst,
+  silently converts an available `PASS` into the untested-reviewer treatment.
+  **Name the location you read it from in the header**, because a home record and a pinned one
+  are not the same claim about this repository. The record is keyed on what the reviewer actually is — model family, product
   *and version*, reasoning effort, and its own self-report where it gave one. The filename is
   always `<identity>-<effort>.md`, and `<identity>` is the first of these the session gave you:
   the served model alias (`gpt-5.6-sol`), else family plus product and version
@@ -14,10 +25,11 @@ kept out of the main file so the obligations sit above the compaction cut.
   carries the effort** — the effort is appended once, by the `-<effort>` half, so a
   `gpt-5.6-sol` reviewer at high effort is filed at `gpt-5.6-sol-high.md` and never at
   `gpt-5.6-sol-high-high.md`. The examples used to be written as finished filenames here, which
-  taught exactly that doubled lookup; `calibration/README.md` has always had it right. **List the directory before
-  concluding a record is absent** — the same product does not always describe itself the same way
-  from one session to the next, so a near-miss on the family is a record worth opening and checking
-  the four identity fields against. Read its
+  taught exactly that doubled lookup; `calibration/README.md` has always had it right. **List both
+  directories before concluding a record is absent** — the same product does not always describe
+  itself the same way from one session to the next, so a near-miss on the family is a record worth
+  opening and checking the four identity fields against, and a record is only absent once it is
+  absent from *both* places. Read its
   result, its expiry, **its corpus digest**, **and the size of work it was earned on**; a record
   past its expiry date, or filed against a different identity — different family, product version,
   or reasoning effort — is stale and counts as missing.

@@ -53,6 +53,13 @@ where the reviewer reads them. Adjudication needs them verbatim; if the window i
 gone, the leakage check records that it could not be made, and no finding is credited as
 independent corroboration.
 
+Those doubts are also formed **after** the brief is written, not alongside it, and arrive in two
+labelled lists — `SEEDED` (the authoring session's own search found the doubt already in the brief)
+and `UNSEEDED` (it did not). Only the second is eligible to be scored as independent corroboration,
+and only once the adjudicator has repeated the search itself. Four rounds that measured this found
+the doubts already in the brief every time — the last of them with the search run correctly — which
+is what moved the fix from the search to the ordering.
+
 `NN` copies whatever numbering the surrounding work already uses: a phase number, a PR number.
 If there is no such numbering — a standalone skill, a bare repo — the files drop the prefix and
 just sit next to the report. Sitting next to the report is the rule; the prefix is not.
@@ -182,12 +189,29 @@ instead. The hand-off lists, for each hunch, which parts of the brief a search a
 along with the raw search output. Where the search finds nothing, the required wording is "no line
 found — unverified", never "held back".
 
-That split exists because the softer version failed three times running. The third failure came
+That split exists because the softer version failed four times running. The third failure came
 *after* a mandatory search had been added, and performed: the author picks the search terms, and
-picks them from the half of the hunch that is not in the brief. Across all three occasions, every
+picks them from the half of the hunch that is not in the brief. Across all four occasions, every
 wrong label was a claim that something was *absent*, and not one claim that something was
 *present* was ever wrong. Claiming absence in a document you wrote yourself is not a judgement you
 are in a position to make.
+
+**The fourth failure is the one that changed the design.** By then the search was honest — it used
+the hunch's own strings, it covered the cover note as well as the brief, and it reported the result
+accurately: all five hunches were in the brief. Nothing had gone wrong with the check. What was
+wrong sat upstream of it. Hunches were being collected in the same pass that mined the load-bearing
+claims, out of one reading of one body of work, which made a hunch structurally almost certain to
+*be* a claim already in the brief. No search, however honest, can subtract a leak that the
+collection order guarantees.
+
+So the order changed. The brief is written and saved first; only then does the author re-read it —
+the file, not their memory of writing it — and ask what it turned out **not** to cover. The hunches
+come back in two labelled lists, and they are worth different things. `UNSEEDED` (the author's own
+search found nothing) is the only one that can ever become independent corroboration, and even then
+only after the adjudicator has repeated the search. `SEEDED` (the search found it in the brief)
+earns its place the other way round: the brief pointed the reviewer straight at that seam, so a
+*calibrated* reviewer that came back silent on it has said something — about the hunch, or about
+that reviewer's reach. Neither list is a ruling; both are evidence handed to whoever adjudicates.
 
 So the ruling happens on the other side. The adjudicator searches the brief itself, records what
 it found for each hunch, and only then can a rediscovered hunch count as corroboration. Where a
@@ -220,6 +244,17 @@ either.
 
 Passing means all four traps and at least one clean case. About twenty minutes, once per model
 rather than once per review.
+
+The record is filed at `~/.adversarial-review/calibration/`, and both skills look there **and** in
+the project they are running in, preferring a project-local one where a team has pinned it. That is
+a correction rather than a preference. The records used to live under the project root, on the
+argument that a pass is project-shaped — but the run is made on a fixed corpus in a scratch
+directory and never touches the project under review, so nothing in the measurement was
+project-shaped in the first place. What was real was the reach: six small Python, HTML and plan
+files say nothing about a Rust service, and that limit is already carried in numbers by the
+workload gap both skills state. Meanwhile the storage choice cost something real — on 2026-08-23 a
+reviewer holding a live `PASS` was reported to a second project as "none on file", because the
+lookup only ever looked where it stood.
 
 Two things make it work at all, and both are borrowed from failures already recorded here. The
 cases are copied one at a time into an empty scratch directory, because a reviewer that can `ls`

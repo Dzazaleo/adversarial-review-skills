@@ -196,9 +196,10 @@ sub-question pointing at the seam.
 15–25 items. Suggested groups: rule/arithmetic correctness · published contracts (one-way
 doors) · robustness and process behavior · supply chain and hygiene.
 
-«Where a sub-question here is one of your own residual doubts — the normal case, since both come
-out of the same reading — keep it sharp and declare the overlap at hand-off (§11 below). Never
-blunt a claim to protect a doubt.»
+«Write this list as if you had no private doubts at all: every seam you can see belongs here,
+**sharp**. Your doubts are not formed yet — the skill's §9 forms them after this brief is saved,
+against what it turned out not to ask, precisely so they stop being a copy of this list. Nothing is
+ever blunted or dropped here to protect one.»
 
 ### 6b. The unseeded pass — required whenever §6 exists
 
@@ -472,19 +473,22 @@ The per-claim adjudication in §6 is unaffected by this — CONFIRMED / REFUTED 
 DETERMINE on a single load-bearing claim is evidence about that claim, not a verdict on the
 work, and it stays.
 
-## 11. The author's own residual doubts — kept out, and not certified by you
+## 11. The author's own residual doubts — formed after this file, and not certified by you
 
-Do not put your residual suspicions anywhere in the prompt, or in the cover note that hands it
-over — the cover note is read first, so anchoring there is worse. A reviewer that reads them is
-anchored by them, and demotion disclaimers do not survive contact. Collect 3–5, each phrased as a
-question with a mechanism and the `file:line` it is about, and put them in the hand-off summary to
-the user instead.
+Nothing about your own suspicions goes in the prompt, or in the cover note that hands it over —
+the cover note is read first, so anchoring there is worse. A reviewer that reads them is anchored,
+and demotion disclaimers do not survive contact.
 
-They will usually overlap the §6 claims — same reading, same seams. Where they do, the claim stays
-sharp and the overlap is declared. What you must not do is report a doubt as *held back*: that is
-a claim of absence in a document you wrote, it has been false on every occasion it has been made,
-and it turns an echo into "independent corroboration". Run the skill's §9 cross-check, report the
-brief items it lands on, and leave the ruling to whoever adjudicates the returned review.
+**And they are not collected while you write this file.** Doubts mined alongside the §6 claims are
+a copy of the §6 claims — same reading, same seams — which is why every round that measured it
+found them already in the brief: 5 of 5, 4 of 4, 2 of 3, 5 of 5. The skill's §9 forms them *after*
+this file is saved, by re-reading it and asking what it turned out **not** to ask, then buckets
+each by search as `SEEDED` (found in the brief) or `UNSEEDED` (not), and hands the user both lists.
+
+What you must never do is report a doubt as *held back*: that is a claim of absence in a document
+you wrote, it has been false on every occasion it has been made, and it turns an echo into
+"independent corroboration". `UNSEEDED` says what your search found and nothing more — the ruling
+belongs to whoever adjudicates the returned review.
 
 The prompt itself ends after the deliverable. Close it with:
 

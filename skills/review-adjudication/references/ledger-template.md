@@ -33,17 +33,22 @@ ledger, another reviewer's findings — and where. Same directory means yes. "Fi
 to see" where that is the case»
 **Reviewer calibration:** «PASS, run «date», expires «date», corpus digest «12-char» — recomputed
 and «matches» / «differs, so stale» / «not checkable, no corpus here» — from
-`.adversarial-review/calibration/«reviewer-id».md`» / «none on file» / «stale — run «date», expired
+`«./» / «~/».adversarial-review/calibration/«reviewer-id».md`; **name which of the two**, since a
+machine-wide record and one pinned to this repository are different claims» / «none on file —
+**both** `./` and `~/.adversarial-review/calibration/` listed and empty of a matching identity» /
+«stale — run «date», expired
 «date»» / «FAIL» / «not looked up — reviewer identity unknown, so no record could be keyed; treated
 as none on file». «Where it is anything but PASS, add: findings adjudicated normally; upheld claims
 recorded as CNV, not coverage»
 **Workload gap:** «the size the pass was earned on, from the record's Workload row, beside the size
 of the work this review covered — both in numbers. State them; do not characterise the gap»
-**Author's residual doubts:** «supplied by the user and quoted into §«N» — «D» doubts, each
-ruled present/absent by this session's own searches» / «unavailable — the authoring session's
-hand-off could not be produced, so no finding is scored as independent corroboration; this is
-absence of the check, not evidence the doubts were kept out» / «none existed — the brief was not
-written by `adversarial-review-prompt`»». **This line is required.** Without it a ledger cannot be
+**Author's residual doubts:** «supplied by the user and quoted into §«N» — «S» `SEEDED` + «U»
+`UNSEEDED` as the hand-off labelled them, with every `UNSEEDED` one re-searched here and ruled
+present/absent by this session; «K» of «S» seeded doubts the reviewer never raised, noted at
+§«N»» / «unavailable — the authoring session's hand-off could not be produced, so no finding is
+scored as independent corroboration; this is absence of the check, not evidence the doubts were
+kept out» / «none existed — the brief was not written by `adversarial-review-prompt`»».
+**This line is required.** Without it a ledger cannot be
 told apart from one where the audit was silently skipped, and the skipped case is the common one
 **Upheld claims:** «S» sampled of «T» listed · «K» re-opened as `U-N`
 **Findings in: «N» · Rows out: «N» · +«K» process, +«M» CNV, +«D» prior-review disagreements

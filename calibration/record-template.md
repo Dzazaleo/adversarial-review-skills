@@ -1,7 +1,10 @@
 # Reviewer calibration record — «reviewer-id»
 
-Save as `.adversarial-review/calibration/«reviewer-id».md` in the project under review.
-Replace every «placeholder». Delete this line and the one above it.
+Save as `~/.adversarial-review/calibration/«reviewer-id».md` — one record per reviewer per
+machine. File it under a project's own `.adversarial-review/calibration/` instead only to pin a
+record to that repository (a team-shared record, or a private replacement corpus); a project-local
+record wins over the home one. Replace every «placeholder». Delete these three lines and the one
+above them.
 
 | | |
 |---|---|
@@ -13,7 +16,8 @@ Replace every «placeholder». Delete this line and the one above it.
 | **Expires** | «YYYY-MM-DD — run date + the window you chose. 30 days is the default, not a requirement; say which you used and why if it was not 30» |
 | **Corpus digest** | «in adversarial-review-skills, run: `git ls-files -z calibration/cases calibration/CALIBRATION-PROMPT.md calibration/ANSWER-KEY.md \| LC_ALL=C sort -z \| xargs -0 shasum \| shasum \| cut -c1-12`» |
 | **Workload** | «what the six cases actually were, in numbers — e.g. `6 cases, 14 files, ~400 lines total`. This is the size the pass was earned on, and the consumer states it beside the size of the work it is adjudicating» |
-| **Project** | «the repo this record is filed in» |
+| **Scope** | «`machine-wide` — filed at `~/.adversarial-review/calibration/`» / «`pinned to «repo»` — filed under that repo, and read in preference to any home record» |
+| **Corpus checkout** | «the `adversarial-review-skills` checkout the digest above was computed in, and its commit — the digest describes that tree, not this machine» |
 | **Result** | **PASS** / **FAIL** |
 
 The first four lines are the identity, and they are all four of it. A model that cannot name its own
@@ -87,3 +91,9 @@ roughly this size and kind — the **Workload** row above says what that size ac
 numbers, so a later reader can compare it with the work being adjudicated rather than guess at
 "roughly". It is not evidence that a clean review of your actual work means your work is clean.
 See `calibration/ANSWER-KEY.md`.
+
+**And the corpus is what it is.** These six cases are small Python, HTML and plan documents. A
+`machine-wide` record travels to every project on this machine, which is the point of filing it
+there — but travelling is not transferring: nothing here was measured on your Rust service, your
+build system or your schema migrations. That bounds the reviewer's *silence*, exactly as the
+Workload gap does, and it never discounts a finding.

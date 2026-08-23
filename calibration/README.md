@@ -61,8 +61,8 @@ the key asks for in [record-template.md](record-template.md).
 
 ## The record
 
-Write the result to `.adversarial-review/calibration/<reviewer-id>.md` in the project you intend
-to review, using [record-template.md](record-template.md). Both skills read it from there.
+Write the result to `~/.adversarial-review/calibration/<reviewer-id>.md`, using
+[record-template.md](record-template.md). Both skills read it from there.
 
 `<reviewer-id>` is the model's **own** identity, slugged, followed by the reasoning effort —
 `gpt-5.6-codex-high`, `gemini-3-pro-high`, `claude-fable-5-default`. The exact rule for building it
@@ -106,16 +106,37 @@ Codex session named the alias `gpt-5.6-sol` and another, hours later, could give
 Codex, GPT-5-based". Those two sessions produce two filenames for one reviewer, and no naming rule
 closes that.
 
-So the lookup rule has a second half. **Before concluding a record is absent, list the directory.**
-`.adversarial-review/calibration/` holds few enough files to read at a glance; a near-miss on the
-family is a record worth opening and checking the four identity fields against, and treating a
-present record as missing is the exact failure this scheme was built to escape. Both skills look
-the record up by filename, and both are told to look at the directory before saying there is
-nothing there.
+So the lookup rule has a second half. **Before concluding a record is absent, list both
+directories.** Each holds few enough files to read at a glance; a near-miss on the family is a
+record worth opening and checking the four identity fields against, and treating a present record
+as missing is the exact failure this scheme was built to escape. Both skills look the record up by
+filename, and both are told to look at the directories before saying there is nothing there.
 
-The record lives in the project, not in your home directory, because the result is
-project-shaped: a reviewer that reads Python plans well may be poor on your Rust service, and a
-pass earned somewhere else is not evidence about here.
+## Where the record lives, and why it is not the project
+
+**Home, not the project root.** The run is made on *this* corpus, in a scratch directory, against
+work the project under review never supplied — the isolation rule above requires exactly that.
+Nothing in the measurement touches the project, so nothing in the result is project-shaped, while a
+record filed under one project root is invisible to the next one. That is not hypothetical: on
+2026-08-23 a reviewer with a filed `PASS` was reported to a second project as "none on file",
+because the lookup only ever looked where it stood. One reviewer, one record, on the machine that
+runs it.
+
+**A project may still pin its own, and it wins.** Both skills read
+`./.adversarial-review/calibration/` first and `~/.adversarial-review/calibration/` second; a
+project-local record takes precedence where both exist. Use that when a team wants one record
+checked into the repository, or when you have replaced the corpus with private traps (B-2) and the
+pass there means something the machine-wide record does not.
+
+**What a home record does not buy** — the true half of the rule it replaces. The pass is earned on
+this corpus: six small Python, HTML and plan-document cases. A reviewer that finds the planted
+defects here has not thereby been shown to read your Rust service well. But that is a statement
+about what the reviewer's *silence* closes, which is what the `Workload` row and the consumers'
+workload-gap line already carry in numbers — and both consumers state it whatever the record's
+location. It was never a reason to hide a real result from the next project.
+
+**Both consumers say which of the two they read it from**, because "PASS, from `~`" and "PASS, from
+this repo" are not the same claim, and a later reader cannot tell them apart otherwise.
 
 ## Expiry
 

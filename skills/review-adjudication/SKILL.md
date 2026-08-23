@@ -105,34 +105,36 @@ From `$ARGUMENTS`, resolve:
   record, and that `PASS` enters the header indistinguishable from a correct one. An identity you
   could not establish is **unknown**, and unknown is treated exactly as no record.
 
-- **The reviewer's calibration record** — `.adversarial-review/calibration/<reviewer-id>.md`
-  under the project root, keyed on family, product *and version*, reasoning effort, and the
-  reviewer's self-report. Filename is `<identity>-<effort>.md`. **List the directory before
-  concluding a record is absent.** Read its result, its expiry, **its corpus digest**, and the
-  **size of work it was earned on**. A record past expiry, or filed against a different identity,
-  is stale and counts as missing.
+- **The reviewer's calibration record** — `.adversarial-review/calibration/<reviewer-id>.md`,
+  in **two locations: the project root first, then `~/`.** Project-local wins where both hold one;
+  the home copy is where a record filed while reviewing a *different* project lives, and an
+  adjudicator that checks only the project root writes "none on file" for a reviewer that passed
+  (2026-08-23). Keyed on family, product *and version*, reasoning effort, and self-report;
+  filename `<identity>-<effort>.md`. **List both before concluding a record is absent**, and **say
+  in the header which of the two you read** — "PASS, from `~`" and "PASS, from this repo" are
+  different claims. Read its result, expiry, **corpus digest**, and the **size of work it was
+  earned on**; past expiry or filed against a different identity is stale and counts as missing.
 
   **Recompute the digest with the command the record names, unmodified, and compare** — the only
   check that notices the instrument moving, and one adjusted until it matches is not a check. A
   different digest is stale however recent the record; without the corpus, staleness is
   **unknowable**, not passed. Record what you found beside the isolation line. **Pin the
   collation** (`LC_ALL=C`): the ordering step is locale-dependent and the same tree hashes two
-  ways without it.
-
-  **State the workload gap in numbers, never in adjectives** — the record's `Workload` row beside
-  the size this review covered. It bounds what the reviewer's *silence* closes, nothing more.
-  Full reasoning: [references/inputs-and-calibration.md](references/inputs-and-calibration.md).
+  ways without it. **State the workload gap in numbers, never adjectives** — the record's
+  `Workload` row beside the size this review covered; it bounds what the reviewer's *silence*
+  closes, nothing more. Full reasoning:
+  [references/inputs-and-calibration.md](references/inputs-and-calibration.md).
 
 - **The author's residual doubts, where the brief had an author.** `adversarial-review-prompt`
-  §10 reports the author's 3–5 private doubts to the user at hand-off, and step 5 below
-  requires **you** to rule per doubt on whether each one leaked into the brief. That ruling
-  needs the list, and **nothing puts the list on disk**: it lives in the authoring session's
-  scratchpad, which is gone, and in a chat message you cannot read. So **ask the user for the
-  hand-off and have them paste it verbatim.** Where they no longer have it, or there was no
-  authoring session at all — a review with no brief, a report from another tool — record that
-  the doubts were unavailable and **score no finding as independent corroboration on that
-  basis**. Do not treat their absence as evidence they were kept out of the brief; absence of
-  the list is absence of the check, and the two must never read the same in a ledger.
+  §10 hands the user **two labelled lists** — `SEEDED` (its own search found the doubt in the
+  brief) and `UNSEEDED` — and step 5 below requires **you** to re-rule the second, since an author
+  cannot certify absence in a document they wrote. **Nothing puts either list on disk**: they live
+  in a chat message you cannot read. So **ask the user for the hand-off and have them paste it
+  verbatim, both headings** — a missing heading is not a zero. Where they no longer have it, or
+  there was no authoring session at all — a review with no brief, a report from another tool —
+  record that the doubts were unavailable and **score no finding as independent corroboration on
+  that basis**. Absence of the list is absence of the check, never evidence the doubts were kept
+  out, and the two must never read the same in a ledger.
 - **The round.** If a ledger already exists at the target path, check whether its last round is
   *closed* — defined over obligations, not cells: every numbered row **and** every auxiliary entry
   carries both axes, no `PENDING OWNER` is unresolved, no blocking `VERIFY` is open, and every
@@ -285,18 +287,14 @@ card, write down what you expect the check to show *before* you run it, run it, 
 command, the output and your verdict. Then re-read the reviewer's argument for that finding and
 record, on its own line, whether it changes the ruling and which way.
 
-You have already read that argument once, in step 1. The card does not make you blind to it and
-nothing here can. What it does is aim the check at the claim rather than at the case made for it,
-and put your expected result on paper before the evidence arrives.
-
+You have already read that argument once, in step 1; the card does not make you blind to it and
+nothing here can. What it does is aim the check at the claim rather than at the case made for it.
 **Pre-registration works on you, in the moment, and only if you actually write the expectation
-first.** It is not proof to a later reader: the ledger records an expectation and an output but
-nothing establishing their order. Write it first because it changes what you notice.
-
-This guards in both directions — a well-argued false finding earns a `CONFIRMED` it did not
-deserve, and a finding stated flatly or in poor English earns a `REFUTED` on the same
-non-evidence. Both are rulings on the reviewer's prose, which is a fact about the reviewer and
-not about the code.
+first** — it is no proof to a later reader, since the ledger records an expectation and an output
+but nothing establishing their order. It guards both directions: a well-argued false finding earns
+a `CONFIRMED` it did not deserve, one stated flatly or in poor English earns a `REFUTED` on the
+same non-evidence, and both are rulings on the reviewer's prose — a fact about the reviewer, not
+about the code.
 
 **Re-read the argument afterwards; it is required.** It is often where the reproduction steps
 are, and a card whose `Trigger` says `not stated` may only be reproducible from the prose around
@@ -327,13 +325,16 @@ the reviewer, whichever way it comes out:
 
 - **Discount non-independent agreement.** A brief claim that was the author's own suspicion makes
   the reviewer's agreement an echo, not confirmation — verify those from primary sources as if the
-  reviewer had said nothing. **Whether a doubt was kept out of the brief is your ruling, not the
-  hand-off's:** an author cannot certify absence in a document they wrote, and in this project
-  they never have. Claims of *presence* have been reliable; only absence fails. So per doubt,
-  search the whole brief **and the cover note**, using the doubt's own citations and identifiers
-  as queries rather than a paraphrase, and record what you found — `at ‹id›:‹line›` or
-  `no line found` — with the query beside it. Score only a doubt *you* ruled absent as
-  independent corroboration.
+  reviewer had said nothing. **The hand-off's `SEEDED`/`UNSEEDED` labels are evidence, not your
+  ruling:** an author cannot certify absence in a document they wrote, and here they never have.
+  Presence has been reliable throughout; only absence fails. So take `SEEDED` at its word, and
+  re-run the search yourself on every `UNSEEDED` doubt — the whole brief **and the cover note**,
+  with the doubt's own citations and identifiers as queries rather than a paraphrase. Record what
+  you found — `at ‹id›:‹line›` or `no line found` — with the query beside it, and score only a
+  doubt *you* ruled absent as independent corroboration. **A `SEEDED` doubt the reviewer never
+  raised is the one thing that list buys:** the brief pointed at it, so a **calibrated** reviewer's
+  silence there is evidence — about the doubt, or about this reviewer's reach. Rule which, or say
+  you could not. From an uncalibrated reviewer that silence is worth nothing, as everywhere else.
 
   **The doubts are the small channel; the brief's load-bearing claims list is the large one** —
   a pointed sub-question states the defect and directs the reviewer at it, so agreement answers a
@@ -381,12 +382,11 @@ Then three escalation rules:
   hold. **But the allowlist bounds which tools exist, not what they may write, and `Bash` is a
   write capability**, so a `Bash`-holding verifier is trusted rather than confined.
 
-  **Record two facts beside the verdict, always:** whether the verifier's tools were restricted,
-  and whether it could have read the report. Not being *handed* the report is not blindness — the
-  subagent is spawned into the directory the report sits in. Real blindness takes a sanitized
-  copy holding the claim card and only the source files the claim concerns. Either way the check
-  counts; **never write "blind" for one that was merely uninformed.** Full procedure and the
-  reasoning: [references/second-opinion.md](references/second-opinion.md).
+  **Record two facts beside the verdict, always:** whether its tools were restricted, and whether
+  it could have read the report — not being *handed* it is not blindness, since the subagent is
+  spawned into the directory it sits in. Real blindness takes a sanitized copy holding the claim
+  card and only the source the claim concerns. Either way the check counts; **never write "blind"
+  for one that was merely uninformed.** [references/second-opinion.md](references/second-opinion.md).
 
 - Where your refutation rests on a hypothesis you formed before reading the evidence, get an
   independent check that is blind to that hypothesis rather than arguing for it.

@@ -630,41 +630,60 @@ def corpus_digest():
     return hashlib.sha1(inner).hexdigest()[:12]
 
 
+def calibration_records():
+    """Every record either consumer could resolve, in lookup order, tagged by where it lives.
+
+    Two locations, because a record is now filed at `~/.adversarial-review/calibration/` by
+    default and only pinned under a project root deliberately - see `calibration/README.md`.
+    Home records are **machine** state, not repository state, so a stale one can only warn: the
+    same checkout must not pass on one machine and fail on another. That is the rule
+    `check_installed_copies` already runs under. A pinned record is tracked-adjacent repository
+    state and keeps the hard failure.
+    """
+    here = os.path.join(ROOT, ".adversarial-review", "calibration")
+    home = os.path.expanduser("~/.adversarial-review/calibration")
+    out = [(p, rel(p), err) for p in sorted(glob.glob(os.path.join(here, "*.md")))]
+    if os.path.realpath(home) != os.path.realpath(here):
+        out += [(p, "~/" + os.path.relpath(p, os.path.expanduser("~")), warn)
+                for p in sorted(glob.glob(os.path.join(home, "*.md")))]
+    return out
+
+
 def check_calibration_digests():
     """Every filed calibration record's digest matches the current instrument."""
-    records = sorted(glob.glob(os.path.join(ROOT, ".adversarial-review", "calibration", "*.md")))
+    records = calibration_records()
     if not records:
-        warn("calibration", "no calibration records on file")
+        warn("calibration", "no calibration records on file in ./ or ~/")
         return
     try:
         actual = corpus_digest()
-    except Exception as e:
-        warn("calibration", f"could not compute the corpus digest: {e}")
+    except Exception as ex:
+        warn("calibration", f"could not compute the corpus digest: {ex}")
         SKIPPED.add(check_calibration_digests)   # round 7 codex7-5
         return
-    for r in records:
+    for r, name, report in records:
         text = read(r)
         m = re.search(r"Corpus digest\D+`([0-9a-f]{6,})`", text)
         if not m:
-            err("calibration", f"{rel(r)} has no Corpus digest row")
+            report("calibration", f"{name} has no Corpus digest row")
         elif m.group(1) != actual:
-            err("calibration", f"{rel(r)} records digest {m.group(1)} but the instrument is "
-                               f"{actual} - that record is stale and counts as missing")
+            report("calibration", f"{name} records digest {m.group(1)} but the instrument is "
+                                  f"{actual} - that record is stale and counts as missing")
         e = re.search(r"\*\*Expires\*\*\s*\|\s*(\d{4}-\d{2}-\d{2})", text)
         if not e:
-            err("calibration", f"{rel(r)} has no Expires row")
+            report("calibration", f"{name} has no Expires row")
             continue
         # Round 7 codex7-6: a lexical compare against *local* today made one record pass on one
         # machine and fail on another at the same instant, and let 9999-99-99 never expire.
         try:
             expires = datetime.date.fromisoformat(e.group(1))
         except ValueError:
-            err("calibration", f"{rel(r)} has an Expires value that is not a real date: "
-                               f"{e.group(1)}")
+            report("calibration", f"{name} has an Expires value that is not a real date: "
+                                  f"{e.group(1)}")
             continue
         if expires < datetime.datetime.now(datetime.timezone.utc).date():
-            err("calibration", f"{rel(r)} expired {e.group(1)} (UTC) - a record past its window "
-                               "is stale and counts as missing")
+            report("calibration", f"{name} expired {e.group(1)} (UTC) - a record past its window "
+                                  "is stale and counts as missing")
 
 
 # --------------------------------------------------------------------------- install
