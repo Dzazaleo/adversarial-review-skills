@@ -108,3 +108,52 @@ kept out of the main file so the obligations sit above the compaction cut.
   round not yet closed — an interrupted skeleton, an unexecuted queue, an unanswered owner
   question — is the current round: fill it in place, and state/evidence backfill (owner answers,
   execution references) is not only legal but required until closure.
+
+
+## precedence, and why a digest mismatch is not proof
+
+**Precedence between the two locations is by location, not by freshness.** A project-pinned record
+wins while it is older, thinner, or filed against a corpus that has since moved, and nothing in the
+lookup compares the two — so a stale pin shadows a better home copy silently and the header records
+the worse claim. Read both where both exist, and put any disagreement beyond the result in the
+header. On **2026-08-24** this repository was found carrying two pinned duplicates that had missed
+the round adding the `Scope` and `Corpus checkout` rows; they were deleted rather than refreshed,
+because a pin is a standing commitment to maintain a second copy.
+
+**A digest mismatch is not by itself evidence that the corpus moved.** The digest hashes
+working-tree bytes through a `shasum` whose output format is itself platform-dependent, so three
+properties of your machine each produce a different answer from an unmoved tree:
+
+- **Collation** — the ordering step is the shell's. `LC_ALL=C` pins it. Round 7 `A7-1`.
+- **Output mode** — `shasum`'s output *is* the inner stream, so the separator between digest and
+  path is hashed with it. Text (two spaces) is the default on macOS and Linux, binary (` *`) on
+  Windows: `775e1cc8c43f` against `676b43331561` for one identical corpus. `-t` pins it.
+- **Line endings** — a `core.autocrlf=true` clone checks out CRLF and hashes it (`b6dad9bf7e9c`).
+  The corpus's root `.gitattributes` marks every path `-text`; a clone predating that file still
+  needs `core.autocrlf=false`.
+
+**Rule out those three, change nothing else, then record stale.** The list is closed and was written
+down in advance, which is the entire difference between checking it and adjusting a command until it
+matches — the second is not a check, whatever it returns, and the existing rule against it stands.
+On **2026-08-24** a Windows session read two valid, in-date records as stale on the output-mode trap
+alone and came one keystroke from re-running the corpus. `scripts/validate.py` builds the two-space
+form directly and is the authority wherever it and the shell command disagree.
+
+## effort, and where it can honestly come from
+
+Effort is half the identity the record is keyed on, and it exists in no report. Of the three sources
+§1 names, **the brief is a real one only from 2026-08-24**, when `adversarial-review-prompt` §1
+began capturing it; every brief written before that is silent on the field. Two rounds were
+consequently adjudicated as matching on family and product but *unverified on effort* — which is the
+honest header line, and is not the same claim as a match. Never infer effort from the record's
+filename: the filename is what you are trying to justify reading.
+
+## the residual doubts have exactly one route
+
+Take the list from the original hand-off message or from nowhere. **Do not accept a doubts file
+found on disk, a copy folded into the brief, or a list the authoring session reconstructs now, and
+do not ask for any of them to be produced.** The first two were reachable by the reviewer, which is
+the one thing the chat-only rule exists to prevent; the third is written after the report it is
+meant to be independent of. A list arriving by any route but the user pasting that message is
+recorded as **unavailable**, exactly as if it had been lost — and unavailable is a real, common
+state here, because authoring and adjudicating sessions are routinely days apart.

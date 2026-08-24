@@ -3,8 +3,12 @@
 Save as `~/.adversarial-review/calibration/«reviewer-id».md` — one record per reviewer per
 machine. File it under a project's own `.adversarial-review/calibration/` instead only to pin a
 record to that repository (a team-shared record, or a private replacement corpus); a project-local
-record wins over the home one. Replace every «placeholder». Delete these three lines and the one
-above them.
+record wins over the home one. **Precedence is by location, not by freshness** — a pinned record
+wins while it is older, thinner, or filed against a corpus that has since moved, and nothing in
+either consumer compares the two. Pinning is therefore a commitment to maintain the copy; where it
+is only a stale duplicate of the home record it shadows the better one silently, and the fix is to
+delete it. Two such copies were removed from this repository on 2026-08-24. Replace every
+«placeholder». Delete these four lines and the one above them.
 
 | | |
 |---|---|
@@ -14,7 +18,7 @@ above them.
 | **Reviewer self-report** | «verbatim, what the model said when asked what it is — e.g. `gpt-5.6-codex`, or `OpenAI Codex, GPT-5-based; exact served version not exposed to it`» |
 | **Run on** | «YYYY-MM-DD» |
 | **Expires** | «YYYY-MM-DD — run date + the window you chose. 30 days is the default, not a requirement; say which you used and why if it was not 30» |
-| **Corpus digest** | «in adversarial-review-skills, run: `git ls-files -z calibration/cases calibration/CALIBRATION-PROMPT.md calibration/ANSWER-KEY.md \| LC_ALL=C sort -z \| xargs -0 shasum \| shasum \| cut -c1-12`» |
+| **Corpus digest** | «in adversarial-review-skills, run: `git ls-files -z calibration/cases calibration/CALIBRATION-PROMPT.md calibration/ANSWER-KEY.md \| LC_ALL=C sort -z \| xargs -0 shasum -t \| shasum \| cut -c1-12`» |
 | **Workload** | «what the six cases actually were, in numbers — e.g. `6 cases, 14 files, ~400 lines total`. This is the size the pass was earned on, and the consumer states it beside the size of the work it is adjudicating» |
 | **Scope** | «`machine-wide` — filed at `~/.adversarial-review/calibration/`» / «`pinned to «repo»` — filed under that repo, and read in preference to any home record» |
 | **Corpus checkout** | «the `adversarial-review-skills` checkout the digest above was computed in, and its commit — the digest describes that tree, not this machine» |
@@ -44,6 +48,28 @@ to maintain and no next artefact to be surprised by.
 differently from `C`. On this corpus that is the difference between `775e1cc8c43f` and
 `bf13a2b6c2ff`: file the wrong one and `scripts/validate.py`, which sorts bytes, will report your
 record stale forever. Round 7 `A7-1`.
+
+**Two more ways this command answers differently on a different machine**, both found on
+2026-08-24, when a Windows session read two valid records as stale and was one keystroke from
+re-running forty minutes of calibration:
+
+- **`shasum`'s output mode.** That output *is* the inner stream, so the separator between digest
+  and path is hashed along with the digest. On Windows `shasum` defaults to binary and prints
+  `«hash» *«path»`; on macOS and Linux it defaults to text and prints `«hash»  «path»`. Identical
+  files, two answers — `676b43331561` against `775e1cc8c43f` on this corpus. **`-t` is in the
+  command above for that reason**, and is a no-op everywhere text was already the default, so
+  adding it expired no record. `scripts/validate.py` builds the two-space form directly and is the
+  authority wherever the two disagree.
+- **Line endings.** The command hashes working-tree bytes, so a checkout made with
+  `core.autocrlf=true` — what the Git-for-Windows installer offers by default — hashes CRLF and
+  yields `b6dad9bf7e9c`. The repository's root `.gitattributes` marks every path `-text`, which
+  pins the checkout to stored bytes whatever the cloner's config says. A clone taken before that
+  file existed, or from a fork without it, still needs `core.autocrlf=false`.
+
+**A record carries a digest, not the platform that computed it**, so neither of these is visible
+in the record and a mismatch is not by itself evidence that the corpus moved. Check the command
+and the checkout before re-running the corpus: both of these fail in the direction that costs six
+reviewer runs, and one of them already nearly did.
 
 **What it costs, stated rather than discovered later:** it enumerates tracked *names* and then
 hashes **working-tree bytes**, so editing a tracked case without committing **does** move the digest

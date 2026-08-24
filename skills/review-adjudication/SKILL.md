@@ -97,7 +97,10 @@ From `$ARGUMENTS`, resolve:
 - **Who the reviewer was** — model family, product and version, and reasoning effort.
   **Establish this; never infer it**, and resolve it before the calibration lookup, which is keyed
   on it. Take it from `$ARGUMENTS`, the brief the report answers, or a prior round's ledger
-  header. Failing all three, **ask**.
+  header. Failing all three, **ask**. **The brief is a real source only from 2026-08-24**, when
+  the sibling skill began capturing effort; every earlier brief is silent on it, and "unverified on
+  effort" is then the honest header line — never a match inferred from the record's filename,
+  which is the thing you are trying to justify reading.
 
   **Never read it off the report.** Prose style, a tool name in a citation, a familiar layout —
   none of that is identification; it is the reviewer's output, the thing under adjudication, and
@@ -109,18 +112,22 @@ From `$ARGUMENTS`, resolve:
   in **two locations: the project root first, then `~/`.** Project-local wins where both hold one;
   the home copy is where a record filed while reviewing a *different* project lives, and an
   adjudicator that checks only the project root writes "none on file" for a reviewer that passed
-  (2026-08-23). Keyed on family, product *and version*, reasoning effort, and self-report;
+  (2026-08-23). **That precedence is by location, not freshness** — a stale pin shadows a better
+  home copy and nothing compares them — so read both where both exist and put any disagreement
+  beyond the result in the header. Keyed on family, product *and version*, reasoning effort, and self-report;
   filename `<identity>-<effort>.md`. **List both before concluding a record is absent**, and **say
   in the header which of the two you read** — "PASS, from `~`" and "PASS, from this repo" are
   different claims. Read its result, expiry, **corpus digest**, and the **size of work it was
   earned on**; past expiry or filed against a different identity is stale and counts as missing.
 
   **Recompute the digest with the command the record names, unmodified, and compare** — the only
-  check that notices the instrument moving, and one adjusted until it matches is not a check. A
-  different digest is stale however recent the record; without the corpus, staleness is
-  **unknowable**, not passed. Record what you found beside the isolation line. **Pin the
-  collation** (`LC_ALL=C`): the ordering step is locale-dependent and the same tree hashes two
-  ways without it. **State the workload gap in numbers, never adjectives** — the record's
+  check that notices the instrument moving, and one adjusted until it matches is not a check.
+  Without the corpus, staleness is **unknowable**, not passed. Record what you found beside the
+  isolation line. **A mismatch is not by itself proof the corpus moved:** pin the collation
+  (`LC_ALL=C`), the output mode (`shasum -t` — it defaults to binary on Windows and hashes a
+  different separator) and an LF checkout, then record stale. That closed list, written down in
+  advance, is the whole difference between checking and adjusting — 2026-08-24, two valid in-date
+  records read as stale on the output-mode trap alone. **State the workload gap in numbers, never adjectives** — the record's
   `Workload` row beside the size this review covered; it bounds what the reviewer's *silence*
   closes, nothing more. Full reasoning:
   [references/inputs-and-calibration.md](references/inputs-and-calibration.md).
@@ -134,7 +141,10 @@ From `$ARGUMENTS`, resolve:
   there was no authoring session at all — a review with no brief, a report from another tool —
   record that the doubts were unavailable and **score no finding as independent corroboration on
   that basis**. Absence of the list is absence of the check, never evidence the doubts were kept
-  out, and the two must never read the same in a ledger.
+  out, and the two must never read the same in a ledger. **Take the list from that message or from
+  nowhere** — never a doubts file found on disk, a copy folded into the brief, or a list the
+  authoring session reconstructs now, and never ask for one to be produced: the first two were
+  reachable by the reviewer, the third is written after the report it must be independent of.
 - **The round.** If a ledger already exists at the target path, check whether its last round is
   *closed* — defined over obligations, not cells: every numbered row **and** every auxiliary entry
   carries both axes, no `PENDING OWNER` is unresolved, no blocking `VERIFY` is open, and every
@@ -369,7 +379,12 @@ Then three escalation rules:
 - A **REFUTED** verdict on a finding **the reviewer rated** high or critical impact, in code you
   authored, requires
   execution evidence. If you cannot execute it, the verdict is `COULD NOT DETERMINE` — not
-  `REFUTED` — and you say what would settle it.
+  `REFUTED` — and you say what would settle it. **That burden reads the reviewer's label, not the
+  stakes**, so a reviewer that mis-rates a class of defect moves it without anyone deciding to.
+  Where its record carries a **Severity calibration** note about that class, or the report ranks a
+  defect far below where its own stated Consequence puts it, apply the burden the consequence
+  earns and say in the row that you did. It moves one thing only — the evidence bar for *refusing*
+  a finding, never its rank or verdict, and never toward accepting one more cheaply.
 - **That same verdict also requires a second opinion that was not handed the report.** Spawn a
   subagent, give it the claim card and the code the claim concerns, and ask it to establish
   whether the mechanism holds — never to check your work, which only hands it your conclusion to

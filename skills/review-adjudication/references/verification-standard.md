@@ -140,3 +140,33 @@ escalation says how.
   stands. Rank that below a plain miss. A miss leaves you the bug; this leaves you the bug plus a
   written case for keeping it, and whoever reads the report next inherits both. Any such passage is
   an open finding, not coverage.
+
+
+## the refutation burden reads a label, not the stakes
+
+The escalation rule in §5 keys the execution-evidence requirement on **the impact the reviewer
+assigned**. That is deliberate — it is the reviewer's own claim about seriousness, and grading it
+yourself before you have checked anything is how dismissal gets in. But it has a consequence nobody
+chose: **a reviewer that systematically mis-rates a class of defect moves the burden with it.** A
+finding filed `low` by a model that under-rates its kind escapes the requirement altogether, and
+nothing in the ledger notices, because the rule read the label and the label was wrong.
+
+Two shapes were reported on **2026-08-24** from a run of these skills, and they run in opposite
+directions:
+
+- One reviewer filed an unbuildable plan dependency at `low`, ranked third, **having filed the same
+  defect at `high` in its own earlier record.** Its plan-integrity ratings do not track its code
+  ratings.
+- Another put two `high`s on a clean plan. On code its `high` means high; on a plan it can mean
+  "this design cannot meet its own acceptance criteria" — real, but a different claim.
+
+So where the reviewer's calibration record carries a **Severity calibration** note about some class
+(`calibration/record-template.md` asks for one), or where the report ranks a defect far below where
+its own stated Consequence puts it, **apply the burden the consequence earns, and say in the row
+that you did and why.**
+
+**This is the one place a severity note may change what you do, and it moves exactly one thing:
+the evidence bar for *refusing* a finding.** Never the finding's rank, never its verdict, and never
+in the direction of accepting one more cheaply. Calibration governs the reviewer's silence and not
+its speech, and that holds here too — the note is being used to stop a cheap refutation, which is
+the direction this skill's dismissal reflex never pushes on its own.

@@ -41,7 +41,15 @@ def skill_dirs():
 
 WRITE_CAPABLE = {"Write", "Edit", "NotebookEdit", "Bash", "Agent"}
 TOOL_NAME_RE = re.compile(r"^\s*([A-Za-z_][A-Za-z0-9_-]*)")
-MAX_SKILL_LINES = 500
+# A budget, not a platform limit, and it is a proxy for something measured elsewhere. What
+# decides whether a rule survives an auto-compaction is the ~5,000 tokens re-attached from the
+# top of the file — roughly 15,500 characters, which each SKILL.md states as its own "treat
+# everything past line ~N as gone" invariant. Total length has no bearing on that: a line below
+# the cut is lost at 498 lines and at 540. This number only bounds how much a fully-loaded skill
+# costs to read. Raised from 500 on 2026-08-24 to take the multi-reviewer, effort-capture and
+# digest-platform rules; the detail behind each went to the references, which have no budget,
+# and both files' stated cut estimates were re-measured and remain conservative.
+MAX_SKILL_LINES = 540
 
 
 def check_frontmatter():
@@ -625,7 +633,17 @@ def corpus_digest():
     files = sorted(f for f in out.stdout.split(b"\0") if f)
     inner = b""
     for f in files:
+        # Working-tree bytes, so a CRLF checkout hashes differently and every record filed
+        # against it reads as permanently stale. The repository's root `.gitattributes` marks
+        # every path `-text` to pin the checkout whatever the cloner's core.autocrlf says.
         h = hashlib.sha1(open(os.path.join(ROOT, f.decode()), "rb").read()).hexdigest()
+        # Two spaces, always, and that is the point of building the stream here rather than
+        # shelling out. The documented command pipes through `shasum`, whose separator is
+        # platform-dependent: text mode (two spaces) by default on macOS and Linux, binary
+        # (` *`) by default on Windows. Identical corpus, 775e1cc8c43f here against
+        # 676b43331561 there. `-t` is in the documented command for that reason; this function
+        # is the authority wherever the two disagree. Found 2026-08-24, after a Windows session
+        # read two valid, in-date records as stale on this alone.
         inner += f"{h}  {f.decode()}\n".encode()
     return hashlib.sha1(inner).hexdigest()[:12]
 

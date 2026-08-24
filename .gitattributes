@@ -1,0 +1,10 @@
+# The calibration corpus is a measuring instrument: its digest hashes working-tree bytes, so a
+# CRLF checkout produces a different digest and every record filed against it reads as
+# permanently stale on any LF machine — the same failure class as the LC_ALL=C collation bug
+# (round 7 A7-1), arriving through the checkout instead of through the sort.
+#
+# `-text` pins the working tree to the stored bytes whatever the cloner's core.autocrlf says.
+# Verified 2026-08-24: a `core.autocrlf=true` clone digests b6dad9bf7e9c without this file and
+# 775e1cc8c43f with it. Adding this file does not move the digest — it is not one of the tracked
+# paths the digest enumerates.
+* -text

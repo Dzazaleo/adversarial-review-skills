@@ -158,9 +158,17 @@ A record is stale when any of these is true, and stale is treated exactly as mis
   trusting a record. **Run the command with `LC_ALL=C`** — the ordering step is the shell's
   collation, and a UTF-8 locale orders this corpus differently, producing a digest the validator's
   byte-sort will never reproduce and a record that reads as permanently stale (round 7 `A7-1`).
-  `record-template.md` carries the command and the reasoning.
+  **`-t` is not optional either, and neither is an LF checkout** — `shasum` defaults to binary mode
+  on Windows and hashes a different separator into the stream, and a `core.autocrlf=true` clone
+  hashes CRLF bytes. Each produces a different digest from identical cases, and a record carries no
+  record of the platform that computed it. `record-template.md` carries the command, all three
+  traps, and the reasoning.
 
-Do not re-date a stale record. Re-run it.
+Do not re-date a stale record. Re-run it. **But establish that it is stale first** — a digest
+mismatch is the expected reading when the command or the checkout differs from the one that filed
+the record, and on 2026-08-24 that cost two valid records a near-miss with forty minutes of
+re-running. The three traps in `record-template.md` are the first thing to rule out, and they are
+cheaper to rule out than a single case is to re-run.
 
 ## What a missing, stale or failed record does — and what it does not
 

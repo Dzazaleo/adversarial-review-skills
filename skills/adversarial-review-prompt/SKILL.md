@@ -35,9 +35,11 @@ skip it without comment** · `why-this-is-hard.md` is background only —
 1. **You write the prompt. You do not perform the review.** The deliverable is two files —
    except for a reviewer with no filesystem, which gets the brief alone and no cover note.
    (objective, §6)
-2. **The reviewer's identity is a required input and is never inferred.** It decides the
-   calibration lookup, the envelope, and the independence framing. Ask when `$ARGUMENTS` is
-   silent. (§1)
+2. **The reviewer's identity, its reasoning effort, and how many reviewers there are are
+   required inputs, never inferred.** Identity keys the calibration lookup, the envelope and the
+   independence framing; effort is that key's other half and survives in no report; and with
+   several reviewers, what you vary between them is what their agreement is later worth. Ask when
+   `$ARGUMENTS` is silent. (§1)
 3. **Declare the operating envelope, and make brief and cover note agree exactly** — brief
    path, report path, and every permission. Disagreement between the two is the defect the
    reviewer will spend its run on. (§7, §8)
@@ -82,17 +84,15 @@ to that parenthesis: it is a required input, and you never infer it.**
 
 - **Target** — a phase, directory, file set, PR, diff range, or a plan/design doc. Get an
   exact file list with line counts; a reviewer needs to know the size of the job.
-- **Reviewer** — which model/CLI receives this. **If `$ARGUMENTS` does not name it, ask, before
-  anything else in this section.** The answer decides three things at once: which calibration
-  record gets looked up, what file access the envelope may assume, and whether the same-family
-  warning fires. None of the three can be resolved without it.
+- **Reviewer** — which model/CLI receives this, **at what reasoning effort, and how many of
+  them**. **If `$ARGUMENTS` does not name all three, ask, before anything else in this section.**
+  Identity decides the calibration lookup, what file access the envelope may assume, and whether
+  the same-family warning fires.
 
-  **A habit is not an answer** — what this project used last time, what is installed, what the
-  docs were written around, what most users run: all inference, each producing a confident wrong
-  answer as readily as a right one. **And a wrong guess costs more than no answer**, because the
-  calibration lookup is keyed on identity: a wrong name returns a *different* model's record, very
-  possibly a `PASS`, and the hand-off then reports this reviewer as calibrated when it has never
-  been tested. Nothing downstream catches it. One question removes that risk entirely.
+  **A habit is not an answer** — last time's reviewer, what is installed, what the docs assume:
+  all inference. **And a wrong guess costs more than no answer**, because a wrong name returns a
+  *different* model's record, very possibly a `PASS`, and the hand-off then reports this reviewer
+  as calibrated when it was never tested. Nothing downstream catches it.
 
   Once you have been told: adjust only the mechanics (how it runs commands, what it can
   access), never the adversarial framing. Name its **model family**, and
@@ -101,21 +101,34 @@ to that parenthesis: it is a required input, and you never infer it.**
   it, and a great many review tools are thin layers over a small pool of base models, so the
   product's name tells you nothing about whose eyes you are actually getting. Whether to proceed
   anyway is the user's call; leaving the lineage unnamed is not.
+
+  **Effort is the other half of the calibration key and appears in no report**, so the brief is
+  the last chance to record it — until 2026-08-24 no brief ever did, leaving two rounds
+  adjudicated unverified on it. Put it in the brief's identity line; `not exposed` where the
+  reviewer has no such setting.
+
+  **And where there are several reviewers, vary something real between them.** Two handed the same
+  brief are not independent (`review-adjudication` §5) — in round 1, 3 of 27 findings across three
+  reviewers were free of the brief's direction. Split the **scope** (disjoint file sets, the union
+  is the audit) or the **directed set** (one gets §3's claims list, another the same ground with
+  only the template's §6b unseeded pass). Varying nothing is legitimate and buys corroboration on
+  nothing; either way say at hand-off which reviewer received which, because the adjudicator rules
+  independence off that line alone.
 - **Calibration** — whether this reviewer has ever been shown to find anything. Look for
-  `.adversarial-review/calibration/<reviewer-id>.md` **in two places — the project root first,
-  then `~/`.** Project-local wins; the home copy is where a record filed while reviewing a
-  *different* project lives, and a lookup that checks only the project root reports an already-
-  calibrated reviewer as untested (2026-08-23). Keyed on family, product and version, effort, and
-  self-report; filename `<identity>-<effort>.md`. **`ls` both before concluding there is no
-  record**, and name at hand-off which of the two it came from. Read its result, expiry, **and corpus
-  digest** — recompute the digest with the command the record names and compare, because that is
-  the only check that notices the instrument changing; where you lack the corpus, say staleness
-  was unknowable rather than treating the record as current. Missing, expired or `FAIL` is normal
-  and never a reason to refuse: run the review anyway. It changes one thing, said at hand-off
-  (§10) — **an untested reviewer's findings still count, and its silence does not.** Its upheld
-  list is not coverage and nothing it "cleared" may enter the next brief's §7. The corpus and its
-  20-minute procedure live in the source repository, not the installed skill, so point at the URL
-  once and do not campaign:
+  `.adversarial-review/calibration/<reviewer-id>.md` **in two places — project root first, then
+  `~/`** — keyed on family, product and version, effort and self-report; filename
+  `<identity>-<effort>.md`. **`ls` both before concluding there is none** (2026-08-23: a passing
+  reviewer reported as untested because only the project root was checked), and name at hand-off
+  which you read. **Project-local wins on location, not freshness**, so a stale pin shadows a
+  better home copy: open both, and flag any disagreement beyond the result. Read result, expiry
+  **and corpus digest** — recompute it with the command the record names, the only check that
+  notices the instrument changing. **A mismatch is not proof the corpus moved**: rule out
+  collation, `shasum`'s platform-dependent output mode, and a CRLF checkout — that closed list and
+  nothing else — before recording stale; without the corpus, staleness is unknowable, not current.
+  Missing, expired or `FAIL` is normal and never a reason to refuse: run the review anyway. It
+  changes one thing, said at hand-off (§10) — **an untested reviewer's findings still count, and
+  its silence does not.** Its upheld list is not coverage and nothing it "cleared" may enter the
+  next brief's §7. Corpus and 20-minute procedure, pointed at once and never campaigned for:
   https://github.com/Dzazaleo/adversarial-review-skills/tree/main/calibration
 
 - **Author provenance — who wrote the work under review.** A required input, like the reviewer,
@@ -151,7 +164,10 @@ commands to state facts, not guesses:
 - File list + line counts for the in-scope set. **Produce every count by running the command
   in the session that writes the brief, and never carry one forward from a previous round's
   brief** — a stale inventory number sends the reviewer to audit the wrong size of file, and it
-  has now shipped in three separate briefs here. Where the brief pins a range, take the counts
+  has now shipped in three separate briefs here. **The rule covers every carried-forward fact,
+  not counts alone** — a `file:line` from the last round points into a file that has moved
+  underneath it, and on 2026-08-24 two of three stale citations caught in a round-2 draft arrived
+  exactly that way. Where the brief pins a range, take the counts
   at the pinned commit (`git show <sha>:<path> | wc -l`), not from the working tree
 - The test/typecheck/build commands and what a *passing* run actually prints. **Check each one
   against the write envelope you are about to declare (§7).** A command that writes into the
@@ -459,14 +475,17 @@ Report to the user, briefly:
   brief to the chat, and that the report comes back in chat for them to save
 - Which directory the reviewer's session must be rooted at for the path in it to resolve
 - The brief's scope and the number of load-bearing claims the reviewer must adjudicate
-- The reviewer's model family, and plainly whether it is the same family that wrote the work
+- The reviewer's model family **and the effort it runs at** (§1), and plainly whether that family
+  wrote the work — effort appears in no report the adjudicator will later read
+- **With several reviewers: what you varied, and which received which** (§1). "The same brief to
+  all" is legitimate and must be given in those words; an unstated split reads as arranged
+  independence
 - Its calibration state in one sentence — passing and until when, **and which of the two
   locations the record came from** (`~/` or this project), or that there is none on file *after
   listing both*. Where there is none, say what it costs and nothing more: findings are adjudicated
   exactly as any other reviewer's, and a clean result is inconclusive rather than an all-clear.
-  Point once at the calibration URL above — six cases, about twenty minutes, filed at
-  `~/.adversarial-review/calibration/` and so paid once per reviewer, not once per project. Do not
-  hold up the hand-off over it or repeat the recommendation
+  Point once at the calibration URL above — six cases, twenty minutes, filed at `~/` and so paid
+  once per reviewer, not once per project. Do not hold up the hand-off or repeat it
 - The capability line from §7 — every path the reviewer may write, the report file included
 - Where the report will land. **For a reviewer with a filesystem**, that they should check that
   file exists when the run ends rather than trusting the chat reply, which is a summary by design.
@@ -482,8 +501,10 @@ Report to the user, briefly:
   unverified"** — so the label can be checked instead of believed. **Chat-only, never written to
   disk**, because a file is one `ls` away from a reviewer session rooted more broadly than you
   expected. Tell the user to keep the message until the adjudicator asks for it, and that if the
-  window is lost the list is lost: no finding that round can then be scored as independent
-  corroboration. None of it is a ruling — an UNSEEDED doubt becomes corroboration only once an
+  window is lost the list is lost. **There is no durable channel and inventing one is not yours to
+  do**: do not write the list to disk, fold it into the brief, or arrange any other route the
+  adjudicator could read without the user. Losing the window costs one round's corroboration
+  scoring; leaking it costs the corroboration itself. None of it is a ruling — an UNSEEDED doubt becomes corroboration only once an
   adjudicator runs its own search and says so.
 - One line, only if they use a terminal: the brief can also be piped —
   `codex exec "$(cat path/to/PROMPT.md)"` (bash/zsh) or

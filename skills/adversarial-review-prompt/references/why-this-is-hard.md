@@ -72,7 +72,37 @@ Everything in this skill exists to defeat that. Three levers do most of the work
   you read it from.** Read its result, its expiry, **and its corpus digest**: recompute the
   digest from the corpus and compare, because that is the only check that notices the instrument
   changing, and where you do not have the corpus, say staleness was unknowable rather than
-  treating the record as current. Missing, expired,
+  treating the record as current.
+
+  **Precedence is by location, not by freshness.** A project-pinned record wins while it is older,
+  thinner, or filed against a corpus that has since moved, and nothing in either consumer compares
+  the two — so a stale pin shadows a better home copy silently. Open both where both exist, and say
+  at hand-off if they disagree on anything but the result. On **2026-08-24** this repository was
+  found carrying two pinned duplicates that had missed the round adding the `Scope` and `Corpus
+  checkout` rows. They were deleted rather than refreshed: a pin is a standing commitment to
+  maintain a second copy, and nothing here needed one.
+
+  **A digest mismatch is not by itself evidence that the corpus moved.** The digest hashes
+  working-tree bytes through a `shasum` whose own output format varies by platform, so three
+  properties of the *machine* each produce a different answer from an unmoved tree:
+
+  - **Collation.** The ordering step is the shell's, and `LC_ALL=C` pins it. Round 7 `A7-1`.
+  - **Output mode.** `shasum`'s output *is* the inner stream, so the separator between digest and
+    path is hashed along with it. It defaults to text (two spaces) on macOS and Linux and to binary
+    (` *`) on Windows — `775e1cc8c43f` against `676b43331561` for one identical corpus. `-t` pins
+    it, and is a no-op wherever text was already the default.
+  - **Line endings.** A `core.autocrlf=true` clone — what the Git-for-Windows installer offers by
+    default — checks out CRLF and hashes it: `b6dad9bf7e9c`. The corpus's root `.gitattributes`
+    marks every path `-text`, pinning the checkout whatever the cloner's config says; a clone
+    predating that file still needs `core.autocrlf=false`.
+
+  **That list is closed, and having been written down in advance is the whole difference between
+  checking it and adjusting a command until it matches** — the second is not a check, whatever it
+  returns. Rule out those three, change nothing else, then record stale. On **2026-08-24** a Windows
+  session read two valid, in-date records as stale on the output-mode trap alone and came one
+  keystroke from re-running the corpus: forty minutes, and both records would have been replaced by
+  ones carrying the same platform-dependent digest, which fixes nothing and expires on the next
+  machine. Missing, expired,
   or `FAIL` is a normal state and never a reason to refuse: run the review anyway. It changes one
   thing, and you say it at hand-off (§10) — **an untested reviewer's findings still count, and
   its silence does not.** A clean report from it is inconclusive rather than an all-clear, its
@@ -155,3 +185,84 @@ it. **Any hit at all makes the doubt `SEEDED`**, and you name where it landed: "
 unverified".** Never "held back", "withheld", or "excluded from the brief": they assert what you
 are not in a position to know, they are the signature of all four failures, and the adjudicator
 greps the hand-off for them.
+
+
+## several reviewers — what their agreement is worth
+
+`review-adjudication` §5 rules that **two reviewers handed the same brief are not independent**.
+That rule has lived only in the skill that measures the damage, never in the one that could prevent
+it, and the asymmetry is itself the defect: by adjudication time the briefs are written and the runs
+are spent, and all that is left to do is discount what came back.
+
+The cost is not marginal. Asked for three reviewers, this skill did the natural thing and produced
+three byte-identical briefs — the same 20 directed claims, the same four measured cases. In round 1,
+**3 of 27 findings across those three reviewers were free of the brief's direction**; the other 24
+were three models answering the same twenty questions, which is one piece of evidence wearing three
+coats. §3 already measures the same effect on a single reviewer — 10 of 15, then 6 of 9 findings
+were echoes of its own sub-questions — and handing that identical list to three reviewers multiplies
+the cost without touching the cause.
+
+So where more than one reviewer is commissioned, vary something real between them:
+
+- **Split the scope.** Each gets a disjoint file set and the union is the audit. Cheapest to
+  arrange, and it bounds each reviewer's silence to its own half instead of leaving it illusory
+  across the whole.
+- **Split the directed set.** One receives §3's claims list; another receives the same ground with
+  the list withheld and only the template's §6b unseeded pass. Agreement between those two means
+  something the first arrangement cannot buy.
+
+**Varying nothing is a legitimate choice, and has to be a stated one.** Three answers to one set of
+questions is a real consistency check: it catches a reviewer that misread the brief, and a claim
+that is wrong in a way only some models see. What it is not is corroboration, on any finding. So say
+which arrangement you used, and name in the hand-off **which reviewer received which** — the
+adjudicator rules independence off that line and has no way to reconstruct it from two reports
+sitting in one directory.
+
+The file mechanics — one report path per reviewer, each cover note naming its own brief — are in
+`cover-note-template.md`. They stop the second run destroying the first one's report. They do
+nothing whatever for independence, and should not be mistaken for having handled it.
+
+## reasoning effort — the field nothing ever captured
+
+Effort is half the calibration key. The record filename is `<identity>-<effort>.md`, and both
+`calibration/record-template.md` and `calibration/README.md` are emphatic about why: the same model
+at high and at low reasoning effort is not the same reviewer, and a pass earned by the strong
+configuration is not evidence about the weak one running under the same name.
+
+Nothing captured it. Effort is a setting inside the reviewer's session, it appears in no report the
+reviewer writes, and until **2026-08-24** no brief this skill produced carried the field either.
+`review-adjudication` §1 names three sources for it — `$ARGUMENTS`, the brief the report answers, or
+a prior round's ledger header — and **the second had never once existed**. The consequence was
+silent and cumulative: two rounds were adjudicated as matching the record on family and product but
+*unverified on the key's own effort field*, which weakens every lookup made against those ledgers
+afterwards.
+
+The fix is one question in §1 and one line in the brief's identity block. Where the reviewer does
+not expose the setting — some do not — the answer is `not exposed`, recorded in those words. That
+is a different and more useful claim than an empty field, which reads as nobody having asked.
+
+## the doubts have no durable channel, and that is the ruling
+
+The list is chat-only by design: a file is one `ls` away from a reviewer session rooted more broadly
+than expected, and the entire value of an `UNSEEDED` doubt is that the reviewer could not have been
+pointed at it. `review-adjudication` §1 then says the list "lives in a chat message you cannot read"
+and asks the user for the hand-off.
+
+That assumes the authoring and adjudicating sessions are close enough together that the window is
+still open. Here they routinely are not — days apart is the normal case rather than the exception —
+and until **2026-08-24** both skills acknowledged the fragility and offered no ruling, so each
+session improvised one.
+
+**The ruling is that there is no durable channel, and inventing one is not the session's to do.**
+The window *is* the artifact. Say so at hand-off in plain words, and stop there: do not resolve the
+fragility by writing the list to disk under a name you judge safe, by folding it into the brief, or
+by arranging any other route the adjudicator could read without the user handing it over. The two
+costs are not symmetric. Losing the window costs one round's corroboration scoring — already a
+bounded loss, since a doubt becomes corroboration only once an adjudicator runs its *own* search and
+rules it absent. Leaking it costs the corroboration itself, silently, and in the direction that looks
+like success.
+
+The adjudication half of the same ruling: **take the list from the original hand-off message or from
+nowhere.** A doubts file found on disk and a copy folded into the brief were both reachable by the
+reviewer; a list the authoring session reconstructs now is written after the report it is supposed to
+be independent of. Any of those is recorded as **unavailable**, exactly as if it had been lost.
