@@ -217,7 +217,18 @@ So ask for both, and keep them separate:»
 > — a considered nothing from an unseeded pass is a result this brief cannot get any other way, and
 > it is not a failure to produce one. Findings that are also in the claim list belong under the
 > claim they answer, not here; this heading is only for what you reached without being pointed at
-> it.
+> it. «§10's skeleton carries the heading; name it there too.»
+>
+> **A defect outside this brief's scope still belongs in that pass.** §4's scope list and §9's
+> anti-patterns bound what we asked you to *review*; they are not a reason to drop a defect you
+> actually saw while reading. Report it under this heading in one line — location and mechanism,
+> no fix and no redesign — marked `out of scope`. Deciding it does not matter is ours to do, not
+> yours. This does not license feature proposals: a suggestion with no defect behind it is still
+> discarded.
+
+«That escape valve is narrow on purpose. §9 should go on discarding "consider adding X"; what this
+recovers is the defect the reviewer noticed sideways and swallowed because the file it sat in was
+not on the list.»
 
 «Score the two passes separately when the report comes back. The adjudicator's echo audit will do
 this anyway — it probes every finding against this brief using the finding's own identifiers — but
@@ -350,7 +361,8 @@ and judge it yourself.»
 - Style, naming, formatting, or comment-density opinions. Not wanted.
 - "Consider adding X" with no defect behind it. A suggestion is not a finding.
 - Restating a code comment as though verifying it. See §2.
-- Proposing out-of-scope functionality.
+- Proposing out-of-scope functionality. A *defect* you saw outside §4's scope is a different
+  thing — one line under §6b's heading, marked `out of scope`, and ours to discard.
 - Impact inflation. If it cannot produce a wrong result, lost data, a wrong exit code, or a
   false-green test, it is not critical — mark it low and rank it accordingly.
 - A flat or tied ranking. "These are all equally important" is a refusal to do the one piece
@@ -453,6 +465,13 @@ what it costs; the ordering is your judgement.
 
 ### 2. <one-line title>
 …
+
+## The unseeded pass
+Where your findings actually came from — §6b. Name which of the ranked findings the undirected
+read produced, and for each say what in it the claim list did not already point at. A defect
+outside §4's scope that belongs nowhere in the ranking goes here as well: one line, marked
+`out of scope`. Write `Nothing` if the pass produced nothing — a considered nothing is a result,
+an omitted section is not.
 
 ## Claims examined and upheld
 Short list, one line each, naming what upheld it — what you ran, or the primary source outside the
