@@ -121,6 +121,13 @@ For a single project instead of everywhere, copy into that project's `.claude/sk
 
 **Keep the clone** — the calibration cases below live in the repo, not inside the skills.
 
+**Re-syncing after an edit.** The copy direction is always this repo → `~/.claude/skills/`, and the
+install flattens the `skills/` prefix (`skills/review-adjudication/` becomes
+`~/.claude/skills/review-adjudication/`). Copy with `rsync -a --delete skills/<skill>/
+~/.claude/skills/<skill>/` so removed files go too, then check it landed with
+`diff -rq skills/<skill> ~/.claude/skills/<skill>`. Never edit the installed copy directly — that
+is the version you actually run, and `scripts/validate.py` warns when the two drift apart.
+
 Restart Claude Code. Then just say what you want:
 
 > "Get an independent review of the payment module from Codex."
