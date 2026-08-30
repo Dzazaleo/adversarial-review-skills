@@ -29,7 +29,8 @@ early** — and re-invoke this skill after a compaction. Each rule is stated in 
 brief — **it is the authority on the framing block and its four branches** ·
 `cover-note-template.md` before writing the cover note, including the no-filesystem variant ·
 `example-audit-prompt.md` for a worked brief **where it exists — it ships absent by default, so
-skip it without comment** · `why-this-is-hard.md` is background only —
+skip it without comment** · `deep-tier.md` **only on a `--deep` run, where a section stubs into
+it** · `why-this-is-hard.md` is background only —
 **this file and the template override it wherever they differ.**
 
 **Tier — light by default, `--deep` on request only.** Light runs §§1–8 as written and is the
@@ -136,10 +137,9 @@ to that parenthesis: it is a required input, and you never infer it.**
   count, silence covers nothing". Missing, expired or `FAIL` is normal and never a reason to
   refuse: run the review anyway. It changes one thing, said at hand-off (§9) — **an untested
   reviewer's findings still count, and its silence does not.** Its upheld list is not coverage and
-  nothing it "cleared" may enter the next brief's §7. **`[deep]`** recompute the corpus digest with
-  the command the record names, arbitrate the two locations against each other, and state the
-  workload gap in numbers — the traps in each are in
-  [references/why-this-is-hard.md](references/why-this-is-hard.md). Corpus and 20-minute
+  nothing it "cleared" may enter the next brief's §7. **`[deep]`** digest recomputation, precedence
+  arbitration and the workload gap — [references/deep-tier.md](references/deep-tier.md) D1. Corpus
+  and 20-minute
   procedure, pointed at once and never campaigned for:
   https://github.com/Dzazaleo/adversarial-review-skills/tree/main/calibration
 

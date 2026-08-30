@@ -25,13 +25,16 @@ the refusal does not lapse because the reader is now Claude.
 <invariants>
 **These hold for the whole task.** After an auto-compaction Claude Code re-attaches only the
 **first 5,000 tokens** of this skill; where several skills were invoked they share a 25,000-token
-budget and an older one can be dropped **entirely**. Treat everything past **line ~195** as gone,
-and re-invoke this skill after a compaction. Each rule below is stated in full in its own section.
+budget and an older one can be dropped **entirely**. Treat everything past **line ~205** as gone —
+**an estimate back-computed at ~3.1 characters per token, not a tokenizer run, and deliberately
+early** — and re-invoke this skill after a compaction. Each rule below is stated in full in its own
+section.
 
 **The references, and when to open each.** `ledger-template.md` before writing the ledger (§7) ·
-`verification-standard.md` before re-verifying (§5) · `second-opinion.md` before spawning a
-verifier (§5) · `inputs-and-calibration.md` for identity and calibration (§1) ·
-`why-this-is-hard.md` is background only — **this file overrides it wherever they differ.**
+`verification-standard.md` before re-verifying (§5) · `inputs-and-calibration.md` for identity and
+calibration (§1) · **`deep-tier.md` only on a `--deep` run** — every `[deep]` stub points into it,
+and `second-opinion.md` is reached from there · `why-this-is-hard.md` is background only —
+**this file overrides it wherever they differ.**
 
 **Tier — light by default, `--deep` on request only.** Light is the whole job for almost every
 review: verify each finding for real, then one line — verdict plus disposition. Fix the blockers,
@@ -136,10 +139,8 @@ From `$ARGUMENTS`, resolve:
   (2026-08-23). **List both before concluding a record is absent**, and **say in the header which
   of the two you read** — "PASS, from `~`" and "PASS, from this repo" are different claims.
   **Light reads two fields: result and expiry.** Past expiry, or filed against a different
-  identity, is stale and counts as missing. **`[deep]`** recompute the corpus digest with the
-  command the record names, arbitrate a project-local record against a home one, and state the
-  workload gap in numbers — each has a trap that has already cost a session, all of them in
-  [references/inputs-and-calibration.md](references/inputs-and-calibration.md).
+  identity, is stale and counts as missing. **`[deep]`** digest recomputation, precedence
+  arbitration and the workload gap — [references/deep-tier.md](references/deep-tier.md) D1.
 
 - **What the author's agreement is worth — one rule, no input required.** Author doubts are never
   corroboration, and reviewer agreement with the brief is **non-independent by default**. The
@@ -225,40 +226,14 @@ carrying the same two axes as any other row (`VERIFY` is the usual pairing for a
   reviewer, and it is an open finding rather than coverage. Scanning the list for that shape is
   cheap; re-opening the rest of it is not, and is not asked for here.
 
-**`[deep]`** give each auxiliary class its own ledger block and its own ID namespace (`P-`, `CNV-`,
-`D-`, `U-` for a re-opened upheld claim, `A-` for your own findings, `C-` for corrections to an
-earlier round), count them separately in the header, and sample the upheld list rather than
-scanning it.
+**`[deep]`** auxiliary blocks and ID namespaces — [references/deep-tier.md](references/deep-tier.md) D2.
 
 **Count in = count out.** One row per numbered finding, one row per auxiliary item above, and the
 header states the count both ways ("Findings in: N · Rows out: N"). Merge two findings only with a
 row naming the IDs and why, and say so in the header too. **A finding with no row is the defect
 this whole skill exists to prevent.**
 
-**`[deep]` Extract a claim card with each row.** Alongside the skeleton, write each finding's
-*claim* on its own, into the session scratchpad — never beside the ledger, where a later reviewer
-would read it. A claim card is exactly five fields, copied verbatim and nothing else:
-
-> Location · Mechanism · Trigger · Consequence · the impact the reviewer assigned
-
-What stays out of the card is the point of it: the reviewer's **reasoning**, its evidence, the
-argument for its severity, its suggested fix, and every phrase carrying confidence ("clearly",
-"this will certainly", "I verified"). Those are how it persuaded itself, and step 5 verifies the
-claim rather than grading the argument. Where a field is genuinely absent from the report, the card
-says `not stated` — a finding with no stated trigger is one nobody can reproduce yet. Where the
-reviewer put its evidence or its severity case *inside* the Mechanism, copy the claim clause
-verbatim and replace the argument with a pointer to the report line (`— argument at :131`); never
-paraphrase, which silently edits what you are about to verify. Cut the cards while you are still
-transcribing, before any ruling exists: a card cut later is a card cut by someone who has already
-decided. It does not make you blind — you read the report in step 1 and cannot unread it — it gives
-step 5 a target containing only the claim.
-[references/verification-standard.md](references/verification-standard.md).
-
-**What the card buys, exactly.** You read the report in step 1 and cannot unread it; the card does
-not make you blind. It gives step 5 a target containing only the claim, so the check aims at the
-mechanism rather than the case for it. Genuine blindness exists only in step 5's subagent, and even
-there, not being *handed* the report is not being unable to read it.
-[references/verification-standard.md](references/verification-standard.md).
+**`[deep]`** a claim card cut with each row — [references/deep-tier.md](references/deep-tier.md) D3.
 
 ## 3. Screen against settled ground — cheap, and gated
 
@@ -302,7 +277,7 @@ Sort every remaining finding into exactly one:
   not follow them; the questions were real, the volume made them unanswerable. If you have more
   than a handful, you are converting your own work into the owner's.
 - **Process/prompt** — about the brief, the envelope, the review method itself. → a row tagged
-  `process`, or **`[deep]`** its own block.
+  `process`, or **`[deep]`** its own block ([references/deep-tier.md](references/deep-tier.md) D2).
 
 The split is the discipline. A machine-checkable finding you resolve by reasoning is an unforced
 error; an owner-judgement finding you resolve yourself is you taking a call that is not yours.
@@ -320,16 +295,8 @@ in front of you, the ruling is durable, and `COULD NOT DETERMINE` with the settl
 costs one line. Dropping a finding for being unclear is the dismissal reflex wearing a
 methodology's clothes. [references/verification-standard.md](references/verification-standard.md).
 
-**`[deep]` Verify against the claim card, and pre-register the expectation.** Open the card, write
-down what you expect the check to show *before* you run it, run it, then re-read the reviewer's
-argument for that finding and record on its own line whether it changes the ruling and which way.
-Pre-registration works on you, in the moment, and only if you actually write the expectation first
-— it is no proof to a later reader, since the ledger records an expectation and an output but
-nothing establishing their order. It guards both directions: a well-argued false finding earns a
-`CONFIRMED` it did not deserve, and one stated flatly or in poor English earns a `REFUTED` on the
-same non-evidence. Both are rulings on the reviewer's prose — a fact about the reviewer, not about
-the code. Re-read the argument afterwards either way: it is often where the reproduction steps are,
-and a card whose `Trigger` says `not stated` may only be reproducible from the prose around it.
+**`[deep]`** verify against the claim card and pre-register the expectation —
+[references/deep-tier.md](references/deep-tier.md) D4.
 
 For every machine-checkable finding, produce evidence at the same standard the brief demanded of
 the reviewer, whichever way it comes out:
@@ -359,17 +326,9 @@ the reviewer, whichever way it comes out:
 - **The same discount applies between reviewers.** Agreement is corroboration only if the second
   could not read the first, and ours land in one directory. **Establish it from timestamps, not a
   promise.** Two reviewers handed the *same brief* are not independent either.
-- **`[deep]` Run the echo probe and tally it.** For every finding, query the brief and the cover
-  note with that finding's own identifiers, record whether the brief had already said it, and put
-  the tally in the ledger — how many findings were echoes, how many partial, how many were free to
-  surprise. That last number is what the report's evidentiary weight actually rests on. Measured
-  twice here: 10 of 15 findings were echoes of the brief's own sub-questions, then 6 of 9.
-  [references/verification-standard.md](references/verification-standard.md).
-- **`[deep]` Sample the upheld list.** A claim the reviewer upheld is a ruling you inherit, not a
-  line you copy. Sample rather than transcribe, re-open what was cleared on the work's own say-so,
-  and rank a reviewer that reached the defect and argued it intentional **below** a plain miss —
-  that leaves you the bug plus a written case for keeping it. (Light tier does the cheap half of
-  this in §2 and no more.)
+- **`[deep]`** the echo probe and its tally — [references/deep-tier.md](references/deep-tier.md) D5.
+- **`[deep]`** sampling the upheld list — [references/deep-tier.md](references/deep-tier.md) D6.
+  Light does the cheap half of this in §2 and no more.
 - **Re-verification hygiene.** Run only commands verified not to rewrite repository files or
   external state — snapshot-updating runners and cache-writing builds count as writes. Throwaway
   copies live in the session scratchpad, never the working tree. End by reporting the working
@@ -385,15 +344,8 @@ Then the escalation rule:
   where its own stated Consequence puts it, apply the burden the consequence earns and say in the
   row that you did. It moves one thing only — the evidence bar for *refusing* a finding, never its
   rank or verdict, and never toward accepting one more cheaply.
-- **`[deep]` and only there: a second opinion that was not handed the report.** Spawn a subagent,
-  give it the claim card and the code the claim concerns, and ask it to establish whether the
-  mechanism holds — never to check your work, which only hands it your conclusion to agree with.
-  Spawn it with a tool allowlist excluding `Write`, `Edit` and `NotebookEdit`; a subagent does not
-  inherit this skill, and `Bash` is itself a write capability. Record two facts beside the verdict:
-  whether its tools were restricted, and whether it could have read the report — not being *handed*
-  it is not blindness, since the subagent is spawned into the directory it sits in, and **never
-  write "blind" for a check that was merely uninformed.** If you disagree with it, the verdict is
-  `COULD NOT DETERMINE`. [references/second-opinion.md](references/second-opinion.md).
+- **`[deep]`** a second opinion that was not handed the report —
+  [references/deep-tier.md](references/deep-tier.md) D7.
 
 ## 6. Rule — two axes, never one word
 
@@ -449,9 +401,8 @@ Non-negotiables:
   the original stays as written. The current round is filled in place, which replaces text by
   design, so **assemble the round outside the ledger and concatenate it once** — an unanchored
   replace matches an earlier round's identical phrase first and rewrites history silently, which
-  closed-round warnings will not catch. **`[deep]`** take a pre-session copy before your first
-  write and prove the completed prefix untouched after every write, not once at the end:
-  `head -n <the prior round's last line> <ledger> | diff - <the pre-session copy>` must be silent.
+  closed-round warnings will not catch. **`[deep]`** the per-write append proof —
+  [references/deep-tier.md](references/deep-tier.md) D8.
 - **Numbered finding IDs are lowercase** (`codex7-1`, `grok7-3`). Uppercase collides with the
   auxiliary namespace — `P` `CNV` `D` `U` `A` `C` `X` `Q` — and the validator errors rather than
   miscounting. The full table, and where a historical exception lives, are in the template.
@@ -462,15 +413,12 @@ Non-negotiables:
   when the input review exists only as a chat transcript — the report file materialized from it,
   saved beside the ledger before adjudication begins. Never the code, the plans, or an existing
   review, whatever the tool grants allow. **`[deep]`** the step-2 claim cards are the one exception
-  and they live in the session scratchpad, never beside the ledger: a card sitting in the review
-  directory is the next reviewer's reading material, and it is the finding stripped of its
-  evidence.
+  ([references/deep-tier.md](references/deep-tier.md) D3).
 - Before saving, verify one row per numbered finding and per auxiliary item, **no empty verdict or
   disposition cells**, and the counts in the header: findings in, rows out, the tier you ran, and
-  the report's completeness state. **`[deep]`** breaks the auxiliary count out per namespace
-  (process, CNV, prior-review disagreements, re-opened upheld claims, your own `A-N` findings,
-  `C-N` corrections to earlier rounds). A mismatch is a defect in your own work — a merge row or a
-  header note explains it; dropping a row never does.
+  the report's completeness state. **`[deep]`** breaks that count out per namespace
+  ([references/deep-tier.md](references/deep-tier.md) D2). A mismatch is a defect in your own work
+  — a merge row or a header note explains it; dropping a row never does.
 
 ## 8. Hand off
 
