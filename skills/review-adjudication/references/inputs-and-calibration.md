@@ -5,6 +5,11 @@ kept out of the main file so the obligations sit above the compaction cut.
 
 ## calibration record
 
+**Light tier reads two fields — result and expiry — and reports one line.** Digest recomputation,
+arbitrating a project-local record against a home one, and the workload-gap arithmetic are the
+`[deep]` tier. They are written out in full here because when they are run they must be run
+exactly this way, not because they are owed on every adjudication.
+
 - **The reviewer's calibration record** — `.adversarial-review/calibration/<reviewer-id>.md`,
   looked up in **two locations: `./` (the project root) first, then `~/`.** A project-local record
   wins where both exist, because a project that pins one has done so deliberately — a team-shared
@@ -148,12 +153,18 @@ consequently adjudicated as matching on family and product but *unverified on ef
 honest header line, and is not the same claim as a match. Never infer effort from the record's
 filename: the filename is what you are trying to justify reading.
 
-## the residual doubts have exactly one route
+## the residual doubts — retired, and what replaced them
 
-Take the list from the original hand-off message or from nowhere. **Do not accept a doubts file
-found on disk, a copy folded into the brief, or a list the authoring session reconstructs now, and
-do not ask for any of them to be produced.** The first two were reachable by the reviewer, which is
-the one thing the chat-only rule exists to prevent; the third is written after the report it is
-meant to be independent of. A list arriving by any route but the user pasting that message is
-recorded as **unavailable**, exactly as if it had been lost — and unavailable is a real, common
-state here, because authoring and adjudicating sessions are routinely days apart.
+`adversarial-review-prompt` used to hand the user a chat-only list of the author's own residual
+doubts, bucketed `SEEDED`/`UNSEEDED`, and this skill used to ask for it and re-rule the second
+bucket. Both halves are gone. The protocol leaked into the brief on all four occasions it was
+measured — 2026-08-10 five of five, 2026-08-15 four of four, 2026-08-17 two of three, 2026-08-23
+five of five with the search run correctly — and the credit it bought was available only after the
+adjudicator repeated the search anyway, through a channel that could not be made durable.
+
+**Do not ask the user for such a list**, and do not accept one found on disk, folded into the
+brief, or reconstructed now by the authoring session. The rule that replaces it needs no input:
+**author doubts are never corroboration, and reviewer agreement with the brief is non-independent
+by default.** The brief's load-bearing claims list was always the larger channel, and `SKILL.md`
+§5's probe — query the brief with a finding's own identifiers, rule the echoes from primary
+sources — covers it directly.

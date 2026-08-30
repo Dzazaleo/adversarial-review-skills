@@ -46,19 +46,18 @@ Two skills, four files, one loop.
 ```
 
 Everything is a file on disk, sitting next to the work. That is a deliberate constraint rather
-than a preference — §4 explains why. **There is exactly one exception, and it is a known cost
-rather than an oversight:** the author's residual doubts are reported to the user in chat at
-hand-off and written nowhere else, because putting them on disk beside the brief is putting them
-where the reviewer reads them. Adjudication needs them verbatim; if the window is closed they are
-gone, the leakage check records that it could not be made, and no finding is credited as
-independent corroboration.
+than a preference — §4 explains why. There used to be one exception — a chat-only list of the
+author's own hunches, handed over at the end for the adjudicator to re-rule — and it is gone. It
+leaked into the brief on all four occasions anyone measured it, and the credit it bought was
+available only after the adjudicator repeated the search anyway. What replaces it is one rule that
+needs no channel: **agreement with the brief is non-independent by default.**
 
-Those doubts are also formed **after** the brief is written, not alongside it, and arrive in two
-labelled lists — `SEEDED` (the authoring session's own search found the doubt already in the brief)
-and `UNSEEDED` (it did not). Only the second is eligible to be scored as independent corroboration,
-and only once the adjudicator has repeated the search itself. Four rounds that measured this found
-the doubts already in the brief every time — the last of them with the search run correctly — which
-is what moved the fix from the search to the ordering.
+**Both skills run light by default, and `--deep` is opt-in.** Light is the whole job for almost
+every review. Deep adds the ceremony — corpus-digest recomputation, claim cards, pre-registered
+expectations, blind second-opinion subagents, echo tallies — and is for a one-way door, a disputed
+high-severity finding, or a reviewer/author disagreement worth arbitrating. **And there are two
+rounds on a target, not more:** after the second, unresolved residuals go to the backlog and the
+owner closes. A third round takes the owner asking for one in their own words.
 
 `NN` copies whatever numbering the surrounding work already uses: a phase number, a PR number.
 If there is no such numbering — a standalone skill, a bare repo — the files drop the prefix and
@@ -170,55 +169,49 @@ in its coverage count.
 
 ### Keeping your own suspicions out of it
 
-The author's own hunches are delivered to you in the hand-off — three to five questions with a
-mechanism attached to each — rather than written into the brief or the cover note. **The *list*
-is what stays out**, not every sentence a hunch touches: hunches and load-bearing claims come out
-of the same reading, so a claim usually sits near one, and that overlap is declared rather than
-denied. See below for why the author cannot certify absence.
+Your hunches go nowhere: not into the brief, not into the cover note, and not into a list handed
+over afterwards. Every seam you can see goes into the load-bearing claims list instead, **sharp** —
+that sharpness is most of the brief's value, and nothing is ever blunted to hold something back.
 
-The reason is that the two cases are worth very different amounts. A suspicion you plant gets
-echoed back at you. A suspicion the reviewer arrives at on its own is independent corroboration,
-which is the strongest evidence this exercise can produce. And disclaimers do not help — "I
-suspect X, but do not let that bias you" does not survive contact with a model reading it.
+The reason a separate channel was ever wanted is that the two cases are worth very different
+amounts. A suspicion you plant gets echoed back at you. A suspicion the reviewer arrives at on its
+own is independent corroboration, which is the strongest evidence this exercise can produce. And
+disclaimers do not help — "I suspect X, but do not let that bias you" does not survive contact with
+a model reading it.
 
-What the author is *not* allowed to do is certify that a hunch stayed out. Hunches and
-load-bearing claims come out of the same reading of the same work, so a hunch is usually about a
-claim you just wrote, and the follow-up question aimed at that weak point *is* the hunch. The
-claim stays sharp — that sharpness is most of the brief's value — and the overlap gets declared
-instead. The hand-off lists, for each hunch, which parts of the brief a search actually landed on,
-along with the raw search output. Where the search finds nothing, the required wording is "no line
-found — unverified", never "held back".
+**The channel was tried and it failed four times running**, which is why the skills no longer have
+one. Hunches were handed to the user at hand-off, bucketed by a search of the saved brief into
+`SEEDED` (found there) and `UNSEEDED` (not), and only the second could ever be scored as
+corroboration. On 2026-08-10 five hunches of five were already in the brief; on 2026-08-15, four of
+four, reported as "deliberately excluded"; on 2026-08-17, two of three, after a search had been
+made mandatory — the author picks the search terms, and picks them from the half of the hunch that
+is not in the brief.
 
-That split exists because the softer version failed four times running. The third failure came
-*after* a mandatory search had been added, and performed: the author picks the search terms, and
-picks them from the half of the hunch that is not in the brief. Across all four occasions, every
-wrong label was a claim that something was *absent*, and not one claim that something was
-*present* was ever wrong. Claiming absence in a document you wrote yourself is not a judgement you
-are in a position to make.
+**The fourth failure is the one that settled it.** By then the search was honest: it used the
+hunch's own strings, it covered the cover note as well as the brief, and it reported the result
+accurately — all five hunches were in the brief. Nothing had gone wrong with the check. What was
+wrong sat upstream of it. Hunches and load-bearing claims come out of one reading of one body of
+work, which makes a hunch structurally almost certain to *be* a claim already in the brief. No
+search, however honest, subtracts a leak the collection order guarantees. Forming the hunches
+*after* the brief was saved was the fix that round produced, and the round after it measured five
+of five anyway.
 
-**The fourth failure is the one that changed the design.** By then the search was honest — it used
-the hunch's own strings, it covered the cover note as well as the brief, and it reported the result
-accurately: all five hunches were in the brief. Nothing had gone wrong with the check. What was
-wrong sat upstream of it. Hunches were being collected in the same pass that mined the load-bearing
-claims, out of one reading of one body of work, which made a hunch structurally almost certain to
-*be* a claim already in the brief. No search, however honest, can subtract a leak that the
-collection order guarantees.
+Against that, the credit was small and awkward to bank: an `UNSEEDED` hunch became corroboration
+only once the adjudicator repeated the search, and the list could not be written to disk — a file
+beside the brief is a file the reviewer can open — so it lived in a chat window that is routinely
+days stale by the time anyone adjudicates. Roughly eighty lines of protocol across the two skills,
+for that.
 
-So the order changed. The brief is written and saved first; only then does the author re-read it —
-the file, not their memory of writing it — and ask what it turned out **not** to cover. The hunches
-come back in two labelled lists, and they are worth different things. `UNSEEDED` (the author's own
-search found nothing) is the only one that can ever become independent corroboration, and even then
-only after the adjudicator has repeated the search. `SEEDED` (the search found it in the brief)
-earns its place the other way round: the brief pointed the reviewer straight at that seam, so a
-*calibrated* reviewer that came back silent on it has said something — about the hunch, or about
-that reviewer's reach. Neither list is a ruling; both are evidence handed to whoever adjudicates.
+**What survives does the same work more cheaply.** The adjudicator queries the brief and the cover
+note with each finding's own identifiers, treats agreement as an echo, and re-establishes those
+findings from primary sources. That was always the larger channel: a pointed sub-question states
+the suspected defect outright, so a reviewer agreeing with it has answered a question rather than
+found anything. Four of the fourteen findings in one self-audit were seeded that way, and all four
+had to be proved again on primary evidence alone.
 
-So the ruling happens on the other side. The adjudicator searches the brief itself, records what
-it found for each hunch, and only then can a rediscovered hunch count as corroboration. Where a
-hunch did leak into the brief, the reviewer's agreement with it is treated as an echo and the
-finding gets re-established from scratch. That rule exists because it happened: four of the
-fourteen findings in the self-audit were seeded this way, and all four had to be proved again on
-primary evidence alone.
+One rule from that history keeps its force and is not about hunches at all: **nobody can certify
+absence in a document they wrote.** Across all four runs every wrong label was a claim that
+something was *absent*, and not one claim that something was *present* was ever wrong.
 
 ### Knowing whether the reviewer can find anything
 
@@ -499,7 +492,7 @@ claim. Only the first is being adjudicated. The second was written by a model sp
 be hostile, and it is doing a second job besides carrying information — it is trying to convince.
 
 So the two get separated while the adjudicator is still only transcribing. As every finding is
-copied into the ledger skeleton, its *claim card* is cut alongside it — Location, Mechanism,
+copied into the ledger skeleton, `--deep` cuts its *claim card* alongside it — Location, Mechanism,
 Trigger, Consequence, and the impact the reviewer assigned, verbatim, and nothing else. The
 reasoning, the evidence, the suggested fix and every confident phrase stay behind. Re-verification
 then runs against the card: write down what you expect the check to show, run it, record the
@@ -529,7 +522,9 @@ surrounding text. What the ordering decides is only which of the two ends up as 
 record.
 
 Genuine blindness exists in exactly one place, because it is expensive and only one case earns it:
-refuting a high or critical finding about code you wrote yourself.
+refuting a high or critical finding about code you wrote yourself. **In the light tier that case
+has a one-line answer** — the verdict is `COULD NOT DETERMINE` and you name the check that would
+settle it — and the machinery below is what `--deep` adds instead.
 
 There, a second opinion is fetched that **is not handed the report** — it gets the claim card and
 the code, and is asked to establish whether the mechanism holds, not to check the ruling, since
@@ -634,14 +629,23 @@ written first by design, so a run killed halfway leaves titles with empty verdic
 immutability rule then forbids anyone from filling in. *(Fable, finding 6; refined again in round 2,
 when "complete" turned out to freeze provisional rows before their required updates.)*
 
-Findings that do not fit the numbered list get the same two answers, each with its own stable ID:
+Findings that do not fit the numbered list get the same two answers. In the light tier they are
+rows in the same table, tagged in the `Class` cell; in `--deep` they get their own blocks and their
+own stable IDs. Either way nothing arrives without leaving a row:
 
 - `P-n` — defects in the process or the brief. The brief invites these, and their fix lands in the
-  brief or the skill rather than in the code, so they get their own block.
+  brief or the skill rather than in the code.
 - `CNV-n` — the reviewer's could-not-verify list. That list is the reviewer being honest about a gap
   it could not close. Dropping it re-hides the gap, and downstream it reads as a pass.
 - `D-n` — places where this reviewer disagrees with an earlier internal review.
-- `U-n` — claims the reviewer said it upheld, that the spot-check reopened.
+- `U-n` — claims the reviewer said it upheld, that the spot-check reopened. Light does the cheap
+  half of this: it scans the upheld list for claims cleared on a comment, a test name or a
+  docstring, and gives those rows.
+
+**And a ledger is written twice at most.** After the second round on a target, unresolved residuals
+go to the durable backlog and the owner closes the phase. Two rounds is not a quality ceiling; it
+is the point past which another round stops being cheaper than deciding. Four rounds happened on
+two phases here, and the only cap ever applied was the owner improvising one mid-flight.
 
 Where two reviewers contradict each other about the same code, neither is presumed right — not by
 seniority, not by which arrived first — and the item gets re-verified before either is ruled on. And
@@ -752,7 +756,7 @@ had not:
 - **Giving the verifier the claim and withholding the argument.**
   [Jmosier69/refute](https://github.com/Jmosier69/refute) hands its refuter the claim only, never
   the finder's reasoning, on the grounds that an argument you have read is an argument you have
-  been moved by. That became the claim card in step 2 and the ordering rule in step 5. Its default
+  been moved by. That became the `--deep` claim card in step 2 and the ordering rule in step 5. Its default
   — *refuted when uncertain* — was deliberately not adopted, for a reason given in section 6: that
   rule belongs to a filter running before a human sees anything, and this ledger is the opposite
   situation.
@@ -833,5 +837,6 @@ project has somewhere durable to put one.
 
 Worth keeping, because it is where the value is: the reviewer never issues a verdict; your own
 hunches never enter the brief, and you never certify that they did not; the report is a file written
-as it goes; refuting a finding is as much work as making one; enumerate before judging; and every
-finding leaves with both a verdict and a disposition.
+as it goes; refuting a finding is as much work as making one; enumerate before judging; every
+finding leaves with both a verdict and a disposition; and the whole thing runs light by default,
+twice at most, because a review protocol nobody can afford to run is one that stops being run.

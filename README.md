@@ -33,10 +33,11 @@ two files:
 - **A short cover note.** The message you actually paste into Codex, Gemini, Cursor, or a fresh
   Claude session. You never paste the long brief into a chat box by hand.
 
-It also tells you — in the chat, privately — what *it* suspects is wrong with the work. Those
-suspicions stay out of the brief so the reviewer isn't led to them. **Copy that message
-somewhere safe**: the second skill asks for it later, to work out which findings the reviewer
-reached on its own.
+Everything it suspects is wrong goes *into* the brief, as a sharp question the reviewer is pointed
+at. There is no private list on the side. That used to exist — a chat-only message you were told to
+save — and it was retired because on all four occasions anyone checked, the "private" suspicions
+were already in the brief anyway. What replaced it costs nothing: the adjudicator assumes agreement
+with the brief is the brief talking to itself, and re-proves those findings from scratch.
 
 ## Skill 2: `review-adjudication` — judges what comes back
 
@@ -77,18 +78,17 @@ already been covered, so you never pay twice for the same finding.
 ## The process, start to finish
 
 1. **You:** "Before we build this, I want an outside review." Claude writes the brief and the
-   cover note, and tells you its private suspicions. *(Same session that wrote the work — it
-   knows where it was unsure.)*
-2. **You save the suspicions message** somewhere durable. It exists nowhere else.
-3. **You paste the cover note** into a different model — Codex, Gemini, Cursor, or a fresh
+   cover note. Everything it suspects goes into the brief, sharp — there is no separate list of
+   hunches to keep, and nothing is held back to be scored later.
+2. **You paste the cover note** into a different model — Codex, Gemini, Cursor, or a fresh
    Claude session that has never seen the work. Different company beats different product:
    many review tools run on the same few underlying models.
-4. **The reviewer** reads the brief, does the audit, and writes its report to a file.
-5. **You, in a fresh session:** "The review is in — adjudicate it." Claude re-tests every
-   finding itself and writes the ledger: every finding ruled, a fix queue, and the questions
-   only you can answer. It will ask you to paste the suspicions from step 2. *(Fresh session,
-   because the one that wrote the work has a stake in the findings being wrong.)*
-6. **You answer the questions and say go.** Fixes happen then, against the ledger, and each
+3. **The reviewer** reads the brief, does the audit, and writes its report to a file.
+4. **You, in a fresh session:** "The review is in — adjudicate it." Claude re-tests every
+   finding itself and writes the ledger: every finding ruled, a fix queue, and the short list of
+   questions only you can answer. *(Fresh session, because the one that wrote the work has a
+   stake in the findings being wrong.)*
+5. **You answer the questions and say go.** Fixes happen then, against the ledger, and each
    ledger row is updated as its fix lands.
 
 ### When to use it
@@ -97,6 +97,15 @@ Not on every commit — that would grind development down. The high-value moment
 a plan before you build it, anything expensive to change later (a published API, a data
 format, a security boundary), and once before shipping a milestone. One round at those points
 buys most of the protection.
+
+**Two rounds on a target, then stop.** After the second, whatever is still open goes on your
+backlog and you close the thing. A third round takes you asking for one; left to itself the loop
+does not end, and a review protocol nobody can afford to run is one that stops being run.
+
+**Both skills run light by default.** Add `--deep` when it is genuinely worth it — a one-way door,
+a high-severity finding you and the reviewer disagree about — and it turns on the heavier
+machinery: corpus-digest checks, blind second opinions, echo tallies. The default path is: write
+the brief, get the report, verify each finding, fix the blockers, backlog the rest.
 
 ---
 

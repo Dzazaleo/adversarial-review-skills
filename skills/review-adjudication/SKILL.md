@@ -1,7 +1,7 @@
 ---
 name: review-adjudication
 description: "Adjudicate an external or cross-model review that has come back — decide which findings are real, re-verify them, and record a durable disposition for every one. Use when a Codex/Gemini/GPT/Cursor review report has landed — NN-EXTERNAL-REVIEW.md, NN-EXTERNAL-CODE-REVIEW.md, or any *EXTERNAL* report family — and the user asks what to act on, what is worth fixing, whether the reviewer is right, to triage or sort or work through the findings, or to close out a review. Also use when a review's findings need re-checking before a phase closes. Produces a NN-REVIEW-ADJUDICATION.md ledger with one row per finding — never a ship/no-ship verdict, and never a fix applied on its own initiative."
-argument-hint: "<review file | phase N> [--round N]"
+argument-hint: "<review file | phase N> [--deep] [--round N]"
 allowed-tools:
   - Read
   - Grep
@@ -33,11 +33,22 @@ and re-invoke this skill after a compaction. Each rule below is stated in full i
 verifier (§5) · `inputs-and-calibration.md` for identity and calibration (§1) ·
 `why-this-is-hard.md` is background only — **this file overrides it wherever they differ.**
 
+**Tier — light by default, `--deep` on request only.** Light is the whole job for almost every
+review: verify each finding for real, then one line — verdict plus disposition. Fix the blockers,
+back-log the rest, hand off. Deep adds exactly what a section marks `[deep]` — claim cards,
+pre-registered expectations, the blind second opinion, the auxiliary ID namespaces, the append
+proof, the echo tally — and is for a one-way door, a disputed high-severity finding, or a
+reviewer/author disagreement worth arbitrating. The brief names the tier it was written at; match
+it unless the user says otherwise, and name yours in the hand-off. (§1, §8)
+
+**Round cap — two rounds on the same target, then stop.** At the second ledger against the same
+work, close it: unresolved residuals go to the durable backlog and the owner closes the phase. No
+third round without the owner asking in their own words. (§1, §8)
+
 1. **Write boundary; current round filled in place, completed rounds append-only.** The only
    files this skill creates or edits are the ledger, `FIX LATER` backlog artifacts, and — where
    the review arrived as a chat transcript — the report file materialized from it. Never the
-   code, the plans, or an existing review. Fill this round's skeleton in place; **never rewrite a
-   completed round**, and prove the earlier rounds are untouched. (§7)
+   code, the plans, or an existing review. (§7)
 2. **Two axes, never one word.** Every finding leaves with a **verdict** (is the claim true?)
    and a **disposition** (what happens now?). Never a bare "ACCEPTED". `NO ACTION` is legal only
    under `REFUTED`, `SETTLED ALREADY`, or `TRUE, NOT A DEFECT` — and that last one is **gated,
@@ -46,18 +57,23 @@ verifier (§5) · `inputs-and-calibration.md` for identity and calibration (§1)
    here, and that it is not. **Boundary: if the claim says anything *here* is wrong, the verdict
    is never this one** — whatever the scope or the cost, that stays `CONFIRMED` + `FIX LATER`.
    A permission that survives compaction without its gate is a dismissal hatch. (§6)
-3. **Count in = count out.** One row per numbered finding, plus separately-counted ruled entries for
-   every auxiliary class — could-not-verify, process, prior-review disagreements, re-opened upheld
-   claims (`U-N`), **and your own findings from re-verification (`A-N`)**. A finding with no row is the defect this skill exists to prevent. (§2, §7)
+3. **Count in = count out.** One row per numbered finding, and one per item on the reviewer's
+   could-not-verify list. Anything else the report raised — a process defect, a disagreement with
+   a prior review — gets a row too. A finding with no row is the defect this skill exists to
+   prevent. (§2, §7)
 4. **`FIX LATER` costs something.** It requires a durable backlog artifact carrying the
    finding's Location, Mechanism and Consequence, created **before the row receives its
-   `FIX LATER` disposition**, with its path quoted in the row. A bare stub is a drop wearing a deferral label. (§6)
+   `FIX LATER` disposition**, with its path quoted in the row. A bare stub is a drop wearing a
+   deferral label. (§6)
 5. **Refutation carries the finding's own burden.** `REFUTED` on a finding the reviewer rated
-   high or critical, in code you authored, needs execution evidence **and** a second opinion
-   that was not handed the report. Without both, the verdict is `COULD NOT DETERMINE`. Beside
-   that verdict, record whether the verifier's tools were restricted and whether it could have
-   read the report. Never write "blind" for a check that was merely uninformed. (§5)
-6. **No ship verdict, and no fixes.** Nothing in the ledger says the work is complete,
+   high or critical, in code you authored, needs execution evidence. Without it the verdict is
+   `COULD NOT DETERMINE` **and you name the check that would settle it** — one line, and an
+   honest, available outcome. `[deep]` adds a second opinion that was not handed the report. (§5)
+6. **Owner questions are batched and bounded.** One block at hand-off, plain terms, each question
+   genuinely two defensible options. Anything with a sensible default takes the default with a
+   one-line note instead of a question — 31 owner rulings out of one phase is the anti-pattern
+   this exists to stop. (§4, §8)
+7. **No ship verdict, and no fixes.** Nothing in the ledger says the work is complete,
    correct, or ready to ship, and fixes are a separate explicit act afterwards. (objective, §8)
 </invariants>
 
@@ -82,6 +98,11 @@ step 3, but gated, because dismissal will try to use it. Each in full, with the 
 
 From `$ARGUMENTS`, resolve:
 
+- **The tier** — `--deep` if `$ARGUMENTS` says so, otherwise **light**, which is the default.
+  Read the brief's stated tier and match it; where the brief predates tiers or does not say, light.
+  Deep is not something the findings earn by looking serious — a one-way door, a disputed
+  high-severity finding, or a reviewer/author disagreement worth arbitrating is the whole list, and
+  the user can ask. Say which you ran in the ledger header.
 - **The report** — the reviewer's own file. Never resolve by a single naming pattern: glob the
   target directory for `*EXTERNAL*` report families (excluding `*PROMPT*`, `*COVER-NOTE*`,
   `*ADJUDICATION*`, `*RESPONSE*`) — real corpora hold several (`NN-EXTERNAL-REVIEW.md`,
@@ -108,44 +129,33 @@ From `$ARGUMENTS`, resolve:
   record, and that `PASS` enters the header indistinguishable from a correct one. An identity you
   could not establish is **unknown**, and unknown is treated exactly as no record.
 
-- **The reviewer's calibration record** — `.adversarial-review/calibration/<reviewer-id>.md`,
+- **The reviewer's calibration record** — `.adversarial-review/calibration/<identity>-<effort>.md`,
   in **two locations: the project root first, then `~/`.** Project-local wins where both hold one;
   the home copy is where a record filed while reviewing a *different* project lives, and an
   adjudicator that checks only the project root writes "none on file" for a reviewer that passed
-  (2026-08-23). **That precedence is by location, not freshness** — a stale pin shadows a better
-  home copy and nothing compares them — so read both where both exist and put any disagreement
-  beyond the result in the header. Keyed on family, product *and version*, reasoning effort, and self-report;
-  filename `<identity>-<effort>.md`. **List both before concluding a record is absent**, and **say
-  in the header which of the two you read** — "PASS, from `~`" and "PASS, from this repo" are
-  different claims. Read its result, expiry, **corpus digest**, and the **size of work it was
-  earned on**; past expiry or filed against a different identity is stale and counts as missing.
-
-  **Recompute the digest with the command the record names, unmodified, and compare** — the only
-  check that notices the instrument moving, and one adjusted until it matches is not a check.
-  Without the corpus, staleness is **unknowable**, not passed. Record what you found beside the
-  isolation line. **A mismatch is not by itself proof the corpus moved:** pin the collation
-  (`LC_ALL=C`), the output mode (`shasum -t` — it defaults to binary on Windows and hashes a
-  different separator) and an LF checkout, then record stale. That closed list, written down in
-  advance, is the whole difference between checking and adjusting — 2026-08-24, two valid in-date
-  records read as stale on the output-mode trap alone. **State the workload gap in numbers, never adjectives** — the record's
-  `Workload` row beside the size this review covered; it bounds what the reviewer's *silence*
-  closes, nothing more. Full reasoning:
+  (2026-08-23). **List both before concluding a record is absent**, and **say in the header which
+  of the two you read** — "PASS, from `~`" and "PASS, from this repo" are different claims.
+  **Light reads two fields: result and expiry.** Past expiry, or filed against a different
+  identity, is stale and counts as missing. **`[deep]`** recompute the corpus digest with the
+  command the record names, arbitrate a project-local record against a home one, and state the
+  workload gap in numbers — each has a trap that has already cost a session, all of them in
   [references/inputs-and-calibration.md](references/inputs-and-calibration.md).
 
-- **The author's residual doubts, where the brief had an author.** `adversarial-review-prompt`
-  §10 hands the user **two labelled lists** — `SEEDED` (its own search found the doubt in the
-  brief) and `UNSEEDED` — and step 5 below requires **you** to re-rule the second, since an author
-  cannot certify absence in a document they wrote. **Nothing puts either list on disk**: they live
-  in a chat message you cannot read. So **ask the user for the hand-off and have them paste it
-  verbatim, both headings** — a missing heading is not a zero. Where they no longer have it, or
-  there was no authoring session at all — a review with no brief, a report from another tool —
-  record that the doubts were unavailable and **score no finding as independent corroboration on
-  that basis**. Absence of the list is absence of the check, never evidence the doubts were kept
-  out, and the two must never read the same in a ledger. **Take the list from that message or from
-  nowhere** — never a doubts file found on disk, a copy folded into the brief, or a list the
-  authoring session reconstructs now, and never ask for one to be produced: the first two were
-  reachable by the reviewer, the third is written after the report it must be independent of.
-- **The round.** If a ledger already exists at the target path, check whether its last round is
+- **What the author's agreement is worth — one rule, no input required.** Author doubts are never
+  corroboration, and reviewer agreement with the brief is **non-independent by default**. The
+  sibling skill used to form a residual-doubts list, bucket it `SEEDED`/`UNSEEDED` and hand it over
+  in chat for you to re-rule; that protocol is retired — it leaked into the brief on all four
+  occasions it was measured, and it had no durable channel to reach you by. Do not ask the user for
+  such a list, and do not accept one found on disk or reconstructed now. What replaces it is §5's
+  probe, which is cheaper and was always the larger channel: query the brief with a finding's own
+  identifiers and rule the echoes from primary sources.
+- **The round — and the cap.** **Two rounds on the same target, then stop.** If this would be the
+  third ledger against the same work, do not open it: say the cap is reached, move every unresolved
+  residual to the durable backlog, and tell the owner the phase is theirs to close. A third round
+  happens only when the owner asks for one in their own words, never because a residual is still
+  open — that is the normal state of a closed phase.
+
+  If a ledger already exists at the target path, check whether its last round is
   *closed* — defined over obligations, not cells: every numbered row **and** every auxiliary entry
   carries both axes, no `PENDING OWNER` is unresolved, no blocking `VERIFY` is open, and every
   executed `FIX NOW` row is backfilled. A closed round is history: append `# Round N`, never edit
@@ -159,8 +169,9 @@ From `$ARGUMENTS`, resolve:
 Read the report in full before anything else. Do not start ruling from its summary. That full read
 is for the four checks below — they are about the document as a whole and none of them can be done
 from an excerpt — and it necessarily exposes you to every argument the report makes. That exposure
-is accepted here rather than denied: step 2 cuts the claims out of it and step 5 says which artifact
-the verification runs against, neither of which is a claim that you have somehow not read it.
+is accepted here rather than denied: step 2 gets every finding onto a row before any ruling exists,
+and step 5 aims the check at the claim rather than at the case made for it. Neither is a pretence
+that you have somehow not read it.
 
 Four checks before it earns a ledger:
 
@@ -201,49 +212,47 @@ This ordering is the guard against the most common real-world drift: the easy fi
 the hard ones get forgotten, and the ledger records only what was convenient. Rows exist first;
 verdicts fill in.
 
-Enumerate these too — they are findings, and each gets a ruled entry in its own ledger block
-(they are counted separately from the numbered-finding rows; see below). Every auxiliary entry
-gets a stable ID (`P-1`, `CNV-1`, `D-1`, `U-1`, …) and the same two axes as a table row — a verdict
-and a disposition (`VERIFY` is the usual pairing for an open CNV gap). The no-empty-cells closure
-check covers these entries, not just the table:
+Enumerate these too — they are findings, and in light tier each gets **a row in the same table**,
+carrying the same two axes as any other row (`VERIFY` is the usual pairing for an open CNV gap):
 
 - The reviewer's **could-not-verify** list. That list is the reviewer being honest about a gap.
   Dropping it re-hides the gap and it reads downstream as a pass.
-- Any **process or prompt defect** the reviewer reported (the brief invites these). These get ruled
-  on in their own block, because their fix lands in the brief or the skill, not the code.
+- Any **process or prompt defect** the reviewer reported (the brief invites these). Its fix lands
+  in the brief or the skill rather than in the code; the row says so.
 - Any **disagreement with a prior internal review** the reviewer raised.
-- The reviewer's **claims-examined-and-upheld** list. Not every line of it is ruled on — but it is
-  not transcription either (step 5). Each claim you re-open gets an entry (`U-1`, …) with the same
-  two axes, and the header carries a separate line: how many you sampled, how many you re-opened.
+- Anything on the reviewer's **claims-examined-and-upheld** list that it cleared on the strength of
+  a comment, a test name or a docstring. That is the party under review talking through the
+  reviewer, and it is an open finding rather than coverage. Scanning the list for that shape is
+  cheap; re-opening the rest of it is not, and is not asked for here.
 
-**Count in = count out — over the report's *numbered* findings.** One table row per numbered
-finding; auxiliary categories are ruled in their own blocks and counted separately in the header
-("Findings in: N · Rows out: N · +K process, +M CNV, +D prior-review disagreements ruled, +U
-re-opened upheld claims, +A adjudicator findings, +C corrections to earlier rounds"). Merge two
-findings only with a row naming the IDs and why — then say so in the header too. A finding with no
-row is the defect this whole skill exists to prevent.
+**`[deep]`** give each auxiliary class its own ledger block and its own ID namespace (`P-`, `CNV-`,
+`D-`, `U-` for a re-opened upheld claim, `A-` for your own findings, `C-` for corrections to an
+earlier round), count them separately in the header, and sample the upheld list rather than
+scanning it.
 
-**Extract a claim card with each row.** Alongside the skeleton, write each finding's *claim* on
-its own, into the session scratchpad — never beside the ledger, where a later reviewer would read
-it. A claim card is exactly five fields, copied verbatim and nothing else:
+**Count in = count out.** One row per numbered finding, one row per auxiliary item above, and the
+header states the count both ways ("Findings in: N · Rows out: N"). Merge two findings only with a
+row naming the IDs and why, and say so in the header too. **A finding with no row is the defect
+this whole skill exists to prevent.**
+
+**`[deep]` Extract a claim card with each row.** Alongside the skeleton, write each finding's
+*claim* on its own, into the session scratchpad — never beside the ledger, where a later reviewer
+would read it. A claim card is exactly five fields, copied verbatim and nothing else:
 
 > Location · Mechanism · Trigger · Consequence · the impact the reviewer assigned
 
 What stays out of the card is the point of it: the reviewer's **reasoning**, its evidence, the
 argument for its severity, its suggested fix, and every phrase carrying confidence ("clearly",
 "this will certainly", "I verified"). Those are how it persuaded itself, and step 5 verifies the
-claim rather than grading the argument. Where a field is genuinely absent from the report, the
-card says `not stated` — and that absence is itself worth seeing early, because a finding with no
-stated trigger is one nobody can reproduce yet.
-
-**Most reports will not hand you a clean separation, so have a rule ready for the mixed field.**
-A good reviewer puts its evidence, citation or severity case *inside* the Mechanism you are told to
-copy verbatim, and both instructions cannot then be obeyed. Expect it on the highest-impact
-findings. **Copy the claim clause verbatim and replace the argument with a pointer to the report
-line** (`— argument at :131`). Never paraphrase: that silently edits what you are about to verify.
-
-The cards are what step 5 works from. Cut them here, while you are still transcribing and before
-any ruling exists, because a card cut later is a card cut by someone who has already decided.
+claim rather than grading the argument. Where a field is genuinely absent from the report, the card
+says `not stated` — a finding with no stated trigger is one nobody can reproduce yet. Where the
+reviewer put its evidence or its severity case *inside* the Mechanism, copy the claim clause
+verbatim and replace the argument with a pointer to the report line (`— argument at :131`); never
+paraphrase, which silently edits what you are about to verify. Cut the cards while you are still
+transcribing, before any ruling exists: a card cut later is a card cut by someone who has already
+decided. It does not make you blind — you read the report in step 1 and cannot unread it — it gives
+step 5 a target containing only the claim.
+[references/verification-standard.md](references/verification-standard.md).
 
 **What the card buys, exactly.** You read the report in step 1 and cannot unread it; the card does
 not make you blind. It gives step 5 a target containing only the claim, so the check aims at the
@@ -285,37 +294,42 @@ Sort every remaining finding into exactly one:
   spend effort on, or a trade-off between two defensible designs. → do not rule. Reframe it as a
   single decidable question with the options and their consequences, and hand it up. Verdict
   `OWNER RULING REQUIRED`.
-- **Process/prompt** — about the brief, the envelope, the review method itself. → its own block.
+
+  **This class is bounded, and the bound is load-bearing.** It is for questions with *two
+  defensible options*. Where one option is plainly the sensible default — the conservative fix, the
+  smaller change, the behaviour the rest of the codebase already has — **take the default, note it
+  in one line, and ask nothing.** One phase here manufactured 31 owner rulings, and the owner could
+  not follow them; the questions were real, the volume made them unanswerable. If you have more
+  than a handful, you are converting your own work into the owner's.
+- **Process/prompt** — about the brief, the envelope, the review method itself. → a row tagged
+  `process`, or **`[deep]`** its own block.
 
 The split is the discipline. A machine-checkable finding you resolve by reasoning is an unforced
 error; an owner-judgement finding you resolve yourself is you taking a call that is not yours.
 
-## 5. Re-verify — symmetric standard, running pipeline
+## 5. Re-verify — run something real, then rule
 
-**Verify against the claim card, not against the report's argument.** For each finding: open its
-card, write down what you expect the check to show *before* you run it, run it, and record the
-command, the output and your verdict. Then re-read the reviewer's argument for that finding and
-record, on its own line, whether it changes the ruling and which way.
-
-You have already read that argument once, in step 1; the card does not make you blind to it and
-nothing here can. What it does is aim the check at the claim rather than at the case made for it.
-**Pre-registration works on you, in the moment, and only if you actually write the expectation
-first** — it is no proof to a later reader, since the ledger records an expectation and an output
-but nothing establishing their order. It guards both directions: a well-argued false finding earns
-a `CONFIRMED` it did not deserve, one stated flatly or in poor English earns a `REFUTED` on the
-same non-evidence, and both are rulings on the reviewer's prose — a fact about the reviewer, not
-about the code.
-
-**Re-read the argument afterwards; it is required.** It is often where the reproduction steps
-are, and a card whose `Trigger` says `not stated` may only be reproducible from the prose around
-it. The ordering decides which of the two ends up as the finding of record.
+**Light tier, the whole loop:** for each finding, run the check that would settle it, record the
+command and its output in the ledger, and write the verdict and the disposition. One line of
+ruling per finding. The evidence standard is the brief's own — Location · Mechanism · Trigger ·
+Consequence · Status — and it binds your refutation exactly as it bound the finding.
 
 **Do not default to refuted when uncertain.** Refutation pipelines do, and are right to — they
 filter before a human sees anything. This ledger is the opposite position: the finding is already
 in front of you, the ruling is durable, and `COULD NOT DETERMINE` with the settling check named
 costs one line. Dropping a finding for being unclear is the dismissal reflex wearing a
-methodology's clothes. The full reasoning is in
-[references/verification-standard.md](references/verification-standard.md).
+methodology's clothes. [references/verification-standard.md](references/verification-standard.md).
+
+**`[deep]` Verify against the claim card, and pre-register the expectation.** Open the card, write
+down what you expect the check to show *before* you run it, run it, then re-read the reviewer's
+argument for that finding and record on its own line whether it changes the ruling and which way.
+Pre-registration works on you, in the moment, and only if you actually write the expectation first
+— it is no proof to a later reader, since the ledger records an expectation and an output but
+nothing establishing their order. It guards both directions: a well-argued false finding earns a
+`CONFIRMED` it did not deserve, and one stated flatly or in poor English earns a `REFUTED` on the
+same non-evidence. Both are rulings on the reviewer's prose — a fact about the reviewer, not about
+the code. Re-read the argument afterwards either way: it is often where the reproduction steps are,
+and a card whose `Trigger` says `not stated` may only be reproducible from the prose around it.
 
 For every machine-checkable finding, produce evidence at the same standard the brief demanded of
 the reviewer, whichever way it comes out:
@@ -331,80 +345,55 @@ the reviewer, whichever way it comes out:
 - **Separate what a finding says about the work from what it says about the codebase.** Some
   findings would read the same against any file in the project and could have been written
   without opening the work. They can be real and get a row like any other — they are simply not
-  evidence that the reviewer read anything, and earn the report no credit elsewhere.
-
-- **Discount non-independent agreement.** A brief claim that was the author's own suspicion makes
-  the reviewer's agreement an echo, not confirmation — verify those from primary sources as if the
-  reviewer had said nothing. **The hand-off's `SEEDED`/`UNSEEDED` labels are evidence, not your
-  ruling:** an author cannot certify absence in a document they wrote, and here they never have.
-  Presence has been reliable throughout; only absence fails. So take `SEEDED` at its word, and
-  re-run the search yourself on every `UNSEEDED` doubt — the whole brief **and the cover note**,
-  with the doubt's own citations and identifiers as queries rather than a paraphrase. Record what
-  you found — `at ‹id›:‹line›` or `no line found` — with the query beside it, and score only a
-  doubt *you* ruled absent as independent corroboration. **A `SEEDED` doubt the reviewer never
-  raised is the one thing that list buys:** the brief pointed at it, so a **calibrated** reviewer's
-  silence there is evidence — about the doubt, or about this reviewer's reach. Rule which, or say
-  you could not. From an uncalibrated reviewer that silence is worth nothing, as everywhere else.
-
-  **The doubts are the small channel; the brief's load-bearing claims list is the large one** —
-  a pointed sub-question states the defect and directs the reviewer at it, so agreement answers a
-  question rather than finding anything. **Run the same probe over every finding**, query both
-  documents with that finding's own identifiers, rule the echoes from primary sources, and tally
-  in the ledger how many were echoes, partial, or free. That last number is what the report's
-  weight rests on. [references/verification-standard.md](references/verification-standard.md).
-
-- **The same discount applies between reviewers.** Agreement is corroboration only if the second
-  could not read the first, and ours land in one directory. **Establish it from timestamps, not a
-  promise**, record what each could see, and re-establish shared findings from primary sources
-  where it could. Two reviewers handed the *same brief* are not independent either.
-
-- **A claim the reviewer upheld is a ruling you inherit, not a line you copy.** Sample the
-  upheld list rather than transcribing it, and re-open anything cleared on the strength of a
-  comment, a test name or a docstring — that is the party under review talking through the
-  reviewer. Rank a reviewer that reached the defect and argued it intentional **below** a plain
-  miss: that leaves you the bug plus a written case for keeping it. An open finding, not coverage.
-
+  evidence that the reviewer read anything.
 - **Confirm the gate would actually fail.** When a finding is about a test or gate proving nothing,
   the check is not "does the suite pass" but "would it fail if the thing were wrong." Break it
   deliberately, in a throwaway copy, and see. A gate that passes before its implementation exists
   is the recurring shape.
+- **Discount non-independent agreement.** The brief's load-bearing claims list states suspected
+  defects outright and points the reviewer at them, so a reviewer that comes back agreeing has
+  answered a question rather than found anything — that is what it was asked to do and is not its
+  failure. Treat agreement with the brief as **non-independent by default**, and verify those
+  findings from primary sources as if the reviewer had said nothing. No author's doubts list
+  reaches you: the protocol that produced one is retired, and its four measured rounds are why.
+- **The same discount applies between reviewers.** Agreement is corroboration only if the second
+  could not read the first, and ours land in one directory. **Establish it from timestamps, not a
+  promise.** Two reviewers handed the *same brief* are not independent either.
+- **`[deep]` Run the echo probe and tally it.** For every finding, query the brief and the cover
+  note with that finding's own identifiers, record whether the brief had already said it, and put
+  the tally in the ledger — how many findings were echoes, how many partial, how many were free to
+  surprise. That last number is what the report's evidentiary weight actually rests on. Measured
+  twice here: 10 of 15 findings were echoes of the brief's own sub-questions, then 6 of 9.
+  [references/verification-standard.md](references/verification-standard.md).
+- **`[deep]` Sample the upheld list.** A claim the reviewer upheld is a ruling you inherit, not a
+  line you copy. Sample rather than transcribe, re-open what was cleared on the work's own say-so,
+  and rank a reviewer that reached the defect and argued it intentional **below** a plain miss —
+  that leaves you the bug plus a written case for keeping it. (Light tier does the cheap half of
+  this in §2 and no more.)
 - **Re-verification hygiene.** Run only commands verified not to rewrite repository files or
   external state — snapshot-updating runners and cache-writing builds count as writes. Throwaway
   copies live in the session scratchpad, never the working tree. End by reporting the working
   state clean: `git status`, or on a target with no repository, name the only files this session
   wrote and show the target directory otherwise unchanged.
 
-Then three escalation rules:
+Then the escalation rule:
 
 - A **REFUTED** verdict on a finding **the reviewer rated** high or critical impact, in code you
-  authored, requires
-  execution evidence. If you cannot execute it, the verdict is `COULD NOT DETERMINE` — not
-  `REFUTED` — and you say what would settle it. **That burden reads the reviewer's label, not the
-  stakes**, so a reviewer that mis-rates a class of defect moves it without anyone deciding to.
-  Where its record carries a **Severity calibration** note about that class, or the report ranks a
-  defect far below where its own stated Consequence puts it, apply the burden the consequence
-  earns and say in the row that you did. It moves one thing only — the evidence bar for *refusing*
-  a finding, never its rank or verdict, and never toward accepting one more cheaply.
-- **That same verdict also requires a second opinion that was not handed the report.** Spawn a
-  subagent, give it the claim card and the code the claim concerns, and ask it to establish
-  whether the mechanism holds — never to check your work, which only hands it your conclusion to
-  agree with. It must not receive the reviewer's reasoning, your reasoning, or your verdict. If
-  you disagree, the verdict is `COULD NOT DETERMINE` and the disagreement goes in the ledger.
-  Where no subagent is available, the fallback is `COULD NOT DETERMINE` with the check named.
-
-  **Spawn it with a tool allowlist excluding `Write`, `Edit` and `NotebookEdit`** — a subagent
-  does not inherit this skill, and an unrestricted general-purpose agent holds every tool you
-  hold. **But the allowlist bounds which tools exist, not what they may write, and `Bash` is a
-  write capability**, so a `Bash`-holding verifier is trusted rather than confined.
-
-  **Record two facts beside the verdict, always:** whether its tools were restricted, and whether
-  it could have read the report — not being *handed* it is not blindness, since the subagent is
-  spawned into the directory it sits in. Real blindness takes a sanitized copy holding the claim
-  card and only the source the claim concerns. Either way the check counts; **never write "blind"
-  for one that was merely uninformed.** [references/second-opinion.md](references/second-opinion.md).
-
-- Where your refutation rests on a hypothesis you formed before reading the evidence, get an
-  independent check that is blind to that hypothesis rather than arguing for it.
+  authored, requires execution evidence. If you cannot execute it, the verdict is
+  `COULD NOT DETERMINE` — not `REFUTED` — and you name the check that would settle it. **That
+  burden reads the reviewer's label, not the stakes**, so where the report ranks a defect far below
+  where its own stated Consequence puts it, apply the burden the consequence earns and say in the
+  row that you did. It moves one thing only — the evidence bar for *refusing* a finding, never its
+  rank or verdict, and never toward accepting one more cheaply.
+- **`[deep]` and only there: a second opinion that was not handed the report.** Spawn a subagent,
+  give it the claim card and the code the claim concerns, and ask it to establish whether the
+  mechanism holds — never to check your work, which only hands it your conclusion to agree with.
+  Spawn it with a tool allowlist excluding `Write`, `Edit` and `NotebookEdit`; a subagent does not
+  inherit this skill, and `Bash` is itself a write capability. Record two facts beside the verdict:
+  whether its tools were restricted, and whether it could have read the report — not being *handed*
+  it is not blindness, since the subagent is spawned into the directory it sits in, and **never
+  write "blind" for a check that was merely uninformed.** If you disagree with it, the verdict is
+  `COULD NOT DETERMINE`. [references/second-opinion.md](references/second-opinion.md).
 
 ## 6. Rule — two axes, never one word
 
@@ -458,12 +447,11 @@ Non-negotiables:
 - Nothing in the ledger claims the work is complete, correct, or ready to ship.
 - Completed rounds append only. A superseded ruling gets a new row citing the row it supersedes;
   the original stays as written. The current round is filled in place, which replaces text by
-  design — so prove the *completed* prefix is untouched, not that the file only grew:
-  `head -n <the prior round's last line> <ledger> | diff - <a pre-session copy>` must be silent.
-  **Run it after every write, not once at the end, and assemble the round outside the ledger and
-  concatenate it once** — an unanchored replace matches an earlier round's identical phrase first
-  and rewrites history silently, which closed-round warnings will not catch. Take the pre-session
-  copy before your first write; afterwards there is nothing to compare against.
+  design, so **assemble the round outside the ledger and concatenate it once** — an unanchored
+  replace matches an earlier round's identical phrase first and rewrites history silently, which
+  closed-round warnings will not catch. **`[deep]`** take a pre-session copy before your first
+  write and prove the completed prefix untouched after every write, not once at the end:
+  `head -n <the prior round's last line> <ledger> | diff - <the pre-session copy>` must be silent.
 - **Numbered finding IDs are lowercase** (`codex7-1`, `grok7-3`). Uppercase collides with the
   auxiliary namespace — `P` `CNV` `D` `U` `A` `C` `X` `Q` — and the validator errors rather than
   miscounting. The full table, and where a historical exception lives, are in the template.
@@ -473,38 +461,45 @@ Non-negotiables:
 - The only files this skill creates or edits are the ledger, `FIX LATER` backlog artifacts, and —
   when the input review exists only as a chat transcript — the report file materialized from it,
   saved beside the ledger before adjudication begins. Never the code, the plans, or an existing
-  review, whatever the tool grants allow. The step-2 claim cards are the one exception and they
-  live in the session scratchpad, never beside the ledger: a card sitting in the review directory
-  is the next reviewer's reading material, and it is the finding stripped of its evidence.
-- Before saving, verify one row per numbered finding and **no empty verdict or disposition cells**,
-  and state the counts in the header (numbered findings, plus process, CNV, prior-review
-  disagreements, re-opened upheld claims, your own `A-N` findings and `C-N` corrections to earlier
-  rounds, each separately, and the report's completeness state). A mismatch is a defect in your own work
-  — a merge row or a header note explains it; dropping a row never does.
+  review, whatever the tool grants allow. **`[deep]`** the step-2 claim cards are the one exception
+  and they live in the session scratchpad, never beside the ledger: a card sitting in the review
+  directory is the next reviewer's reading material, and it is the finding stripped of its
+  evidence.
+- Before saving, verify one row per numbered finding and per auxiliary item, **no empty verdict or
+  disposition cells**, and the counts in the header: findings in, rows out, the tier you ran, and
+  the report's completeness state. **`[deep]`** breaks the auxiliary count out per namespace
+  (process, CNV, prior-review disagreements, re-opened upheld claims, your own `A-N` findings,
+  `C-N` corrections to earlier rounds). A mismatch is a defect in your own work — a merge row or a
+  header note explains it; dropping a row never does.
 
 ## 8. Hand off
 
 Report to the user, briefly:
 
-- The ledger path, and the count: N findings in, N rows out.
-- **The owner questions**, in full — each as one decidable question with its options and what each
-  costs. These are the reason the skill stops here. Say which of them block execution.
+- The ledger path, the tier you ran, and the count: N findings in, N rows out.
+- **The owner questions, in one block and in plain terms** — each a single decidable question with
+  its two options and what each costs, and each one you could not have defaulted. Say which block
+  execution. **This list is meant to be short.** Anything with a sensible default was taken by
+  default with a one-line note in the ledger, not asked here (§4); a hand-off carrying dozens of
+  rulings is not thorough, it is unanswerable, and the owner has said so twice.
 - The `FIX NOW` queue, one line each, and an offer to execute it as a separate act. The owner's
   acceptance of that offer **is** that act: record it verbatim in the ledger, and the same session
   may then execute and backfill. Whoever lands a `FIX NOW` change updates that row — a ledger
   still saying "queued" after the work landed is a false record.
 - The `FIX LATER` items with their backlog artifact paths, so the user can see they exist.
 - Anything you ruled `COULD NOT DETERMINE`, and what would settle it.
-- Whether the report was complete, partial, or inconclusive (step 1). A partial report leaves
-  claims unexamined rather than upheld, and an inconclusive one needs a re-run before anything here
-  means much — in both cases say what the next run should cover.
-- Whether each reviewer had a passing calibration record, and if not what that cost: which claims
-  are CNV entries rather than coverage, and that nothing it cleared carries into the next brief.
-  One sentence, one pointer — the URL in §1, not a bare `calibration/README.md`, which resolves to
-  nothing from an installed skill. Reported, never argued: the user chose the reviewer they had.
-- How many upheld claims you sampled and how many you re-opened.
+- Whether the report was complete, partial, or inconclusive (§1). A partial report leaves claims
+  unexamined rather than upheld, and an inconclusive one needs a re-run before anything here means
+  much — in both cases say what the next run should cover.
+- Whether each reviewer had a passing calibration record, and if not what that cost: its findings
+  count exactly as any other's, its silence covers nothing, and nothing it cleared carries into the
+  next brief. One sentence, one pointer — the URL in §1, not a bare `calibration/README.md`, which
+  resolves to nothing from an installed skill. Reported, never argued: the user chose the reviewer
+  they had.
 - Where a reviewer's figures failed to reproduce, or two reviewers disagreed — that bears on how
   much weight the rest of that report earns.
+- **Whether this was round two.** If it was, say the cap is reached: the residuals are on the
+  backlog, and closing the phase is the owner's to do. A third round needs their own words.
 - One line on what this ledger feeds: the next review brief's "ground already walked" section reads
   it, so those findings are not re-found. That is why undispositioned findings are expensive.
 

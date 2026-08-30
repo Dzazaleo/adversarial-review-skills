@@ -40,21 +40,18 @@ machine-wide record and one pinned to this repository are different claims» / �
 «date»» / «FAIL» / «not looked up — reviewer identity unknown, so no record could be keyed; treated
 as none on file». «Where it is anything but PASS, add: findings adjudicated normally; upheld claims
 recorded as CNV, not coverage»
-**Workload gap:** «the size the pass was earned on, from the record's Workload row, beside the size
-of the work this review covered — both in numbers. State them; do not characterise the gap»
-**Author's residual doubts:** «supplied by the user and quoted into §«N» — «S» `SEEDED` + «U»
-`UNSEEDED` as the hand-off labelled them, with every `UNSEEDED` one re-searched here and ruled
-present/absent by this session; «K» of «S» seeded doubts the reviewer never raised, noted at
-§«N»» / «unavailable — the authoring session's hand-off could not be produced, so no finding is
-scored as independent corroboration; this is absence of the check, not evidence the doubts were
-kept out» / «none existed — the brief was not written by `adversarial-review-prompt`»».
-**This line is required.** Without it a ledger cannot be
-told apart from one where the audit was silently skipped, and the skipped case is the common one
-**Upheld claims:** «S» sampled of «T» listed · «K» re-opened as `U-N`
-**Findings in: «N» · Rows out: «N» · +«K» process, +«M» CNV, +«D» prior-review disagreements
-ruled, +«U» re-opened upheld claims, +«A» adjudicator findings, +«C» corrections to earlier
-rounds** «numbered counts must match; if merged, say which IDs; state each auxiliary count even
-when it is zero»
+**Workload gap:** «`[deep]` only — the size the pass was earned on, from the record's Workload
+row, beside the size of the work this review covered, both in numbers. State them; do not
+characterise the gap»
+**Tier:** «light / deep», «and the tier the brief was written at, where they differ»
+**Independence:** «agreement with the brief is non-independent by default; no author's doubts list
+exists — that protocol is retired» «`[deep]`: echo tally — «E» echo, «P» partial, «F» free»
+**Upheld claims:** «`[deep]`: «S» sampled of «T» listed · «K» re-opened as `U-N`» / «light: list
+scanned for claims cleared on a comment, a test name or a docstring; «K» found and given rows»
+**Findings in: «N» · Rows out: «N»** «the two must match; if merged, say which IDs». «`[deep]`
+breaks the auxiliary rows out per namespace: +«K» process, +«M» CNV, +«D» prior-review
+disagreements ruled, +«U» re-opened upheld claims, +«A» adjudicator findings, +«C» corrections to
+earlier rounds — each stated even when it is zero»
 ```
 
 The envelope line matters. The brief's permissions are an instruction, not a sandbox — if the
@@ -116,6 +113,13 @@ One row per finding. Both axes, always.
 Keep the reviewer's numbering. Where you merged two findings, keep both IDs in the `#` cell and say
 why in the row.
 
+**Light tier writes one table.** Every auxiliary item — a could-not-verify entry, a process or
+prompt defect, a disagreement with a prior review, an upheld claim cleared on a comment — is a row
+in it, tagged in the `Class` cell (`process`, `CNV`, `prior-review`, `upheld`) and carrying both
+axes like any other. The separate blocks and ID namespaces below are `[deep]`; the obligation they
+serve — a row for everything that came in — is the same either way, and one table meets it with
+less bookkeeping.
+
 **When the vocabulary changes, earlier rounds do not become wrong.** A verdict or disposition term
 added in round N does not reach back: rows written before it were correct under the rules then in
 force, and they are history under invariant 1 — **not defects to repair.** Where a widened
@@ -126,8 +130,8 @@ new work. When more than one report feeds a round, prefix each ID with the revie
 
 No bare "ACCEPTED" — it means both "the finding is real" and "we are shipping with it."
 
-**Every `REFUTED` that required a second opinion carries a verifier-exposure clause**, in the row
-itself, saying two things: whether the verifier's tools were restricted, and whether it could have
+**`[deep]`: every `REFUTED` that required a second opinion carries a verifier-exposure clause**, in
+the row itself, saying two things: whether the verifier's tools were restricted, and whether it could have
 read the report. Neither is decoration. A reader who is not told assumes the stronger version of
 both, and "blind" is never the word for a check that was merely uninformed — the `Reviewer
 isolation` line in the header is about the *external reviewer* and does not cover this.

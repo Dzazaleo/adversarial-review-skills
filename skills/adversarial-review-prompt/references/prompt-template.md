@@ -196,10 +196,21 @@ sub-question pointing at the seam.
 15–25 items. Suggested groups: rule/arithmetic correctness · published contracts (one-way
 doors) · robustness and process behavior · supply chain and hygiene.
 
+**Bound what may be ranked, in the brief itself, verbatim-worthy:**
+
+> A claim whose falsity has no behavioural consequence — a comment, a docblock, a citation — is a
+> NOTE for this report's appendix, never a ranked finding. Rank only findings whose consequence is
+> a wrong number, a wrong file, a crash, or a gate that cannot fail. Say a wrong comment is wrong;
+> do not spend a finding's rank on it.
+
+«Without that line a directed reviewer produces prose-accuracy findings once the real defects are
+gone — three consecutive verification rounds on one project came back 100% documentation-class
+while every success criterion passed, and the prose fixes then minted fresh false clauses at two in
+three. The mining stays; the ranking is what this bounds.»
+
 «Write this list as if you had no private doubts at all: every seam you can see belongs here,
-**sharp**. Your doubts are not formed yet — the skill's §9 forms them after this brief is saved,
-against what it turned out not to ask, precisely so they stop being a copy of this list. Nothing is
-ever blunted or dropped here to protect one.»
+**sharp**. There is no other channel — the skill collects no residual-doubts list and hands none
+over. Nothing is ever blunted or dropped here to hold something back for one.»
 
 ### 6b. The unseeded pass — required whenever §6 exists
 
@@ -492,22 +503,14 @@ The per-claim adjudication in §6 is unaffected by this — CONFIRMED / REFUTED 
 DETERMINE on a single load-bearing claim is evidence about that claim, not a verdict on the
 work, and it stays.
 
-## 11. The author's own residual doubts — formed after this file, and not certified by you
+## 11. Closing the prompt
 
-Nothing about your own suspicions goes in the prompt, or in the cover note that hands it over —
-the cover note is read first, so anchoring there is worse. A reviewer that reads them is anchored,
-and demotion disclaimers do not survive contact.
-
-**And they are not collected while you write this file.** Doubts mined alongside the §6 claims are
-a copy of the §6 claims — same reading, same seams — which is why every round that measured it
-found them already in the brief: 5 of 5, 4 of 4, 2 of 3, 5 of 5. The skill's §9 forms them *after*
-this file is saved, by re-reading it and asking what it turned out **not** to ask, then buckets
-each by search as `SEEDED` (found in the brief) or `UNSEEDED` (not), and hands the user both lists.
-
-What you must never do is report a doubt as *held back*: that is a claim of absence in a document
-you wrote, it has been false on every occasion it has been made, and it turns an echo into
-"independent corroboration". `UNSEEDED` says what your search found and nothing more — the ruling
-belongs to whoever adjudicates the returned review.
+Nothing about your own suspicions goes in this file, in the cover note that hands it over, or in
+the hand-off afterwards. There is no residual-doubts section and no residual-doubts list: the
+protocol that produced one leaked into the brief on all four occasions it was measured, and it is
+retired ([why-this-is-hard.md](why-this-is-hard.md)). What replaces it is one sentence the
+adjudicator already operates on — **agreement with this brief is non-independent by default** — so
+every seam you can see belongs in §6, sharp, and none of it is held back to be scored later.
 
 The prompt itself ends after the deliverable. Close it with:
 

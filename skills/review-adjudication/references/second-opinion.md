@@ -1,8 +1,9 @@
 # The second opinion — when it is required, how to spawn it, and what it is worth
 
-Background for `SKILL.md` §5's escalation rules. The obligations are in the skill; this is the
-full procedure and the reasoning, kept out of the main file so the obligations sit above the
-compaction cut.
+Background for `SKILL.md` §5's escalation rules, and **`[deep]` tier only** — the light tier's
+answer to a refutation it cannot execute is `COULD NOT DETERMINE` with the settling check named,
+which costs one line and is an honest outcome. Read this when the tier is deep. The obligations are
+in the skill; this is the full procedure and the reasoning.
 
 - **That same verdict also requires a second opinion that was not handed the report.** Spawn a
   subagent, hand it the claim card and the code the claim concerns, and ask it to establish

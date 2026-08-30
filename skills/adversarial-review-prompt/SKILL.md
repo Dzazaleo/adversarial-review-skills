@@ -1,7 +1,7 @@
 ---
 name: adversarial-review-prompt
 description: "Generate a targeted adversarial review prompt to hand to a different AI model — for independent audits, cross-model code review, red-teaming a plan or design, or second-opinion verification of work Claude itself produced. Use when the user asks for an external/independent/adversarial review, a prompt for another model (Codex, Gemini, GPT, Qwen, Cursor), something to paste into another model's chat box, a red-team of their own code, or wants their work attacked rather than confirmed. Produces an audit brief plus a paste-ready cover note that tells the reviewer to write its report to a file — never a review."
-argument-hint: "<target: phase N | path | PR | diff | plan file> [--reviewer <model>] [--writes]"
+argument-hint: "<target: phase N | path | PR | diff | plan file> [--reviewer <model>] [--deep] [--writes]"
 allowed-tools:
   - Read
   - Grep
@@ -32,35 +32,39 @@ brief — **it is the authority on the framing block and its four branches** ·
 skip it without comment** · `why-this-is-hard.md` is background only —
 **this file and the template override it wherever they differ.**
 
-1. **You write the prompt. You do not perform the review.** The deliverable is two files —
-   except for a reviewer with no filesystem, which gets the brief alone and no cover note.
-   (objective, §6)
-2. **The reviewer's identity, its reasoning effort, and how many reviewers there are are
-   required inputs, never inferred.** Identity keys the calibration lookup, the envelope and the
-   independence framing; effort is that key's other half and survives in no report; and with
-   several reviewers, what you vary between them is what their agreement is later worth. Ask when
+**Tier — light by default, `--deep` on request only.** Light runs §§1–8 as written and is the
+right answer nearly always. Deep adds exactly what the sections mark `[deep]`, and is for a
+one-way door, a disputed high-severity finding, or a reviewer/author disagreement worth
+arbitrating. Say which tier you ran, in the hand-off: the adjudicator runs the tier the brief
+was written at. (§1, §9)
+
+**Round cap — two rounds on the same target, then stop.** No third brief without the owner
+asking for one in their own words; unresolved residuals go to the durable backlog and the owner
+closes. (§1)
+
+1. **You write the prompt; you do not perform the review.** Two files out — the brief and the
+   cover note — except for a reviewer with no filesystem, which gets the brief alone. (objective, §6)
+2. **The reviewer's identity, its effort, how many there are, and who authored the work are
+   required inputs, never inferred.** Identity and effort key the calibration lookup; identity and
+   provenance together are the only truthful source for the independence sentence; with several
+   reviewers, what you vary between them is what their agreement is later worth. Ask when
    `$ARGUMENTS` is silent. (§1)
-3. **Declare the operating envelope, and make brief and cover note agree exactly** — brief
-   path, report path, and every permission. Disagreement between the two is the defect the
-   reviewer will spend its run on. (§7, §8)
-4. **The report is a file the reviewer creates as it works** — never a ship/no-ship verdict.
-   The one exception is a reviewer with no filesystem: it returns the report in chat, the user
-   saves it, and the hand-off must say so **and** tell the user to send one word to continue if
-   the output stops at a section boundary. (§6, §7, §10)
-5. **Residual doubts are formed in §9, *after* the brief is saved — never alongside the
-   claims, and never inside the brief or the cover note.** Collected while mining claims they
-   are a copy of the claims: five of five leaked, most recently 2026-08-23. §9's search buckets
-   each as **SEEDED** (the brief asks it — never corroboration, though a calibrated reviewer's
-   silence on it is evidence) or **UNSEEDED** (the only corroboration-eligible bucket). Never
-   blunt a claim to move a doubt. Where a query finds nothing the words are **"no line found —
-   unverified"**; never "held back", "withheld", or "excluded from the brief". (§6, §9, §10)
+3. **Declare the operating envelope, and make brief and cover note agree exactly** — brief path,
+   report path, every permission. Disagreement between the two is the defect the reviewer will
+   spend its run on. (§7, §8)
+4. **The report is a file the reviewer creates as it works** — never a ship/no-ship verdict. The
+   one exception is a reviewer with no filesystem: it returns the report in chat, the user saves
+   it, and the hand-off says so. (§6, §7, §9)
+5. **Your own suspicions appear nowhere** — not in the brief, not in the cover note, not as a
+   doubts list handed over afterwards. Every seam you can see belongs in §3's claims list, sharp.
+   Author doubts are never corroboration; the adjudicator treats reviewer agreement with the brief
+   as non-independent by default. (§3, §6, §9)
 6. **Never overwrite an existing brief, cover note or report** — the report path you *name*
-   for the reviewer counts, since a reviewer told to write an occupied path destroys it on your
-   instruction. Check each with `ls`/`Glob`, take the next free name, bind the suffixes (a `-2`
-   brief names a `-2` report), and say which you used. (§6, §8)
-7. **Never claim independence you have not established.** The "different architecture"
-   framing is conditional on the reviewer's identity **and the work's author provenance**,
-   in four branches, each carrying its own payoff line. (§1, template §1)
+   counts, since a reviewer told to write an occupied path destroys it on your instruction. Check
+   each with `ls`/`Glob`, take the next free name, bind the suffixes, say which you used. (§6, §8)
+7. **Never claim independence you have not established.** The "different architecture" framing is
+   conditional on the reviewer's identity **and** the work's author provenance, in four branches.
+   (§1, template §1)
 </invariants>
 
 <why_this_is_hard>
@@ -68,8 +72,8 @@ A brief is only worth what its reviewer can act on, and four things reliably des
 **writing from memory or a summary** instead of the work, so unlocatable claims waste the run and
 teach the reviewer the brief is unreliable · **claiming independence you have not established**,
 false for a same-family reviewer and inflating exactly the findings this exercise can least check ·
-**forming your doubts out of the same reading that wrote the brief**, so the reviewer answers the
-question you asked and you bank it as a discovery · **an envelope the cover note and brief state
+**banking the brief's own echo as a discovery**, when a reviewer answering a sub-question you
+wrote has found nothing you did not already suspect · **an envelope the cover note and brief state
 differently**, which the reviewer spends its run on instead of the work.
 
 Each in full, with its history: [references/why-this-is-hard.md](references/why-this-is-hard.md).
@@ -82,6 +86,16 @@ Each in full, with its history: [references/why-this-is-hard.md](references/why-
 Resolve from `$ARGUMENTS` (ask only if genuinely ambiguous). **The reviewer is the one exception
 to that parenthesis: it is a required input, and you never infer it.**
 
+- **Tier** — `--deep` if `$ARGUMENTS` says so, otherwise **light**, which is the default and
+  almost always right. Deep adds only what a section marks `[deep]`; nothing else changes. Never
+  infer deep from the work feeling important — a one-way door, a disputed high-severity finding,
+  or a reviewer/author disagreement worth arbitrating is the whole list. Name the tier at hand-off.
+- **Round** — how many briefs have already been written against this target. Count the files
+  (`NN-EXTERNAL-REVIEW-PROMPT*.md` beside the work); §4 reads them anyway. **At two, stop.** Do
+  not write a third brief: say the cap is reached, put the unresolved residuals on the durable
+  backlog, and tell the owner the target is theirs to close. A third round happens only when the
+  owner asks for one in their own words — never because a residual is still open, which is the
+  normal state of a closed phase.
 - **Target** — a phase, directory, file set, PR, diff range, or a plan/design doc. Get an
   exact file list with line counts; a reviewer needs to know the size of the job.
 - **Reviewer** — which model/CLI receives this, **at what reasoning effort, and how many of
@@ -115,20 +129,18 @@ to that parenthesis: it is a required input, and you never infer it.**
   nothing; either way say at hand-off which reviewer received which, because the adjudicator rules
   independence off that line alone.
 - **Calibration** — whether this reviewer has ever been shown to find anything. Look for
-  `.adversarial-review/calibration/<reviewer-id>.md` **in two places — project root first, then
-  `~/`** — keyed on family, product and version, effort and self-report; filename
-  `<identity>-<effort>.md`. **`ls` both before concluding there is none** (2026-08-23: a passing
-  reviewer reported as untested because only the project root was checked), and name at hand-off
-  which you read. **Project-local wins on location, not freshness**, so a stale pin shadows a
-  better home copy: open both, and flag any disagreement beyond the result. Read result, expiry
-  **and corpus digest** — recompute it with the command the record names, the only check that
-  notices the instrument changing. **A mismatch is not proof the corpus moved**: rule out
-  collation, `shasum`'s platform-dependent output mode, and a CRLF checkout — that closed list and
-  nothing else — before recording stale; without the corpus, staleness is unknowable, not current.
-  Missing, expired or `FAIL` is normal and never a reason to refuse: run the review anyway. It
-  changes one thing, said at hand-off (§10) — **an untested reviewer's findings still count, and
-  its silence does not.** Its upheld list is not coverage and nothing it "cleared" may enter the
-  next brief's §7. Corpus and 20-minute procedure, pointed at once and never campaigned for:
+  `.adversarial-review/calibration/<identity>-<effort>.md` **in two places — project root first,
+  then `~/`** — and **`ls` both before concluding there is none** (2026-08-23: a passing reviewer
+  reported as untested because only the project root was checked). **Light reads two fields and
+  reports one line: result and expiry** — "calibrated PASS until X", or "no record — findings
+  count, silence covers nothing". Missing, expired or `FAIL` is normal and never a reason to
+  refuse: run the review anyway. It changes one thing, said at hand-off (§9) — **an untested
+  reviewer's findings still count, and its silence does not.** Its upheld list is not coverage and
+  nothing it "cleared" may enter the next brief's §7. **`[deep]`** recompute the corpus digest with
+  the command the record names, arbitrate the two locations against each other, and state the
+  workload gap in numbers — the traps in each are in
+  [references/why-this-is-hard.md](references/why-this-is-hard.md). Corpus and 20-minute
+  procedure, pointed at once and never campaigned for:
   https://github.com/Dzazaleo/adversarial-review-skills/tree/main/calibration
 
 - **Author provenance — who wrote the work under review.** A required input, like the reviewer,
@@ -154,7 +166,7 @@ to that parenthesis: it is a required input, and you never infer it.**
   note at all: follow the **"Reviewer has no filesystem access"** variant in
   `references/cover-note-template.md`, which attaches the brief where the chat accepts uploads and
   has the user save the returned report. Getting this wrong does not fail loudly; it produces a
-  chat-window summary in place of a report file, the one artifact §10 tells the user not to trust.
+  chat-window summary in place of a report file, the one artifact §9 tells the user not to trust.
 
 ## 2. Read the actual work — never write the prompt from memory or from a summary
 
@@ -224,6 +236,15 @@ Group them (rule/arithmetic correctness · published contracts · robustness and
 behavior · supply chain and hygiene). Aim for 15–25 items. Fewer means you did not read
 enough; many more means you are padding with things that cannot produce a wrong result.
 
+**Then bound what the reviewer may rank, in the brief and in these words:** *a claim whose falsity
+has no behavioural consequence — a comment, a docblock, a citation — is a NOTE for the report's
+appendix, never a ranked finding. Rank only findings whose consequence is a wrong number, a wrong
+file, a crash, or a gate that cannot fail.* Prose accuracy is what a directed reviewer produces
+once the real defects are gone: three consecutive verification rounds on one project came back
+100% documentation-class findings while every success criterion passed, and the prose fixes then
+minted fresh false clauses at two in three. Mining the claims is still where the confirmed defects
+come from — the mining stays, the ranking is what this bounds.
+
 **Then ask for an unseeded pass beside them** — the template's §6b, never optional once a claims
 list exists. A list this directed is where the confirmed defects come from, and also why a
 reviewer's coverage collapses to the seams you named: measured twice here, 10 of 15 findings then
@@ -236,9 +257,9 @@ to nothing, and a considered "nothing" from it is a result, not a failure.
 List every prior finding — internal review, code review, CI, earlier audits — with its
 severity label and its **disposition**. Check beside each report for its adjudication ledger
 first — `NN-REVIEW-ADJUDICATION.md` in a phase directory, or bare `REVIEW-ADJUDICATION.md` for a
-standalone target (a skill, a repo with no phase structure) — its rows *and its ruled auxiliary
-entries* (process, could-not-verify, prior-review disagreements) are the dispositions, verdict
-and outcome per finding. Undispositioned findings are the richest seam:
+standalone target (a skill, a repo with no phase structure) — its rows, including the class-tagged
+auxiliary ones (process, could-not-verify, prior-review disagreements), are the dispositions,
+verdict and outcome per finding. Undispositioned findings are the richest seam:
 a warning that was found and left, and that can produce a *wrong result that looks right* or
 a *green test run that proves nothing*, is a blocker wearing a warning label.
 
@@ -320,9 +341,11 @@ Non-negotiables while writing:
   evidence about a claim, not a verdict, and stays.
 - **Your own suspicions appear nowhere in the prompt, nor in the cover note (§8), which is read
   first and anchors hardest.** Write this file as if you held none: every seam you can see belongs
-  in §3's claims list, **sharp**. Do not collect a doubts list here either — that is §9's job, and
-  it runs *after* this file is saved, precisely so the doubts are formed against what the brief
-  turned out to ask rather than out of the same reading that wrote it.
+  in §3's claims list, **sharp**. Do not collect a doubts list anywhere either: this skill no
+  longer forms one. Four rounds were measured and the doubts were already in the brief on all four
+  (5 of 5, 4 of 4, 2 of 3, then 5 of 5 with the search run correctly) — a list mined from the same
+  reading that wrote the brief is a copy of the brief, and the protocol that tried to separate them
+  cost eighty lines and a fragile chat-only channel to buy corroboration it never delivered.
 
 Before saving, verify the prompt against reality: open every `file:line` you cited and
 confirm the quoted text is still on that line, and re-run the exact commands the prompt
@@ -416,9 +439,10 @@ Four decisions before you write it:
    The authorization paragraph is load-bearing, not courtesy: a brief that opens with *attack
    this, find what is wrong, prove it* and no provenance reads like a request to break into
    someone else's system, and an unsure reviewer spends its output on hedges.
-4. **What stays out.** The residual doubts (§10), because the cover note is read first and
-   anchors hardest. The adversarial framing, because the brief carries it in full and a
-   compressed restatement here both dilutes it and risks contradicting it.
+4. **What stays out.** Your own suspicions, because the cover note is read first and anchors
+   hardest — they belong in §3's claims list and nowhere else. The adversarial framing, because
+   the brief carries it in full and a compressed restatement here both dilutes it and risks
+   contradicting it.
 
 Write the cover note **after** the brief, then check the two against each other: the brief
 path, the report path, and every permission must agree exactly. The brief instructs the
@@ -433,40 +457,7 @@ with an unsuffixed cover note stops the pair being findable. Grep it for `«` an
 with the brief. Then reproduce it **verbatim in the hand-off message**, inside a single fenced
 block, so the user can copy it in one gesture.
 
-## 9. Now form the residual doubts — against the saved brief, not from the reading that wrote it
-
-**Order is the fix here, not a sharper search.** Doubts mined alongside the claims are a copy of
-the claims — same reading, same seams — and every round that measured it found them already in the
-brief: 5 of 5, 4 of 4, 2 of 3, then 5 of 5 again on 2026-08-23 with the search correctly run *and*
-correctly reported. So brief and cover note reach disk first, then this.
-
-**Re-read the saved brief — the file, not your memory of writing it** — and only then ask what you
-still doubt, aimed at what the brief turned out *not* to ask: a seam dropped for space, ground §5
-deprioritized, the assumption under a claim rather than the claim. Up to five, each a question
-with a mechanism and its `file:line` — fewer is fine, and none is itself a result.
-
-**Then classify each by search, with no discretion in it.** Queries come from the doubt's own text
-— its citations, identifiers, the exact strings it quotes — never from your sense of what it is
-really about; author-chosen queries defeated this check on 2026-08-17. Search the brief **and the
-cover note** — the brief alone where the reviewer gets none (§8) — whitespace-normalized. Each
-doubt lands in exactly one bucket:
-
-- **SEEDED** — the query hit. The brief asks it, so agreement can never be corroboration. It still
-  belongs in the hand-off: a **calibrated** reviewer pointed at a seeded doubt and silent on it is
-  evidence — about the doubt, or about the reviewer.
-- **UNSEEDED** — no line found. The only corroboration-eligible bucket, and even then only once an
-  adjudicator runs its *own* search and rules it absent. Yours is a report, never a ruling.
-
-**Never blunt or drop a claim to move a doubt into UNSEEDED**; that spends the brief's main value
-for a credit which was not yours to grant. Where one lands SEEDED, try once for an unseeded
-successor — what would still worry you if the brief's question came back answered — and where there
-is none, say so: **"no unseeded doubts" is a result**, an unlabelled empty list is not.
-
-Record per doubt the query and its verbatim output, in the session scratchpad and never beside the
-brief, where it is one `ls` away from the reviewer. Search loop and case histories:
-[references/why-this-is-hard.md](references/why-this-is-hard.md).
-
-## 10. Hand off
+## 9. Hand off
 
 Report to the user, briefly:
 - The brief's path — and, **for a reviewer with a filesystem**, the cover note's path too
@@ -494,18 +485,12 @@ Report to the user, briefly:
   report stops at a section boundary.** The brief tells the reviewer to stop there and wait; the
   reviewer cannot resume itself, so if this never reaches the user a truncated report gets filed
   as a complete one — which is the whole failure the instruction exists to prevent
-- **Last in the hand-off, in its own copy-ready block: §9's doubts, under two headings —
-  `SEEDED (n)` and `UNSEEDED (n)`.** Both headings every round, even at zero: a missing heading
-  and a zero count must never read the same. Under each doubt give its text, the query §9 ran, and
-  that query's verbatim output — by id and line ("claim 7 at `:301`") or **"no line found —
-  unverified"** — so the label can be checked instead of believed. **Chat-only, never written to
-  disk**, because a file is one `ls` away from a reviewer session rooted more broadly than you
-  expected. Tell the user to keep the message until the adjudicator asks for it, and that if the
-  window is lost the list is lost. **There is no durable channel and inventing one is not yours to
-  do**: do not write the list to disk, fold it into the brief, or arrange any other route the
-  adjudicator could read without the user. Losing the window costs one round's corroboration
-  scoring; leaking it costs the corroboration itself. None of it is a ruling — an UNSEEDED doubt becomes corroboration only once an
-  adjudicator runs its own search and says so.
+- **The tier you ran** — light or deep — and, where this was round 2, that the cap is reached and
+  a third round needs the owner's own words
+- **One sentence on what agreement is worth: author doubts are never corroboration, and the
+  adjudicator treats reviewer agreement with the brief as non-independent by default.** No doubts
+  list is formed, kept or handed over. Nothing here is a ruling on independence: the adjudicator
+  probes findings against the brief itself and rules from that
 - One line, only if they use a terminal: the brief can also be piped —
   `codex exec "$(cat path/to/PROMPT.md)"` (bash/zsh) or
   `codex exec (Get-Content path/to/PROMPT.md -Raw)` (PowerShell). The cover note is the

@@ -45,53 +45,37 @@ A refutation carries the finding's own burden. For any claim about runtime behav
 read plus a reassuring code comment is not evidence — the comment is the party under review
 talking. Reconstruct and run the actual path.
 
-## echo audit — the history of leaked doubts
+## echo audit — what agreement with the brief is worth
 
-- **Discount non-independent agreement.** Where a brief claim was the author's own suspicion — a
-  residual doubt leaked into the brief — the reviewer agreeing with it is an echo, not
-  confirmation. Verify those findings from primary sources as if the reviewer had said nothing.
+**Agreement with the brief is non-independent by default.** The brief's load-bearing claims list
+states suspected defects outright and points the reviewer at them, so a reviewer that comes back
+agreeing has answered a question rather than found anything — which is what it was asked to do and
+is not its failure. Verify those findings from primary sources as if the reviewer had said nothing.
 
-  **The hand-off arrives with the doubts already bucketed, and the two buckets are not worth the
-  same to you.** `adversarial-review-prompt` §9 now forms the doubts *after* the brief is saved
-  and searches the brief and cover note for each, labelling it `SEEDED` (found) or `UNSEEDED` (not
-  found). Take `SEEDED` at its word — a claim of presence, provable by pointing at a line, and
-  reliable on every occasion it has been made here. **Re-run the search yourself on every
-  `UNSEEDED` doubt**, because that is a claim of absence in a document its author wrote, and here
-  those have failed every time they were checked: 2026-08-10, five doubts of five were in the
-  brief; 2026-08-15, four of four, reported as "deliberately excluded"; 2026-08-17, two of three,
-  after a search had been made mandatory and the author ran it with queries that missed their own
-  doubt; 2026-08-23, five of five, that last one with the search performed correctly and the leak
-  reported accurately — which is what moved the fix upstream into the ordering.
+**`[deep]` runs the probe and puts the tally in the ledger.** For every finding, query the brief
+**and the cover note** with that finding's own identifiers — never a paraphrase — and flatten
+whitespace before concluding nothing is there, since the brief's prose wraps and a line-oriented
+grep has reported "no line found" for a phrase that was present. Record for each whether the brief
+had already said it, then tally: how many findings were echoes, how many partial, how many were
+free to surprise. That last number is what the report's evidentiary weight actually rests on, and a
+report whose independent findings are all confirmed has earned more than its count of findings
+suggests. Measured twice on this repository: 10 of 15 findings were echoes of the brief's own
+sub-questions, then 6 of 9, with roughly one in nine arriving unprompted.
 
-  Search the whole brief **and the cover note**, not just the claims list (in the 2026-08-17 case
-  half the leak sat in the one-way doors), using the doubt's own citations and identifiers as the
-  queries rather than a paraphrase, and flatten whitespace before concluding nothing is there —
-  the brief's prose wraps, and a line-oriented grep has reported "no line found" for a phrase that
-  was present. Record per doubt what you found — in the brief at ‹id›:‹line›, or no line found —
-  with the query beside it, and score only a doubt *you* ruled absent as independent corroboration.
-  A hand-off that says "held back", "withheld" or "excluded from the brief" is asserting what its
-  author was not positioned to know: unverified until you check.
+**The author's residual doubts are retired and no list reaches you.** The sibling skill used to
+form one after saving the brief, bucket each doubt `SEEDED` or `UNSEEDED`, and hand both lists over
+in chat for this skill to re-rule. It leaked into the brief every time it was measured — 2026-08-10
+five of five, 2026-08-15 four of four (reported as "deliberately excluded"), 2026-08-17 two of
+three (the author chose queries that missed their own doubt), 2026-08-23 five of five **with the
+search run correctly**. Doubts mined from one reading of one body of work are structurally almost
+certain to be claims already in the brief, and no search subtracts a leak the collection order
+guarantees. Do not ask for the list, and do not accept one from disk or reconstructed now.
 
-  **A `SEEDED` doubt the reviewer never raised is worth reading, and it is the only thing that
-  bucket buys.** The brief pointed the reviewer straight at that seam. A **calibrated** reviewer
-  that came back silent on it has told you something — that the doubt is unfounded, or that this
-  reviewer does not reach this class of defect. Rule which in the ledger, or record that you could
-  not tell. From an uncalibrated reviewer the silence is worth nothing, exactly as everywhere else:
-  calibration governs the reviewer's silence, never its speech.
-
-  **The residual doubts are the small channel. The brief's load-bearing claims list is the large
-  one, and it is the one that will actually be carrying the author's suspicions.** Every claim
-  there with a pointed sub-question — "is 30 derived from anything, or chosen because it sounds
-  like a period?", "does the loud error crowd out the quiet gap?" — states the suspected defect
-  outright and directs the reviewer at it. A reviewer that comes back agreeing has not
-  independently found anything; it has answered a question, which is what it was asked to do and
-  is not its failure. So run the same probe over **every finding**, not just the doubts: query the
-  brief and cover note with that finding's own identifiers, and record for each whether the brief
-  had already said it. Then rule the echoes from primary sources, scoring the reviewer's agreement
-  as nothing. Put the tally in the ledger — how many findings were echoes, how many partial, how
-  many were free to surprise. That last number is what the report's evidentiary weight actually
-  rests on, and a report whose independent findings are all confirmed has earned more than its
-  count of findings suggests.
+One rule from that history is not doubts-specific and keeps its force: **nobody can certify absence
+in a document they wrote.** Across all four runs every wrong label was a claim of absence, and not
+one claim of presence was wrong. If a report or a hand-off tells you something was "held back",
+"withheld" or "excluded from the brief", that is a claim its author was not positioned to make —
+unverified until you check.
 
 ## What the claim card buys — the long version
 

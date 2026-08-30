@@ -21,8 +21,8 @@ Text in `«guillemets»` is an instruction to you and must not survive into the 
 What stays out: the adversarial framing (the brief carries it in full — restating a compressed
 version here dilutes it and risks contradicting it), and anything about the author's own
 suspicions (they anchor the reviewer, and this note is read *first*, so anchoring here is worse
-than in the brief). The doubts themselves do not exist yet: the skill forms them in §9, after this
-file is saved, and searches **this file as well as the brief** when bucketing them.
+than in the brief). There is no residual-doubts list to keep out any more; the skill no longer
+forms one.
 
 Part 1 is not politeness. An audit brief arriving cold — attack this, find what is wrong,
 prove it — reads like a request to break into someone else's system, and a reviewer that is
@@ -90,8 +90,8 @@ what failed twice; the list is the fix.
 | Its own tools (subagents, MCP) | | |
 | Effort budget | | |
 
-**Read-scope exclusions carry across.** Where the brief withholds a path — a residual-doubts
-hand-off, a sibling reviewer's brief — this note names the same exclusion in the same words. Round 7
+**Read-scope exclusions carry across.** Where the brief withholds a path — a sibling reviewer's
+brief is the usual one — this note names the same exclusion in the same words. Round 7
 excluded `ROUND-6-HANDOFF.md` from one of two reviewers and left the other free to read it.
 
 **Name the repository by absolute path, and give a one-command identity check.** A bare relative
@@ -117,7 +117,7 @@ paste it whole only as a last resort; the report will come back in chat, and the
 it to `NN-EXTERNAL-REVIEW.md` themselves. **And tell them to send a single "continue" if the
 report stops at a section boundary** — the brief tells the reviewer to stop there and wait, and
 it cannot resume itself, so a user who is not told files a truncated report as a complete one.
-Say this here rather than relying on the skill's §10 checklist: §10 sits below the compaction cut
+Say this here rather than relying on the skill's §9 checklist: §9 sits below the compaction cut
 and this variant does not.
 
 **Several reviewers, one brief — or one range split across briefs.** Give each reviewer its own

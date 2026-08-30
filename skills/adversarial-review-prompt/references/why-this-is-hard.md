@@ -20,8 +20,9 @@ Everything in this skill exists to defeat that. Three levers do most of the work
    Whether a difference in architecture is among the things it buys depends on both identities,
    which is why the emitted wording is not written here: take it from `prompt-template.md`'s four
    branches, which are the authority. Never imply you know what was missed. Where you genuinely
-   do suspect something, that is a *known* unknown — it is held out of the prompt entirely and
-   handed to the user for post-review comparison (§10), never written into the prompt.
+   do suspect something, that is a *known* unknown — it is held out of the prompt entirely, and
+   out of the cover note and the hand-off too. It is not routed anywhere: the residual-doubts
+   protocol that used to carry it is retired, below.
 2. **Demote the author's assertions to claims.** Every confident comment, test name, and
    "verified/measured/guaranteed" note is a testable assertion by the party under review,
    never evidence. This single reframing produces more findings than any checklist.
@@ -49,7 +50,12 @@ Everything in this skill exists to defeat that. Three levers do most of the work
   a normal state that costs one honest sentence at hand-off. A **wrong** record is an error no
   later step can see. One question removes the second risk entirely.
 
-## calibration lookup
+## calibration lookup — light reads two fields, `[deep]` does the rest
+
+**Light tier reads the result and the expiry and reports one line.** Everything below — digest
+recomputation, the closed list of mismatch traps, arbitrating a project-local record against a
+home one — is the `[deep]` tier. It is here because when it is run it must be run exactly this
+way, not because it is owed on every brief.
 
 - **Calibration** — whether this reviewer has ever been shown to find anything. Look for
   `.adversarial-review/calibration/<reviewer-id>.md` in **two locations, the project root first
@@ -104,7 +110,7 @@ Everything in this skill exists to defeat that. Three levers do most of the work
   ones carrying the same platform-dependent digest, which fixes nothing and expires on the next
   machine. Missing, expired,
   or `FAIL` is a normal state and never a reason to refuse: run the review anyway. It changes one
-  thing, and you say it at hand-off (§10) — **an untested reviewer's findings still count, and
+  thing, and you say it at hand-off (§9) — **an untested reviewer's findings still count, and
   its silence does not.** A clean report from it is inconclusive rather than an all-clear, its
   claims-examined-and-upheld list is not coverage, and nothing it "cleared" may be written into
   the next brief's §7. That asymmetry is not caution, it is the same rule as everywhere else
@@ -115,77 +121,45 @@ Everything in this skill exists to defeat that. Three levers do most of the work
   Mention it once, do not campaign for it.
 
 
-## leaked doubts — the case histories, and why the fix is the order
+## residual doubts — retired, and the history that retired it
 
-Four rounds, four leaks: 2026-08-10 (five doubts of five were in the brief), 2026-08-15 (four of
-four, reported as "deliberately excluded"), 2026-08-17 (two of three), 2026-08-23 (five of five).
+The skill used to close by forming the author's own residual doubts against the saved brief,
+bucketing each `SEEDED` (the brief already asks it) or `UNSEEDED` (it does not), and handing the
+user both lists in chat for the adjudicator to re-rule. That is gone. One sentence replaces it, in
+SKILL.md §9: **author doubts are never corroboration, and the adjudicator treats reviewer
+agreement with the brief as non-independent by default.**
 
-The third failed because the author chose the queries. A search of the saved brief had just been
-made mandatory and was duly performed: for a doubt whose own text quoted `unitScale && (rotation
-=== 0 || isoBone)`, the recorded search was `packed`/`original`/`whitespace`/`strip`, none of which
-the brief contained, while `isoBone` sat in claim 7. The one collision it did surface was then
-ruled "generic" by hand. The rule that followed — **queries come from the doubt's own text, never
-from your sense of what it is about** — closed that hole, and the hole stayed closed.
+The warrant is the protocol's own measured record. Four rounds, four leaks: 2026-08-10 (five
+doubts of five were already in the brief), 2026-08-15 (four of four, reported as "deliberately
+excluded"), 2026-08-17 (two of three — the author chose the queries, and for a doubt whose own
+text quoted `unitScale && (rotation === 0 || isoBone)` the recorded search was
+`packed`/`original`/`whitespace`/`strip`, while `isoBone` sat in claim 7), and 2026-08-23 (five of
+five, **with the search run correctly** — the doubt's own strings, over the brief and the cover
+note, whitespace flattened, and the leak reported accurately).
 
-**The fourth round is the one that changed the design.** On 2026-08-23 the search was run
-correctly, with the doubt's own strings, over the brief *and* the cover note, and it reported the
-leak accurately: all five. The adjudicator's tally on the same report read *1 free / 3 partial /
-4 echo*, and the review's single genuinely independent discovery was also its best finding. Nothing
-had gone wrong with the check. **What was wrong was upstream of it.** Doubts were being mined in
-the same pass as the load-bearing claims, out of one reading of one body of work, so a doubt was
-structurally almost certain to be a claim already in the brief. No search, however honest, can
-subtract a leak that the collection order guarantees.
+The fourth round is the one that settles it, because nothing was wrong with the check. Doubts
+mined from one reading of one body of work are structurally almost certain to be claims already in
+the brief, and no search subtracts a leak the collection order guarantees. Forming them *after* the
+brief was saved was the fix that round produced; the next round measured 5 of 5 anyway.
 
-So the order changed: **the brief is saved first, and only then are the doubts formed — by
-re-reading the saved file and asking what it turned out not to ask.** Overlap is now measured
-against a fixed document rather than produced alongside it, and the two buckets carry different
-weight rather than the whole list collapsing to "echo":
+Against that, the credit at stake was small and could not be banked cheaply. An `UNSEEDED` doubt
+became corroboration only once an adjudicator ran its *own* search and ruled it absent. The list
+had no durable channel and could not be given one — a file is one `ls` away from a reviewer session
+rooted more broadly than expected — so it lived in a chat window, and authoring and adjudicating
+sessions here are routinely days apart, which made "unavailable" the ordinary outcome. Roughly
+eighty lines of protocol across the two skills, for that.
 
-- `SEEDED` doubts are not corroboration and never can be. Their use is the reverse: the brief
-  pointed at the seam, so a **calibrated** reviewer that stayed silent on it has told you
-  something — about the doubt, or about that reviewer's reach.
-- `UNSEEDED` doubts are the only corroboration-eligible ones, and even they are only a report
-  until an adjudicator has run its own search.
+**What survives does the same work and costs nothing extra.** The adjudicator probes every finding
+against the brief and the cover note using the finding's own identifiers and rules the echoes from
+primary sources. That was always the large channel: a pointed sub-question states the suspected
+defect outright, so a reviewer agreeing with it has answered a question rather than found
+anything. The doubts were the small one.
 
-And the older rule still holds, because it is what makes the buckets readable: **you cannot certify
-absence in a document you wrote.** Across all four runs every wrong label was a claim of absence,
-and not one claim of presence — "prompted by claim N" — was wrong. Presence is provable by pointing
-at a line. Absence is a claim about all six hundred of them, made by the person who wrote them.
-Point, and let the adjudicator rule.
-
-## the search loop
-
-Run it with no discretion in it. The queries come **from the doubt's own text** — every `file:line`
-it cites, every backticked identifier, every SHOUTED term — never from your sense of what the doubt
-is really about. One per line in a scratch file, then:
-
-```bash
-BRIEF=path/to/NN-EXTERNAL-REVIEW-PROMPT.md
-NOTE=path/to/NN-EXTERNAL-REVIEW-COVER-NOTE.md
-# Second pass on a whitespace-flattened copy: the brief's prose wraps, and a line-oriented
-# grep has reported "no line found" for a phrase that was present, split across two lines.
-cat "$BRIEF" "$NOTE" | tr '\n' ' ' | tr -s ' ' > "$TMPDIR/flat.txt"
-
-while IFS= read -r q; do
-  printf '\n--- %s\n' "$q"
-  grep -nF -- "$q" "$BRIEF" "$NOTE" \
-    || { grep -qF -- "$q" "$TMPDIR/flat.txt" \
-         && echo '  WRAPPED HIT - present; the line grep missed it, locate it by hand' \
-         || echo '  no line found - unverified'; }
-done < queries.txt
-```
-
-A line citation often sits inside a range on the brief's side — the doubt says `:154`, the claim
-cites `:129-155` — so when a citation query misses, run the bare path as well and read what cites
-it. **Any hit at all makes the doubt `SEEDED`**, and you name where it landed: "claim 7 at `:301`",
-"one-way door 1 at `:173`" — from anywhere in the brief, not only the claims list, because on
-2026-08-17 half the leak sat in the one-way doors, which the then-current rule did not cover.
-
-**Only a doubt with no hit in either pass is `UNSEEDED`, and the words for it are "no line found —
-unverified".** Never "held back", "withheld", or "excluded from the brief": they assert what you
-are not in a position to know, they are the signature of all four failures, and the adjudicator
-greps the hand-off for them.
-
+**Two rules keep their force, and neither is doubts-specific.** You cannot certify absence in a
+document you wrote — across all four runs every wrong label was a claim of absence, and not one
+claim of presence ("prompted by claim N") was ever wrong. And your suspicions still go nowhere near
+the brief, the cover note, or the hand-off: they belong in §3's claims list, sharp, where the
+reviewer is pointed at them openly instead of being credited with reaching them alone.
 
 ## several reviewers — what their agreement is worth
 
@@ -240,29 +214,3 @@ afterwards.
 The fix is one question in §1 and one line in the brief's identity block. Where the reviewer does
 not expose the setting — some do not — the answer is `not exposed`, recorded in those words. That
 is a different and more useful claim than an empty field, which reads as nobody having asked.
-
-## the doubts have no durable channel, and that is the ruling
-
-The list is chat-only by design: a file is one `ls` away from a reviewer session rooted more broadly
-than expected, and the entire value of an `UNSEEDED` doubt is that the reviewer could not have been
-pointed at it. `review-adjudication` §1 then says the list "lives in a chat message you cannot read"
-and asks the user for the hand-off.
-
-That assumes the authoring and adjudicating sessions are close enough together that the window is
-still open. Here they routinely are not — days apart is the normal case rather than the exception —
-and until **2026-08-24** both skills acknowledged the fragility and offered no ruling, so each
-session improvised one.
-
-**The ruling is that there is no durable channel, and inventing one is not the session's to do.**
-The window *is* the artifact. Say so at hand-off in plain words, and stop there: do not resolve the
-fragility by writing the list to disk under a name you judge safe, by folding it into the brief, or
-by arranging any other route the adjudicator could read without the user handing it over. The two
-costs are not symmetric. Losing the window costs one round's corroboration scoring — already a
-bounded loss, since a doubt becomes corroboration only once an adjudicator runs its *own* search and
-rules it absent. Leaking it costs the corroboration itself, silently, and in the direction that looks
-like success.
-
-The adjudication half of the same ruling: **take the list from the original hand-off message or from
-nowhere.** A doubts file found on disk and a copy folded into the brief were both reachable by the
-reviewer; a list the authoring session reconstructs now is written after the report it is supposed to
-be independent of. Any of those is recorded as **unavailable**, exactly as if it had been lost.
