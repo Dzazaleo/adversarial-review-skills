@@ -4,6 +4,11 @@ Deferred work with a recorded origin. Each entry carries the finding's **Locatio
 and **Consequence** copied from the report that raised it, so the item can be picked up without
 re-reading the review.
 
+The reports and ledger cited below as **Origin** are no longer in this repository — the seven-round
+working corpus was removed in `4290a91`. Recover any of them from `ef74e91`, where they sit at the
+repository root under the names given. The citations are kept as provenance, and every entry is
+readable without them by the design stated above.
+
 ---
 
 ## B-1 — No corpus-level check that the cases and the answer key remain mutually valid

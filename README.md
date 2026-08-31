@@ -193,7 +193,8 @@ anything: its "I checked, it's fine" is recorded as unverified, not as coverage.
 
 The [examples/](examples/) folder holds the skills pointed at *themselves*: two different
 models were sent to audit these skills, found real defects, and the defects were adjudicated
-and fixed using the very skill under review. Raw files, nothing cleaned up.
+and fixed using the very skill under review. Real reports and real rulings — the only edits were
+absolute paths and one private project's name.
 
 Start with
 [examples/audit-of-review-adjudication/REVIEW-ADJUDICATION.md](examples/audit-of-review-adjudication/REVIEW-ADJUDICATION.md)
