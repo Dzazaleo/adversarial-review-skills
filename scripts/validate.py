@@ -448,17 +448,17 @@ def check_ledger_axes():
 
 NO_ACTION_RE = re.compile(r"\*\*(" + "|".join(re.escape(v) for v in NO_ACTION_OK) + r")")
 
-# Round 7 A7-4: operators are told two closed-round warnings are expected and permanent, so a
-# third would arrive among them unremarked. The expected two are pinned by file, line and ID;
-# anything else is flagged as new. Round 3 wrote these under a rule that has since changed and
-# they are history, documented at R6.15.
+# Round 7 A7-4: operators are told which closed-round warnings are expected and permanent, so an
+# unexpected one would otherwise arrive among them unremarked. Anything not pinned here is
+# flagged as new.
 # Pinned by row *identity*, not by line: appending anywhere above shifts every line number
-# below it, and pinning on those re-flagged the two known rows as new the first time it was
-# tested. The IDs are stable because closed rounds are immutable.
-EXPECTED_HISTORY = {
-    ("REVIEW-ADJUDICATION.md", "R3-P3"),
-    ("REVIEW-ADJUDICATION.md", "R3-P4"),
-}
+# below it, and pinning on those re-flagged known rows as new the first time it was tested.
+# The IDs are stable because closed rounds are immutable.
+# Empty since 2026-08-31: the two pinned rows (R3-P3, R3-P4, documented at R6.15) lived in the
+# seven-round working ledger, which was removed from the repository along with the raw report
+# corpus. Recover from commit ef74e91 at the pre-move root paths if that history is ever needed.
+# The guard stays live for the ledgers that remain under examples/, which raise none today.
+EXPECTED_HISTORY = set()
 
 
 def history_note(p, cells):
