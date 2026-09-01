@@ -128,7 +128,12 @@ to that parenthesis: it is a required input, and you never infer it.**
   is the audit) or the **directed set** (one gets §3's claims list, another the same ground with
   only the template's §6b unseeded pass). Varying nothing is legitimate and buys corroboration on
   nothing; either way say at hand-off which reviewer received which, because the adjudicator rules
-  independence off that line alone.
+  independence off that line alone. **Then settle where each one runs, which is the half that is
+  not about the brief.** Disjoint file scopes do not imply disjoint filesystems — that is the trap,
+  and it was sprung with scopes that were disjoint. Where any reviewer may write (§7), give each a
+  usable tree of its own or run them one at a time, and say which at hand-off. Concurrent reviewers
+  in one tree make every mutation result in both reports uninterpretable, and neither of them can
+  see it happening.
 - **Calibration** — whether this reviewer has ever been shown to find anything. Look for
   `.adversarial-review/calibration/<identity>-<effort>.md` **in two places — project root first,
   then `~/`** — and **`ls` both before concluding there is none** (2026-08-23: a passing reviewer
@@ -399,6 +404,14 @@ question. When you authorize it, bound it: throwaway probes in an obviously temp
 location, commit nothing, restore `src/` and `tests/` and any untracked files exactly as
 found, report the tree clean at the end.
 
+**Those bounds are single-reviewer discipline and they do not compose.** A reviewer authorized to
+mutate needs a tree no other reviewer is touching, and the tree must be *usable*: a git worktree
+without the project's installed dependencies is not, and the observed failure is silent relocation
+to the shared tree — mentioned in passing inside the reviewer's own report — never a refusal to
+run. So link the dependency directory in, name the tree in the envelope, and require the reviewer
+to **stop and report itself blocked rather than relocate**. A clean final `git diff` proves only
+that this reviewer put its own files back; it is not evidence the tree was ever exclusive.
+
 **Then tell the user.** The summary you give the user must contain one explicit line naming
 every path the reviewer may write and every capability it is granted — the report file
 included, plus any probe location, install, or exec permission. Not buried in the prompt file:
@@ -470,7 +483,8 @@ Report to the user, briefly:
   wrote the work — effort appears in no report the adjudicator will later read
 - **With several reviewers: what you varied, and which received which** (§1). "The same brief to
   all" is legitimate and must be given in those words; an unstated split reads as arranged
-  independence
+  independence. Where any of them may write, name the tree each one gets, or say they run in
+  sequence
 - Its calibration state in one sentence — passing and until when, **and which of the two
   locations the record came from** (`~/` or this project), or that there is none on file *after
   listing both*. Where there is none, say what it costs and nothing more: findings are adjudicated

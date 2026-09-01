@@ -311,6 +311,17 @@ failed to catch is only a finding if the reviewer can show the change affected b
 required, reachable and observable — otherwise it proves nothing. An earlier draft said every
 uncaught mutation was a finding, which is a false-positive generator. *(Codex, finding 3.)*
 
+**And two reviewers with write access need two trees.** Those bounds are single-reviewer discipline
+and they do not compose. In one two-reviewer run both were given disjoint *file scopes* and the
+same *working tree*; one had been handed a git worktree, found it had no installed dependencies,
+and ran in the shared tree instead — a fact it recorded in passing in its own report rather than
+stopping and reporting itself blocked — while the other stated that each of its mutations had been
+made alone, which it had no way to know. Every mutation happened to reproduce when re-run in
+isolation afterwards, which was luck rather than protocol, and each reviewer's clean final diff
+proved only that it had restored its own files. So the brief names the tree, requires the reviewer
+to stop rather than relocate when that tree will not run, and the hand-off tells you which reviewer
+got which. *(Reported from a run of these skills, 2026-09-01.)*
+
 **And you get told.** The hand-off to you has to contain one explicit line naming every path the
 reviewer may write to and every capability it was granted. Not buried in the brief — in the
 message. Nobody's objection is "an external model touched files." The objection is "an external
@@ -484,6 +495,14 @@ either; it is reopened, and it goes to you.
   question with options and costs) · process (it is about the brief or the method, so its fix lands
   there rather than in the code). *Resolving a machine-checkable finding by reasoning is an unforced
   error. Resolving an owner-judgement finding yourself is taking a call that is not yours.*
+- **But most owner-judgement findings have a sensible default, and taking it is the rule, not a
+  shortcut** — one phase manufactured 31 owner rulings and the owner could not follow them. The
+  catch is that the reason for defaulting is usually itself a claim about how the code behaves, and
+  that claim is machine-checkable, so it gets checked before it may license skipping the question.
+  A finding was once defaulted away on a note calling a hard refusal a confirmation prompt; the
+  "conservative" direction that licensed would have broken an entire feature. Which direction is
+  conservative is frequently the thing in dispute. *(Reported from a run of these skills,
+  2026-09-01.)*
 
 ### Ruling on the claim, not on the case made for it
 
@@ -547,7 +566,11 @@ unclear would be the same dismissal reflex the whole section exists to resist.
 
 - **When a finding says a test proves nothing, do not check whether the suite passes — check
   whether it would fail if the thing were wrong.** Break it deliberately, in a throwaway copy
-  outside the working tree, and see what happens.
+  outside the working tree, and see what happens. Two practical notes, both learned the hard way: a
+  copy without the project's installed dependencies cannot run anything, so the copy links them
+  rather than duplicating them; and the same mutation gets run **again after the fix**, because a
+  test written to catch a defect can pass under the very mutation it was written for. In one round
+  of seven fixes, three were provably real only because of that second run.
 - **Separate what a finding says about your work from what it says about the codebase.** Some
   findings would read the same against any file in the project — "this has no test", in a project
   that tests nothing — and the reviewer could have written them without opening the work at all.
@@ -563,7 +586,10 @@ unclear would be the same dismissal reflex the whole section exists to resist.
   is deliberate. For a genuine second opinion it is contamination wearing the costume of
   independent agreement. So the ledger records what each reviewer was able to see, and where it
   could see the earlier report, the shared finding gets re-established as though only one reviewer
-  had raised it.
+  had raised it. Where the reviewers could write, the timestamps answer a second question too —
+  whether they were in the same tree at the same time. If they were, a figure that fails to
+  reproduce is not yet evidence against the reviewer who reported it, and nothing either reviewer
+  says it cleared counts as coverage.
 
 ---
 

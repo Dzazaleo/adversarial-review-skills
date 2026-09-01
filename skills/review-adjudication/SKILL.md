@@ -276,6 +276,16 @@ Sort every remaining finding into exactly one:
   in one line, and ask nothing.** One phase here manufactured 31 owner rulings, and the owner could
   not follow them; the questions were real, the volume made them unanswerable. If you have more
   than a handful, you are converting your own work into the owner's.
+
+  **The bound has a gate of its own: where the reason for not asking is a claim about how the code
+  behaves, that claim is machine-checkable — check it before the default is licensed.** Which
+  direction counts as "conservative" is frequently the thing in dispute, and a one-line note that
+  asserts the premise instead of testing it is the dismissal reflex wearing this bound's clothes;
+  the tell is a default justified by a sentence beginning "because X is only a…". One such note
+  called a hard refusal a confirmation prompt, and the "conservative" direction it licensed would
+  have made an entire export mode unrunnable and a shipped user-facing sentence false — three tests
+  caught it during execution, the adjudication did not. Verify, then default. Never escalate when
+  unsure: the check is the one §5 would have run anyway.
 - **Process/prompt** — about the brief, the envelope, the review method itself. → a row tagged
   `process`, or **`[deep]`** its own block ([references/deep-tier.md](references/deep-tier.md) D2).
 
@@ -316,7 +326,16 @@ the reviewer, whichever way it comes out:
 - **Confirm the gate would actually fail.** When a finding is about a test or gate proving nothing,
   the check is not "does the suite pass" but "would it fail if the thing were wrong." Break it
   deliberately, in a throwaway copy, and see. A gate that passes before its implementation exists
-  is the recurring shape.
+  is the recurring shape. **The copy has to be able to run**, and neither obvious route gives you
+  that: mutating the working tree breaks §7's write boundary, and copying the sources without the
+  installed dependencies runs nothing. Copy sources, tests and configs to the scratchpad and *link*
+  the dependency directory — [references/verification-standard.md](references/verification-standard.md)
+  has the recipe and the one delete command that destroys the real one. What the copy cannot reach
+  fails as an artifact of the copy rather than a defect, so take whole-suite baselines in the real
+  tree with a runner that writes nothing. **Then run the same check again after the fix, not only
+  before it:** re-run the original mutation and confirm the gate now fails, and fails on the new
+  case. Three of seven fixes in one round were provably real only because of that re-run — and one
+  newly written test passed under the very mutation it had been written to catch.
 - **Discount non-independent agreement.** The brief's load-bearing claims list states suspected
   defects outright and points the reviewer at them, so a reviewer that comes back agreeing has
   answered a question rather than found anything — that is what it was asked to do and is not its
@@ -325,7 +344,12 @@ the reviewer, whichever way it comes out:
   reaches you: the protocol that produced one is retired, and its four measured rounds are why.
 - **The same discount applies between reviewers.** Agreement is corroboration only if the second
   could not read the first, and ours land in one directory. **Establish it from timestamps, not a
-  promise.** Two reviewers handed the *same brief* are not independent either.
+  promise.** Two reviewers handed the *same brief* are not independent either. Where reviewers
+  could write, those same timestamps settle a second question — whether they were in one tree at
+  the same time. If they were, every mutation either report leaned on ran against a state the other
+  could have been changing: a figure that fails to reproduce is not yet evidence against that
+  reviewer, and nothing either one "cleared" is coverage. A reviewer's own assertion that it worked
+  alone is a claim it was not positioned to make.
 - **`[deep]`** the echo probe and its tally — [references/deep-tier.md](references/deep-tier.md) D5.
 - **`[deep]`** sampling the upheld list — [references/deep-tier.md](references/deep-tier.md) D6.
   Light does the cheap half of this in §2 and no more.
@@ -333,7 +357,12 @@ the reviewer, whichever way it comes out:
   external state — snapshot-updating runners and cache-writing builds count as writes. Throwaway
   copies live in the session scratchpad, never the working tree. End by reporting the working
   state clean: `git status`, or on a target with no repository, name the only files this session
-  wrote and show the target directory otherwise unchanged.
+  wrote and show the target directory otherwise unchanged. **Write probe scripts to a file rather
+  than piping them through a shell heredoc**, and have the probe print the inputs it actually
+  resolved. A heredoc ate one backslash level, turned a Windows path into an escape sequence, and
+  printed output that made a reviewer's correctly reproduced figure look wrong — one line short of
+  a false "did not reproduce" filed against a reviewer whose numbers were right. That is the
+  numbers check above ruling on a quoting artifact, and nothing in the ledger would have shown it.
 
 Then the escalation rule:
 
@@ -433,7 +462,8 @@ Report to the user, briefly:
 - The `FIX NOW` queue, one line each, and an offer to execute it as a separate act. The owner's
   acceptance of that offer **is** that act: record it verbatim in the ledger, and the same session
   may then execute and backfill. Whoever lands a `FIX NOW` change updates that row — a ledger
-  still saying "queued" after the work landed is a false record.
+  still saying "queued" after the work landed is a false record, and a row closing a false-green
+  gate cites the post-fix re-run that proves it now fails (§5).
 - The `FIX LATER` items with their backlog artifact paths, so the user can see they exist.
 - Anything you ruled `COULD NOT DETERMINE`, and what would settle it.
 - Whether the report was complete, partial, or inconclusive (§1). A partial report leaves claims

@@ -45,6 +45,38 @@ A refutation carries the finding's own burden. For any claim about runtime behav
 read plus a reassuring code comment is not evidence — the comment is the party under review
 talking. Reconstruct and run the actual path.
 
+## the throwaway copy — one that can actually run
+
+§5 requires deliberate breakage in a throwaway copy, and §7 forbids writing to the working tree.
+Both obvious ways to satisfy the first violate the second or produce nothing: mutating the real
+`src/` is the write boundary, and a bare copy of the sources cannot run a suite whose dependencies
+were never copied. A git worktree has the same defect, and it is the shape that has actually caused
+trouble — an *external reviewer* handed one found it had no `node_modules` and silently ran in the
+shared tree instead.
+
+What works, and costs a minute:
+
+- **Copy the code the mutation touches, not the repository.** `src/`, `tests/`, `scripts/` and the
+  config files the runner reads (`package.json`, the tsconfig, the runner's own config) into the
+  session scratchpad.
+- **Link the dependency directory rather than copying it.** A symlink on POSIX, a directory
+  junction on Windows (`mklink /J`). Copying it is slow enough that people skip the copy entirely,
+  which is how mutating the real tree starts looking reasonable.
+- **Remove the link with a link-aware command.** On Windows this is the one that matters:
+  `cmd /c rmdir <link>` unlinks it, while a recursive delete from Git Bash or MSYS *traverses the
+  junction* and empties the real dependency tree behind it. A POSIX symlink is not followed by a
+  recursive delete, so the hazard is Windows-specific and total when it lands.
+- **A test the copy cannot satisfy has failed as an artifact of the copy, not as a defect.** Specs
+  that read repository files outside the copied set are the usual case, and they fail identically
+  whether or not the finding is real. Take whole-suite baselines in the real tree instead, with a
+  runner invoked so that it writes nothing (`vitest run`, `pytest -p no:cacheprovider`), and use
+  the copy only for the mutation and the one target spec.
+
+The same copy serves the check after the fix. Re-running the original mutation against the fixed
+gate is what separates a repaired guarantee from a decorative one: in one round of seven fixes,
+three were only provably real because of that re-run, and one newly written test passed cleanly
+under the very mutation it had been written to catch.
+
 ## echo audit — what agreement with the brief is worth
 
 **Agreement with the brief is non-independent by default.** The brief's load-bearing claims list
