@@ -263,5 +263,107 @@ pass — came back **clean** here on the same digest at the same effort. So what
 run's `clean-wordcount` report, still only on the machine that produced it, is the one artifact that
 would settle it, and it is worth retrieving before anyone edits a case.
 
+**Superseded in part, 2026-09-10 (later the same day) — see B-6.** The correction above
+concludes that whatever flagged `clean-wordcount` on 2026-09-09 is *"not reproducible."* It is
+reproducible — on the host that produced it. That case's CLI inherits the **host's** default stdin
+encoding, so on a cp1252 Windows host it miscounts UTF-8 input while on a UTF-8 host it does not,
+from bytes the digest proves identical. The report this entry asks anyone to retrieve before
+editing a case has now been read on the machine that holds it, and the mechanism re-derived there
+by execution. B-6 carries the defect, the evidence from both hosts, and the remedies.
+
+What stands unchanged here is everything about `clean-copy-link`, the `high`-vs-`xhigh` comparison
+on **this** case included. What does not stand is the inference that `clean-wordcount`'s half was
+unexplained variance — and with it the reading that these two runs differed only in reviewer
+effort. They differed in effort *and* in host, and it was the host that decided this control.
+
 Record: `~/.adversarial-review/calibration/grok-4.6-xhigh.md`. Raw reports:
 `.adversarial-review/calibration/runs/2026-09-10-grok-4.6-xhigh/`.
+
+
+---
+
+## B-6 — `clean-wordcount`'s result turns on the host's default stdin encoding, so the second negative control is not frozen by the digest
+
+**Origin:** raised against the corpus by the operator, 2026-09-10, while reconciling the
+`grok-4.6-xhigh` **PASS** run of 2026-09-10 against the `grok-4.6-xhigh` **FAIL** filed 2026-09-09.
+It settles the question B-5's amendment left open in those words — *"whatever flagged
+`clean-wordcount` on 2026-09-09 is not reproducible"*. It is reproducible. It is conditional on the
+host, and the 2026-09-09 report has now been read on the machine that holds it.
+
+**Location:** `calibration/cases/clean-wordcount/wordcount.py:16` — the single `sys.stdin.read()` —
+read against `README.md:3-7` and the `count_words` docstring at `:8-10`. Scored by
+`calibration/ANSWER-KEY.md:62` and the pass rule at `:76-77`.
+
+**Mechanism:** the CLI decodes stdin with the interpreter's *default* text encoding, which is the
+host's, not the corpus's. On a UTF-8 host (macOS, most Linux) UTF-8 input decodes correctly and the
+count matches the README. On a Windows host with a cp1252 ANSI codepage, UTF-8 input is decoded
+byte-for-byte through cp1252, and byte `0xA0` — which occurs inside common CJK code points — maps to
+NBSP, which `str.isspace()` treats as a separator. The documented contract ("whitespace-separated
+tokens") is then violated by the shipped program on inputs the README does not exclude. Neither
+reviewer was wrong: the defect is present on one host and absent on the other, from identical bytes.
+
+**Evidence, by execution on both hosts.** The 2026-09-09 Windows run reported this as its only
+`clean-wordcount` finding, rated `high`: the CLI run as a subprocess with `PYTHONUTF8` and
+`PYTHONIOENCODING` stripped returned `b'3\r\n'` where the contract requires `2`. Re-derived
+independently on the same Windows host 2026-09-10, on a scratchpad copy of the case, against
+digest `775e1cc8c43f`:
+
+```
+payload bytes       : b'\xe4\xbd\xa0\xe5\xa5\xbd world'   # "<CJK> world", 2 words
+stdout              : b'3\r\n'   exit 0
+sys.stdin.encoding  : cp1252
+cp1252 decode split : 3 tokens
+```
+
+The 2026-09-10 macOS run returned **no findings at all** on this case and named the reason itself,
+under *Hypotheses that did not become findings* and *Coverage*: it compared the program against
+`wc -w` under `C.UTF-8` and `en_US.UTF-8` only, and closed with *"Did not reach: Windows/locale code
+pages."* It did not miss the defect; the defect was not present on its host, and it said so.
+
+**Consequence:** the instrument digest covers `cases/`, the fixed brief and the answer key — K-6
+narrowed it to exactly those three — and all three were byte-identical across the two runs. **The
+digest does not cover the host, so it does not freeze this case.** Two consequences follow, and the
+second is the serious one:
+
+- A record's `PASS`/`FAIL` on `clean-wordcount` is not comparable across machines, and nothing in
+  `record-template.md` records the host, so two records that look directly comparable — same
+  identity, same effort, same digest — can disagree for a reason neither one states.
+- **On a Windows host both negative controls are now compromised**, `clean-copy-link` by B-5 and
+  this case by the mechanism above, so the pass rule's tolerance is entirely spent. A reviewer
+  thorough enough to run the CLI under a stripped environment — which is the behaviour the traps
+  reward — cannot pass on Windows, however well calibrated it is. That is the failure mode B-5's
+  Consequence paragraph predicted for one control, arriving on both.
+
+**And it corrects the effort story.** B-5's amendment reads the 2026-09-09 `FAIL` against the
+2026-09-10 `PASS` as evidence that this corpus is effort-sensitive. For `clean-copy-link` that
+comparison stands — same host is not required for it, and `grok-4.6` at `high` argued the reading
+out where at `xhigh` it rated the same 16 lines `critical`. For `clean-wordcount`, which is the half
+that actually decided both verdicts, the variable was never effort: it was the host. The
+`high`-vs-`xhigh` comparison across those two runs confounds the two, and only the
+`clean-copy-link` half of it is sound.
+
+**Sketch of the options, if taken up.** (a) and (d) expire every stored record; (c) does not.
+
+- **(a) Pin the decoding in the case** — read stdin as UTF-8 explicitly rather than inheriting the
+  host default. Makes the program honour the contract its README states on every host, and is the
+  only option that leaves a *correct* program behind, which is what a negative control requires.
+- **(b) Document the platform assumption in the case's README.** Cheapest, and wrong for this
+  purpose: it makes the program correct-as-specified by narrowing the spec, so a reviewer that
+  reports the cp1252 split is now over-flagging a documented limitation. It buys the control back
+  by making the case teach the reviewer to trust a README, which `ANSWER-KEY.md` treats as a claim
+  rather than proof everywhere else.
+- **(c) Record the host and compare only within it** — add a host row to `record-template.md`
+  alongside effort, and treat a different host as a different reviewer the way a different effort
+  already is. Does not touch the instrument, so no record expires. Does not fix the control; it
+  stops the control's result being read across hosts, and it multiplies runs per reviewer.
+- **(d) Retire `clean-wordcount` and author a replacement** whose correctness is host-independent.
+  B-2 is the missing construction-and-validation protocol this would need, and is unclosed.
+
+**Not yet ruled on.** This entry records the defect and the evidence; which option lands is the
+owner's call. As with B-5, B-1's absent corpus-level validity check is the thing that would have
+caught it — and note that a drift gate of the shape B-1 sketches, run on one host, would not have.
+
+Records: `~/.adversarial-review/calibration/grok-4.6-xhigh.md` (Windows, `FAIL`) and
+`.adversarial-review/calibration/runs/2026-09-10-grok-4.6-xhigh/record.md` (macOS, `PASS`). The
+2026-09-09 raw reports remain on the Windows machine at
+`~/.adversarial-review/calibration/runs/2026-09-09-grok-4.6-xhigh/`.
