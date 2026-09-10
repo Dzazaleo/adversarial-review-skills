@@ -462,3 +462,29 @@ CLI has moved to `1.0.25` but stops short of declaring itself stale, so nothing 
 
 **Not yet ruled on.** As with B-5 and B-6, this entry records the defect and the evidence; which
 option lands is the owner's call.
+
+**RULED AND LANDED 2026-09-10 — option (b).** The owner ruled option (b); it is implemented in
+`check_calibration_digests`. Records that pass the two testable conditions are now collected and
+named in a single closing WARN:
+
+```
+WARN  calibration: NOT checked here - the product-version clause of the expiry rule in
+calibration/README.md. Compare each against the installed build by hand:
+~/.adversarial-review/calibration/grok-4.6-xhigh.md was earned on grok CLI 1.0.25 (...)
+```
+
+One line whatever the record count, naming each survivor and the build it was earned on, so the
+comparison the script cannot make is put in front of the reader who can. Both branches were
+exercised on the live tree the same day: three digest-stale records took the stale path and were
+correctly excluded, one survivor was listed.
+
+Options (a) and (c) are **not** foreclosed by this. (b) fixes the misreading; the gap itself stays
+open, and (c)'s re-attestation row would close it without a per-reviewer probe.
+
+**One defect introduced and fixed inside the remedy, worth recording because it is B-6's class.**
+The first implementation echoed the record's `Product and version` prose straight to stdout. That
+row contains an em dash, and this host's console is cp1252 — it rendered `?` and, on a stricter
+stdout, would have raised `UnicodeEncodeError` and taken the validator down. **A check that fails on
+the host's codepage is the exact defect B-6 was filed about, reintroduced by the tooling that
+reports it.** The string is now ASCII-folded before it is printed. Anything echoing record prose to
+a console should do the same.

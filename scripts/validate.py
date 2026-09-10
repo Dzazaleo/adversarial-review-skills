@@ -668,7 +668,15 @@ def calibration_records():
 
 
 def check_calibration_digests():
-    """Every filed calibration record's digest matches the current instrument."""
+    """Every filed calibration record's digest matches the current instrument, and is in date.
+
+    Two of the three staleness conditions in `calibration/README.md`. The third - a changed
+    reviewer identity, which includes a changed *product version* - is not checked and cannot
+    be from here: nothing in this script knows which CLIs are installed, or which binary a
+    record refers to. B-7 option (b): say so on every run rather than let the summary line
+    imply otherwise. On 2026-09-10 three of four records were stale on an installed-build
+    change while this reported 12 of 12 passing.
+    """
     records = calibration_records()
     if not records:
         warn("calibration", "no calibration records on file in ./ or ~/")
@@ -679,14 +687,18 @@ def check_calibration_digests():
         warn("calibration", f"could not compute the corpus digest: {ex}")
         SKIPPED.add(check_calibration_digests)   # round 7 codex7-5
         return
+    survived = []
     for r, name, report in records:
         text = read(r)
+        stale = False
         m = re.search(r"Corpus digest\D+`([0-9a-f]{6,})`", text)
         if not m:
             report("calibration", f"{name} has no Corpus digest row")
+            stale = True
         elif m.group(1) != actual:
             report("calibration", f"{name} records digest {m.group(1)} but the instrument is "
                                   f"{actual} - that record is stale and counts as missing")
+            stale = True
         e = re.search(r"\*\*Expires\*\*\s*\|\s*(\d{4}-\d{2}-\d{2})", text)
         if not e:
             report("calibration", f"{name} has no Expires row")
@@ -702,6 +714,22 @@ def check_calibration_digests():
         if expires < datetime.datetime.now(datetime.timezone.utc).date():
             report("calibration", f"{name} expired {e.group(1)} (UTC) - a record past its window "
                                   "is stale and counts as missing")
+            stale = True
+        if not stale:
+            p = re.search(r"\*\*Product and version\*\*\s*\|([^|]*)\|", text)
+            # ASCII-fold: this line echoes record prose to a console whose encoding is the
+            # host's, and an em dash in a record killed nothing here only because this stdout
+            # happened to replace rather than raise. Same class as B-6.
+            build = p.group(1).strip() if p else "(no Product and version row)"
+            build = build.encode("ascii", "replace").decode("ascii")
+            survived.append(f"{name} was earned on {build}")
+
+    # B-7 option (b). These records pass the two conditions this check can test; the third is
+    # the reader's to test, so name it rather than leave a green line standing for it.
+    if survived:
+        warn("calibration", "NOT checked here - the product-version clause of the expiry rule "
+                            "in calibration/README.md. Compare each against the installed build "
+                            "by hand: " + "; ".join(survived))
 
 
 # --------------------------------------------------------------------------- install
