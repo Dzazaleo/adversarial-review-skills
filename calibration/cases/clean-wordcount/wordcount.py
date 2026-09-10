@@ -13,7 +13,9 @@ def count_words(text: str) -> int:
 
 
 def main() -> int:
-    print(count_words(sys.stdin.read()))
+    # Decode as UTF-8 rather than the interpreter's default, which follows the
+    # host's codepage: the count must not depend on the platform it runs on.
+    print(count_words(sys.stdin.buffer.read().decode("utf-8")))
     return 0
 
 

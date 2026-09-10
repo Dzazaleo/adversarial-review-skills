@@ -367,3 +367,98 @@ Records: `~/.adversarial-review/calibration/grok-4.6-xhigh.md` (Windows, `FAIL`)
 `.adversarial-review/calibration/runs/2026-09-10-grok-4.6-xhigh/record.md` (macOS, `PASS`). The
 2026-09-09 raw reports remain on the Windows machine at
 `~/.adversarial-review/calibration/runs/2026-09-09-grok-4.6-xhigh/`.
+
+**RULED AND LANDED 2026-09-10 — option (a).** The owner ruled option (a); it is implemented and
+verified by execution on the cp1252 host that raised the entry. `wordcount.py:16` now reads
+
+```python
+    # Decode as UTF-8 rather than the interpreter's default, which follows the
+    # host's codepage: the count must not depend on the platform it runs on.
+    print(count_words(sys.stdin.buffer.read().decode("utf-8")))
+```
+
+Same probe as the Evidence section above, same stripped environment, same host, before and after:
+
+```
+before : stdout b'3\r\n'   sys.stdin.encoding cp1252   -> contract violated
+after  : stdout b'2\r\n'   sys.stdin.encoding cp1252   -> contract honoured
+```
+
+`README.md:5-8`'s example still returns `3`, empty stdin returns `0`, CRLF-separated input returns
+`2`, and `test_wordcount.py` passes 5/5. The program is now correct on every host, which is what a
+negative control requires.
+
+**Three choices made inside (a), each of which could have gone another way:**
+
+- **`sys.stdin.buffer.read().decode("utf-8")` rather than `sys.stdin.reconfigure(encoding="utf-8")`.**
+  `reconfigure` mutates global state and is not on the `TextIO` type `sys.stdin` is declared as, so
+  a type checker flags it — a citable finding planted in a negative control, which is the hazard
+  B-2 exists to guard against. The explicit decode has neither property.
+- **`README.md` was not touched.** The fix satisfies the contract the README already states; option
+  (b) was rejected for narrowing that spec, and editing the README here would have imported the
+  same defect through the remedy.
+- **No test was added.** The defect lives at the I/O boundary in `main()`, which a unit test on
+  `count_words` cannot reach; covering it needs a subprocess test, which would grow a 40-line
+  negative control by a third and add environment-sensitive machinery to a case about environment
+  sensitivity. **Left for the owner** — the boundary is now correct but untested, and a reviewer
+  raising that as a `low` or `medium` is within what `ANSWER-KEY.md:70-73` permits.
+
+**Not introduced by this fix:** the decode is `errors="strict"`, so malformed input raises
+`UnicodeDecodeError`. The original had the same property — cp1252 leaves `0x81`, `0x8D`, `0x8F`,
+`0x90` and `0x9D` undefined and Python's codec raises on them — so crash-on-undecodable-input is
+pre-existing behaviour, not a new defect, and it is the correct strict reading of a UTF-8 contract.
+
+**Cost, as predicted: the digest moved and every stored record expired.**
+`775e1cc8c43f` -> **`84cd4ae37511`**. All four records at
+`~/.adversarial-review/calibration/` were filed against the old digest and are now stale-as-missing:
+`gpt-6-astra-high` (`PASS`, and the only one that was live on every test before this edit),
+`grok-4.6-high` (`PASS`), `gpt-5.6-sol-high` (`PASS`) and `grok-4.6-xhigh` (`FAIL`).
+
+**B-5 is untouched and still open, so the restored tolerance has zero margin.** `clean-copy-link`
+remains ambiguous, and `grok-4.6` at `xhigh` has rated it `critical` on two independent runs, one
+per host. A `grok-4.6-xhigh` pass therefore rests entirely on `clean-wordcount` coming back clean —
+the pass rule's one-clean-case tolerance is restored, but nothing is spare. Landing B-5 option (b)
+is what would give it margin back.
+
+---
+
+## B-7 — `validate.py`'s calibration check does not enforce the product-version clause it documents
+
+**Origin:** raised against the validator by the operator, 2026-09-10, while establishing whether the
+unexpired `grok-4.6-xhigh` record was usable before re-running it.
+
+**Location:** `scripts/validate.py:670-700` (`check_calibration_digests`), read against the expiry
+rule at `calibration/README.md:142-149`.
+
+**Mechanism:** the README makes a record stale on any of three conditions — 30 days elapsed, a
+changed instrument digest, or **a changed reviewer identity, "a different family, a different
+product version, a different reasoning effort, or a different self-reported string."** The check
+tests the first two and is silent on the third. It cannot fully test it — the validator has no way
+to know which CLIs are installed or which binary a record refers to — but it also does not say so,
+and the run's summary line makes no distinction between a condition checked and a condition skipped.
+
+**Consequence:** `12 of 12 checks pass` reads as "the records on file are live" when it means "no
+record is date-expired or digest-stale." Measured on this machine immediately before the B-6 fix,
+with the digest matching and every record in date: `grok-4.6-high` was earned on grok CLI `1.0.5`
+and `grok-4.6-xhigh` on `1.0.24`, against `1.0.25` installed; `gpt-5.6-sol-high` was earned on Codex
+CLI `0.149.1` against `0.153.4` installed. **Three of four records were stale by the documented rule
+while the validator reported all twelve checks passing** — only `gpt-6-astra-high` (Codex `0.153.4`)
+matched the installed build. This is a gate that goes green on drift it does not look at, and the
+`grok-4.6-xhigh` record is the specific case that matters: it carries a hand-written note that the
+CLI has moved to `1.0.25` but stops short of declaring itself stale, so nothing mechanical marked it.
+
+**Sketch of the options, if taken up.** None touches the instrument, so none expires a record.
+
+- **(a) Add a `Product and version` probe per reviewer.** Requires a per-identity command to ask the
+  installed build its version, which the repository does not have and which is one more thing to
+  maintain per reviewer. Most complete, least cheap.
+- **(b) Record the check's own scope in the output** — have the calibration check name what it did
+  not verify, so the green line stops over-claiming. Cheapest, and it fixes the misreading rather
+  than the gap.
+- **(c) WARN whenever a record's `Product and version` row has not been re-attested since it was
+  filed** — an operator-attested `Verified against installed build on <date>` row in
+  `record-template.md`, warned on when absent or older than the record. Mechanical, no per-reviewer
+  probe, and it makes the drift visible where the record is read.
+
+**Not yet ruled on.** As with B-5 and B-6, this entry records the defect and the evidence; which
+option lands is the owner's call.
