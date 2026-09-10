@@ -165,3 +165,103 @@ markdown footnote markers alongside emphasis characters and backticks before mat
 record is `REVIEW-ADJUDICATION.md` §R6.19, and round 7 `grok7-3` is the finding that this paragraph
 was left reading as open work after the fix landed. Re-verified by execution 2026-08-23: a
 footnote-broken retired phrase now errors. **Nothing here is outstanding.**
+
+
+## B-5 — `clean-copy-link`'s `viewer.html` reads as an undelivered feature, so the control no longer measures over-flagging
+
+**Origin:** the K-1 regression brief (Claude artifact *The K-1 Regression*, 2026-09-10),
+root-causing the `grok-4.6-xhigh` record filed 2026-09-09 — `FAIL`, 4/4 traps, **0/2 clean**.
+Not raised by an external reviewer; raised against the corpus by the operator.
+
+**Location:** `calibration/cases/clean-copy-link/viewer.html`, all 16 lines, read against
+`calibration/cases/clean-copy-link/PLAN.md:12-28` (Steps 1-3). Scored by
+`calibration/ANSWER-KEY.md:66` and the pass rule at `:76-77`. Introduced by `e1fc88b` as K-1.
+
+**Mechanism:** K-1 added `viewer.html` so that the plan would have the existing markup it extends,
+retiring the pre-fix reading "the required `viewer.html` is absent". The file it added carries the
+one thing Step 1 names as its attachment point — `<h1 id="page-title">` — and none of Steps 1-3:
+no `<button id="copy-link">`, no `navigator.clipboard.writeText` call, no `execCommand` fallback,
+no label swap, no `<script>` element at all. The gap was therefore not removed but made **more
+citable**: a reviewer that previously had to argue from an absent file can now quote a present one
+line by line and report every element the plan names as missing from it. Both readings are
+available from the same bytes — "the starting page Step 1 would edit" and "an undelivered feature"
+— and nothing in the case, the fixed brief or the key tells the reviewer which artifact is the
+deliverable.
+
+**Consequence:** `clean-copy-link` is a negative control. It exists to measure one thing — whether
+a reviewer invents `critical` or `high` severity against a small, complete plan. It now also
+measures whether the reviewer guessed correctly which artifact was under review, and on the
+evidence that second thing dominates. Because `clean-wordcount` is then the only clean case still
+measuring what it claims to, the pass rule's tolerance is spent: `ANSWER-KEY.md:76-77` passes a
+reviewer on *at least one* of two clean cases, so a single over-flag on `clean-wordcount` now fails
+a reviewer outright — precisely the flakiness `ANSWER-KEY.md:85-87` chose that threshold to avoid.
+Reviewers are failing on the instrument rather than on their own calibration, and the resulting
+`FAIL` records are indistinguishable from earned ones.
+
+**Evidence, and which half of it this repository can settle.** On the frozen post-K-1 bytes, the
+two archived runs both **passed** the control: `2026-08-22-gpt-5.6-sol-high-775e1cc8c43f` raised one
+medium and one low, and `2026-08-22-grok-4.6-high` raised nothing, stating the reading explicitly —
+"`viewer.html` has no copy control and no script; that is the starting page Step 1 would edit, not
+an undelivered feature." The one archived **pre**-K-1 run, `2026-08-22-gpt-5.6-sol-high`, failed the
+control with a `High` citing the absent file: K-1 was written against a real defect. Four
+subsequent runs on the same frozen bytes are reported to have failed the control, the most recent
+being `grok-4.6-xhigh` on 2026-09-09. **Those archives are not in this repository** — they sit on
+the machine that produced them under `runs/2026-09-09-grok-4.6-xhigh/`. So the 2-pass/4-fail split
+is archive-verified on the two passes and operator-reported on the four failures; the mechanism
+above is verified here by reading the bytes.
+
+**What a fix costs, before anyone picks one.** The instrument digest covers `cases/`, the fixed
+brief and the answer key — K-6, in this same commit, narrowed it to exactly those three. Every
+remedy below touches one of them, so **no fix here is digest-free**: each expires every stored
+calibration record and costs a twenty-minute re-run per reviewer on file. Choose on merit; the
+cost is identical whichever way it goes.
+
+**Sketch of the options, if taken up:**
+
+- **(a) Revert K-1.** Returns to the absent-file state, which the pre-fix archived run shows also
+  fails this control. Known-failing; listed only so it is not rediscovered.
+- **(b) Make `viewer.html` coherent on its own** — a complete page whose current behaviour is
+  self-consistent, which the plan then extends *additively*. Leaves "not implemented" nothing to
+  attach to, and is the only option that fixes the ambiguity rather than labelling it.
+- **(c) Say which artifact is the deliverable**, in the case rather than in `CALIBRATION-PROMPT.md`
+  — the fixed brief is shared by all six cases and must not hint that the session is an evaluation
+  (K-4). Cheapest to write, but it narrows what the control measures by telling the reviewer the
+  answer to half of it.
+- **(d) Tighten the pass rule** so both clean cases must come back clean. Does not touch this case
+  at all, and makes the problem worse rather than better while `clean-copy-link` is ambiguous.
+
+**Not yet ruled on.** This entry records the defect and the evidence; which option lands is the
+owner's call, and B-1's corpus-level validity check is the thing that would have caught it.
+
+**Amended 2026-09-10 — a third post-K-1 run, and a correction to the entry above.** `grok-4.6` was
+calibrated at **xhigh** on this machine against digest `775e1cc8c43f` — the same digest the
+`grok-4.6-high` PASS was earned on, so the instrument is provably frozen between the two. Result:
+**PASS**, 4/4 traps (two of them proven by execution, including a constructed `dc478bbc` collision),
+`clean-wordcount` clean with zero findings, and `clean-copy-link` rated **`critical`** — *"The
+copy-link feature is not implemented"*, locating `viewer.html:1-16` and listing every element of
+Steps 1-3 absent from it. That is the Mechanism above almost word for word, from a third
+independent run.
+
+Two things this settles, one of which corrects the entry:
+
+- **The controlled comparison now exists.** Same bytes, same model, same digest: at **high**,
+  `grok-4.6` passed this case with zero findings and argued the reading out explicitly (*"the
+  starting page Step 1 would edit, not an undelivered feature"*); at **xhigh** it rates the same 16
+  lines `critical`. Neither reading is wrong on the bytes, which is the ambiguity this entry is
+  about. It also means the case is not simply "broken" — it is **effort-sensitive**, and a negative
+  control whose result turns on the reviewer's effort setting is measuring the wrong variable.
+- **The Consequence paragraph's margin claim is no longer a prediction.** This run passed *only*
+  because `clean-wordcount` came back clean. Had it produced one `high`, a reviewer that found every
+  planted defect and proved four of them by execution would have been recorded `FAIL`.
+
+**And the correction:** this entry leaned on a reported "4 of 4 reviewer-runs failing the control
+since the fix," which invited reading the whole `grok-4.6-xhigh` `FAIL` of 2026-09-09 (4/4 traps,
+**0/2 clean**) as B-5's doing. It is not. B-5 accounts for the `clean-copy-link` half only, and
+`clean-wordcount` — the half that actually decided that `FAIL`, since one clean case suffices to
+pass — came back **clean** here on the same digest at the same effort. So whatever flagged
+`clean-wordcount` on 2026-09-09 is **not** reproducible and is **not** explained by this entry. That
+run's `clean-wordcount` report, still only on the machine that produced it, is the one artifact that
+would settle it, and it is worth retrieving before anyone edits a case.
+
+Record: `~/.adversarial-review/calibration/grok-4.6-xhigh.md`. Raw reports:
+`.adversarial-review/calibration/runs/2026-09-10-grok-4.6-xhigh/`.

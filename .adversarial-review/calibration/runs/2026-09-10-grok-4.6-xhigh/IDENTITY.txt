@@ -1,0 +1,7 @@
+**Family:** Grok (xAI)
+
+**Product / version:** Grok 4.6
+
+**Served model alias:** None was exposed to me in this session. The system prompt identifies me as Grok 4.6; the only slug I can see in-tooling is `grok-4.6`.
+
+**Reasoning effort:** Not disclosed as a runtime setting in this session. I was not given a field such as `low` / `high` / `xhigh`, so I cannot honestly name the effort this run was configured at.
