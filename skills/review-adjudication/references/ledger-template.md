@@ -181,6 +181,11 @@ The reason this ledger stops rather than finishing. One block per question:
 **Blocks:** «which plan/task cannot start before this is answered, or "nothing"»
 ```
 
+Write these blocks the way the hand-off will have to read them — plain, in the owner's terms, no
+ledger vocabulary carrying the sentence — because §8 lifts them straight out of here and a question
+phrased in row IDs has to be rewritten twice or asked badly once. The test is the same in both
+places: an owner who reads only the question can answer it without opening the ledger or the report.
+
 Once answered, the answer is recorded here verbatim and dated. An owner ruling that lives only in
 chat is the same failure as a review that lives only in chat.
 

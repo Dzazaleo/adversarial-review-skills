@@ -72,10 +72,12 @@ third round without the owner asking in their own words. (§1, §8)
    high or critical, in code you authored, needs execution evidence. Without it the verdict is
    `COULD NOT DETERMINE` **and you name the check that would settle it** — one line, and an
    honest, available outcome. `[deep]` adds a second opinion that was not handed the report. (§5)
-6. **Owner questions are batched and bounded.** One block at hand-off, plain terms, each question
-   genuinely two defensible options. Anything with a sensible default takes the default with a
-   one-line note instead of a question — 31 owner rulings out of one phase is the anti-pattern
-   this exists to stop. (§4, §8)
+6. **The hand-off is plain, batched and bounded.** The summary and the owner questions are both
+   written in the owner's terms rather than the ledger's, and the test is answerable rather than a
+   matter of taste: **an owner who reads only the hand-off can act on it without opening the ledger
+   or the report.** Questions come in one block, each genuinely two defensible options. Anything
+   with a sensible default takes the default with a one-line note instead of a question — 31 owner
+   rulings out of one phase is the anti-pattern this exists to stop. (§4, §8)
 7. **No ship verdict, and no fixes.** Nothing in the ledger says the work is complete,
    correct, or ready to ship, and fixes are a separate explicit act afterwards. (objective, §8)
 </invariants>
@@ -451,13 +453,22 @@ Non-negotiables:
 
 ## 8. Hand off
 
-Report to the user, briefly:
+Report to the user, briefly — and **in plain terms, the summary and the questions both**. The
+reader is the owner: they did not read the report, will not open the ledger, and may not have
+written the code. So say what breaks and who notices before you say where it lives; spend a clause
+expanding any name that is carrying the explanation — a symbol, a plan ID, a phase number; and keep
+the ledger's own vocabulary out of the load-bearing sentence. `CONFIRMED (partial)`, `CNV`, `U-4`,
+a bare `FIX LATER` — those are the ledger's index, and they belong in parentheses so a row can be
+found, never in place of the sentence saying what happened. **The test: an owner who reads only
+this hand-off can act on it without opening either file.** A line that fails it is not shorter, it
+is unusable — the same complaint as the volume rule below, arriving one sentence at a time instead
+of thirty-one at once.
 
 - The ledger path, the tier you ran, and the count: N findings in, N rows out.
-- **The owner questions, in one block and in plain terms** — each a single decidable question with
-  its two options and what each costs, and each one you could not have defaulted. Say which block
-  execution. **This list is meant to be short.** Anything with a sensible default was taken by
-  default with a one-line note in the ledger, not asked here (§4); a hand-off carrying dozens of
+- **The owner questions, in one block** — each a single decidable question with its two options
+  and what each costs, and each one you could not have defaulted. Say which block execution.
+  **This list is meant to be short.** Anything with a sensible default was taken by default with a
+  one-line note in the ledger, not asked here (§4); a hand-off carrying dozens of
   rulings is not thorough, it is unanswerable, and the owner has said so twice.
 - The `FIX NOW` queue, one line each, and an offer to execute it as a separate act. The owner's
   acceptance of that offer **is** that act: record it verbatim in the ledger, and the same session
