@@ -488,3 +488,42 @@ stdout, would have raised `UnicodeEncodeError` and taken the validator down. **A
 the host's codepage is the exact defect B-6 was filed about, reintroduced by the tooling that
 reports it.** The string is now ASCII-folded before it is printed. Anything echoing record prose to
 a console should do the same.
+
+---
+
+## B-8 — `check_installed_copies` crashes the whole validator where `diff` is not on PATH
+
+**Origin:** hit by the owner 2026-09-10, running `py scripts/validate.py` from `cmd.exe` to confirm
+a `git clean` had not disturbed the corpus. **RULED AND FIXED the same day** — this entry is the
+record, not a proposal.
+
+**Location:** `scripts/validate.py`, `check_installed_copies` — the unguarded
+`subprocess.run(["diff", "-rq", d, inst], ...)`. Introduced by `bf092c9`, the commit that added the
+validator, and unchanged since.
+
+**Mechanism:** `diff` is an external binary, not a Python builtin. Git Bash supplies it at
+`/usr/bin/diff`, so the validator has always worked there — but `cmd.exe` and PowerShell do not have
+it on PATH, and Git for Windows does not put it there (`git.exe` lives in `cmd/`, `diff.exe` in
+`usr/bin/`). Unguarded, `FileNotFoundError` propagated out of `main()` and terminated the process
+with a traceback.
+
+**Consequence, and why it is worse than a missing warning:** the run produced **no report at all** —
+not a failure verdict, not a partial one. Every check that had already passed was discarded along
+with the ones that had not run. `check_installed_copies`'s own docstring promises it "can only ever
+warn - it never fails the build"; the implementation took the build down instead, so the function
+violated its stated contract on any shell without `diff`. And because Git Bash was where the
+validator was habitually run, **every `12 of 12 checks pass` on record was earned in one shell** and
+silently unobtainable in the other.
+
+**Fix:** wrap the call in `try/except OSError`, `warn` and `SKIPPED.add(check_installed_copies)`. The
+warning states explicitly that the check **did not run** and that this is not a statement that the
+copies match — silence from a skipped comparison must never read as agreement. Verified both ways on
+the same tree: with `diff` on PATH, `12 of 12 checks pass (6 warnings)`; with `git` present and
+`diff` absent, `11 of 12 checks pass (5 warnings); 1 check SKIPPED and NOT counted`.
+
+**The class, which is the reason this is worth an entry rather than a one-line fix.** This is the
+third defect of one shape found on 2026-09-10, after B-6 and the em-dash bug inside B-7's own
+remedy: **behaviour that depends on the host or the shell rather than on the bytes under test.** The
+corpus digest was hardened against exactly this and the tooling around it was not. Anything in this
+repository that shells out, decodes, or prints should be assumed guilty until run under a second
+shell — and `12 of 12` should be read as a statement about one environment until it has been.

@@ -749,7 +749,22 @@ def check_installed_copies():
         inst = os.path.join(home, os.path.basename(d))
         if not os.path.isdir(inst):
             continue
-        r = subprocess.run(["diff", "-rq", d, inst], capture_output=True, text=True)
+        # B-8: `diff` is an external binary and is NOT on PATH in cmd.exe or PowerShell -
+        # Git Bash supplies it at /usr/bin/diff, which is why this went unnoticed. Unguarded,
+        # FileNotFoundError propagated out of main() and took the whole run down with a
+        # traceback, so a shell without `diff` got no validation report at all rather than the
+        # one warning this check exists to emit - and the docstring above promises it "can only
+        # ever warn - it never fails the build". Skip loudly instead, and be explicit that the
+        # comparison did not happen: silence here must never read as "the install matches".
+        try:
+            r = subprocess.run(["diff", "-rq", d, inst], capture_output=True, text=True)
+        except OSError as ex:
+            warn("install", f"could not compare {rel(d)} with the installed copy at {inst}: "
+                            f"{type(ex).__name__} running `diff`. This is NOT a statement that "
+                            "they match - the check did not run. `diff` ships with Git Bash; "
+                            "run the validator from there, or install diffutils.")
+            SKIPPED.add(check_installed_copies)
+            return
         if r.returncode:
             warn("install", f"{rel(d)} differs from the installed copy at {inst} - "
                             "the version you actually run is not this one")
